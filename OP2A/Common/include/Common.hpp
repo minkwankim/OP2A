@@ -15,6 +15,24 @@
 
 
 #include "Common/include/Standard_headers.hpp"
+#include "Common/include/CommonAPI.hpp"
 
+
+//////////////////////////////////////////////////////////////////////////////
+namespace OP2A {
+
+  /*
+   * Common holds classes that abstract the Operating System
+   * and prvide common facilities (like logging) to all other libraries.
+   *
+   * Common is the most basic of the Kernel libraries.
+   */
+
+
+  namespace Common {
+
+  } // namespace Common
+}
+//////////////////////////////////////////////////////////////////////////////
 
 #endif /* COMMON_HPP_ */
