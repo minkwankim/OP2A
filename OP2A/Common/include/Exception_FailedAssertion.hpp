@@ -22,15 +22,14 @@ namespace OP2A {
 
 namespace Common {
 
-class Common_API FailedAssertionException : public Common::Exception {
+class Common_API ExceptionFailedAssertion : public Common::Exception
+{
 public:
-
-  FailedAssertionException (const Common::Code_location& where, const std::string& what) :
-    Common::Exception(where, what, "FailedAssertionException") {}
+  ExceptionFailedAssertion (const Common::Code_location& where, const std::string& what) :
+    Common::Exception(where, what, "ExceptionFailedAssertion") {}
 
   /// Copy constructor
-  FailedAssertionException(const FailedAssertionException& e) throw  () : Exception(e) {}
-
+  ExceptionFailedAssertion(const ExceptionFailedAssertion& e) throw  () : Exception(e) {}
 };
 
 
