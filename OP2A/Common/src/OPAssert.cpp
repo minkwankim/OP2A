@@ -16,10 +16,12 @@
 #include "Common/include/Common.hpp"
 #include "Common/include/CodeLocation.hpp"
 #include "Common/include/OPAssert.hpp"
-#include "Common/include/FailesAssertionException.hpp"
+#include "Common/include/Exception_FailedAssertion.hpp"
+#include "Common/include/OSystem.hpp"
 
 
-
+using namespace std;
+using namespace OP2A::Common;
 
 namespace OP2A {
 
@@ -64,7 +66,7 @@ void AssertionManager::do_assert ( bool condition,
 
 		if ( AssertionManager::getInstance().AssertionThrows )
 		{
-			throw FailedAssertionException (FromHere(),out.str());
+			throw ExceptionFailedAssertion (FromHere(),out.str());
 		}
 		else
 		{

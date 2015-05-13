@@ -13,7 +13,15 @@
 #ifndef OSYSTEM_HPP_
 #define OSYSTEM_HPP_
 
-#include "./Common/include/Common.hpp"
+#include "Common/include/Common.hpp"
+#include "Common/include/NonCopyable.hpp"
+#include "Common/include/Exception.hpp"
+#include "Common/include/Exception_OSystem.hpp"
+#include "Common/include/Ptr_Safe.hpp"
+#include "Common/include/ProcessInfo.hpp"
+#include "Common/include/SignalHandler.hpp"
+#include "Common/include/LibLoader.hpp"
+
 
 namespace OP2A
 {
@@ -27,6 +35,19 @@ private:
 	Common::ProcessInfo 	*m_process_info;
 	Common::SignalHandler 	*m_sig_handler;
 	Common::LibLoader 		*m_lib_loader;
+
+	OSystem();
+	~OSystem();
+
+public:
+	static OSystem& getInstance();
+
+	Common::Ptr_Safe<Common::ProcessInfo> 	getProcessInfo();
+	Common::Ptr_Safe<Common::SignalHandler> getSignalHandler();
+	Common::Ptr_Safe<Common::LibLoader> 	getLibLoader();
+
+	void executeCommand (const std::string& call);
+	void sleep (const OPuint& seconds = 1);
 };
 
 } // end namespace Common

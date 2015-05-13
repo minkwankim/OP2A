@@ -16,7 +16,7 @@
 #include "Common/include/Common.hpp"
 #include "Common/include/NonCopyable.hpp"
 #include "Common/include/Compatibility.hpp"
-
+#include "Common/include/OP2A.hpp"
 
 namespace OP2A{
 namespace Common{
@@ -33,7 +33,7 @@ public:
 	virtual OPuint 		getPID () 			const = 0;
 
 	virtual OPdouble memoryUsageBytes()	const = 0;
-	std::string memoryUsage()			const = 0;
+	std::string memoryUsage()			const;
 	static std::string getClassName()
 	{
 		return "ProcessInfo";

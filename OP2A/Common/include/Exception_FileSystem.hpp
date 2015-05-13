@@ -20,6 +20,7 @@ namespace Common{
 
 class Common_API ExceptionFileSystem : public Common::Exception
 {
+public:
 
 	ExceptionFileSystem ( const Common::Code_location& where, const std::string& what)
 			: Common::Exception(where,what,"ExceptionFileSystem")

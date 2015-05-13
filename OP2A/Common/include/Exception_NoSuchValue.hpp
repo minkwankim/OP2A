@@ -20,6 +20,7 @@ namespace Common{
 
 class Common_API ExceptionNoSuchValue: public Common::Exception
 {
+public:
 
 	ExceptionNoSuchValue ( const Common::Code_location& where, const std::string& what)
 			: Common::Exception(where,what,"ExceptionNoSuchValue")

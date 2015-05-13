@@ -14,6 +14,8 @@
 #define OBJECT_OWNED_HPP_
 
 #include "Common/include/Common.hpp"
+#include "Common/include/OP2A.hpp"
+
 
 namespace OP2A{
 namespace Common{
