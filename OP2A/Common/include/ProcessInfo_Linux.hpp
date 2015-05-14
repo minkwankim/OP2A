@@ -25,8 +25,9 @@ class Common_API ProcessInfoLinux :public ProcessInfo
 {
 public:
 
-	ProcessInfoLinux();	// Constructor
+	ProcessInfoLinux();				// Constructor
 	virtual ~ProcessInfoLinux();	// Destructor
+
 
 	virtual std::string getFlatformName()	const	{ return "Linux";};
 	static 	std::string dumpBacktrace();
@@ -34,7 +35,7 @@ public:
 
 	virtual OPuint 		getPID () 			const;
 	virtual OPdouble 	memoryUsageBytes()	const;
-	std::string memoryUsage()				const;
+	std::string 		memoryUsage()		const;
 };
 
 } //end namespace Common

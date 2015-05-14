@@ -13,8 +13,8 @@
 #ifndef ARRAY2D_HPP_
 #define ARRAY2D_HPP_
 
-#include "Common/include/OP2A.hpp"
-
+#include "Common/include/Standard_headers.hpp"
+#include "Common/include/OPAssert.hpp"
 
 
 
@@ -22,23 +22,45 @@ namespace OP2A{
 
 namespace Common{
 
+/*
+ * Class for 2D array (Matrix, I x J)
+ * 	- [Size_]: size of Coloumn (I)
+ * 	- [ElementSize_]: Size of row (J)
+ * 	- [Data_]: Data of matrix
+ *
+ * 	Initially written by:	Minkwan Kim
+ * 	Last modified on	:	May/14/2015
+ * 	Last modified by	:	Minkwan Kim
+ */
+
 template <typename T>
 class Array2D
 {
+protected:
+	unsigned int Size_;
+	unsigned int ElementSize_;
+	std::vector<T>	Data_;
+
 public:
+
+	// Constructors
 	Array2D():Size_(0), ElementSize_(0)
 	{
 
 	}
 
-
-	Array2D(unsigned int I, unsigned int J):ElementSize_(J)
+	Array2D(unsigned int _I, unsigned int _J):ElementSize_(_J)
 	{
-		Resize(I);
+		Resize(_I);
 	}
 
 
-	// Getting information about the size
+
+
+	/*
+	 * Class Functions
+	 */
+	// CF-01: Getting information about the size
     unsigned int GetSize () const
     {
     	return Size_;
@@ -55,7 +77,7 @@ public:
     }
 
 
-	// Resize data (I)
+	// CF-02: Resize data (I)
 	void Resize(unsigned int I)
 	{
 		op_assert(ElementSize_ > 0);
@@ -63,8 +85,7 @@ public:
 		Size_	= I;
 	}
 
-
-	// Resize data (J)
+	// CF-03: Resize data (J)
 	void SetElementSize (unsigned int J)
 	{
 		op_assert (J);
@@ -74,17 +95,18 @@ public:
 	 }
 
 
-	// Reserve data size
+	// CF-04: Reserve data size
     void Reserve (unsigned int I)
     {
     	Data_.reserve (I*ElementSize_);
     }
 
 
+    // CF-05: Get data
     T & Get (unsigned int I, unsigned int J)
     {
     	op_assert (I < Size_);
-    	op_assert (I < ElementSize_);
+    	op_assert (J < ElementSize_);
     	return Data_[I*ElementSize_+ J];
      }
 
@@ -96,23 +118,18 @@ public:
     }
 
 
+	// CF-04: Push back data
     T & PushBack ()
     {
     	Resize (Size_+1);
     	return Get(Size_-1, 0);
     }
 
+    // CF-05: Clear data
     void clear ()
     {
     	Resize (0);
     }
-
-
-
-protected:
-	unsigned int Size_;
-	unsigned int ElementSize_;
-	std::vector<T>	Data_;
 };
 
 

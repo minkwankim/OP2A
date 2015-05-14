@@ -16,7 +16,7 @@
 
 #include "Common/include/Exception_FailedCast.hpp"
 #include "Common/include/Ptr_Alloc.hpp"
-#include "Common/include/DemangledTypeID.hpp"
+//#include "Common/include/DemangledTypeID.hpp"
 
 namespace OP2A{
 namespace Common{
@@ -157,9 +157,9 @@ Ptr_Safe<DTYPE> Ptr_Safe<TYPE>::d_castTo() const
   if (rPtr == OPNULL)
   {
     std::string msg ("SafePtr failed dynamic cast from ");
-    msg += DEMANGLED_TYPEID(TYPE);
+    //msg += DEMANGLED_TYPEID(TYPE);
     msg += " to ";
-    msg += DEMANGLED_TYPEID(DTYPE);
+   // msg += DEMANGLED_TYPEID(DTYPE);
     throw Common::ExceptionFailedCast(FromHere(), msg);
   }
 

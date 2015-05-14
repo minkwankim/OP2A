@@ -49,40 +49,41 @@ std::string ProcessInfoLinux::dumpBacktrace ()
 {
 #define OP_BUFFER_SIZE 256
 
-  cout << endl << endl << " dumping backtrace ..." << endl;
+	cout << endl << endl << " dumping backtrace ..." << endl;
 
-  std::ostringstream oss;
-  int j, nptrs;
-  void *buffer[OP_BUFFER_SIZE];
-  char **strings;
+	std::ostringstream oss;
+	int j, nptrs;
+	void *buffer[OP_BUFFER_SIZE];
+	char **strings;
 
-  nptrs = backtrace(buffer, OP_BUFFER_SIZE);
-  oss << "\nbacktrace() returned " << nptrs << " addresses\n";
+	nptrs = backtrace(buffer, OP_BUFFER_SIZE);
+	oss << "\nbacktrace() returned " << nptrs << " addresses\n";
 
-  strings = backtrace_symbols(buffer, nptrs);
-  if (strings == NULL)	oss << "\nno backtrace_symbols found\n";
+	strings = backtrace_symbols(buffer, nptrs);
+	if (strings == NULL)	oss << "\n no backtrace_symbols found\n";
 
-  for (j = 0; j < nptrs; j++)	oss << strings[j] << "\n";
-  free(strings);
+	for (j = 0; j < nptrs; j++)	oss << strings[j] << "\n";
+	free(strings);
 
 #undef OP_BUFFER_SIZE
 
-  return oss.str();
+	return oss.str();
 }
 
 
 
 std::string ProcessInfoLinux::getBackTrace () const
 {
-  return dumpBacktrace ();
+	return dumpBacktrace ();
 }
 
 
 OPuint ProcessInfoLinux::getPID() const
 {
-  pid_t pid = getpid();
-  return static_cast<OPuint> ( pid );
+	pid_t pid = getpid();
+	return static_cast<OPuint> ( pid );
 }
+
 
 
 OPdouble ProcessInfoLinux::memoryUsageBytes() const

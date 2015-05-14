@@ -14,14 +14,11 @@
 
 
 #include "Common/include/Exception.hpp"
-#include "Common/include/OSystem.hpp"
-#include "Common/include/ProcessInfo.hpp"
 
 
 
 
 namespace OP2A{
-
 namespace Common{
 
 ExceptionManager::ExceptionManager()
@@ -31,6 +28,13 @@ ExceptionManager::ExceptionManager()
 	ExceptionAborts		= false;
 }
 
+Exception::~Exception() throw ()
+{
+
+}
+
+
+
 ExceptionManager& ExceptionManager::getInstance()
 {
 	static	ExceptionManager exception_manager;
@@ -38,56 +42,53 @@ ExceptionManager& ExceptionManager::getInstance()
 }
 
 
-
-
-
-Exception::Exception (Code_location where, std::string msg, std::string className) throw ()
-		: m_where(where), m_msg(msg), m_class_name(className)
+Exception::Exception (Code_location where, std::string msg, std::string className) throw (): m_where(where), m_msg(msg), m_class_name(className)
 {
 	m_what = full_description();
 
-	if ( ExceptionManager::getInstance().ExceptionOutputs )
+	if (ExceptionManager::getInstance().ExceptionOutputs)
 	{
 		std::cout << "+++ Exception thrown +++++++++++++++++" << std::endl;
 		std::cout << m_what << std::endl;
 		std::cout << "++++++++++++++++++++++++++++++++++++++" << std::endl;
 	}
 
-	if ( ExceptionManager::getInstance().ExceptionDumps )
-	{
-		std::string backtrace = OSystem::getInstance().getProcessInfo()->getBackTrace();
-		std::cout << "+++ Exception backtrace ++++++++++++++" << std::endl;
-		std::cout << backtrace << std::endl;
-		std::cout << "++++++++++++++++++++++++++++++++++++++" << std::endl;
-	}
 
-	if ( ExceptionManager::getInstance().ExceptionAborts )
+	if (ExceptionManager::getInstance().ExceptionAborts )
 	{
 		std::cout << "+++ Exception aborting ... " << std::endl;
 		abort();
 	}
+
+
+	if (ExceptionManager::getInstance().ExceptionDumps )
+	{
+		//std::string backtrace = OSystem::getInstance().getProcessInfo()->getBackTrace();
+		std::cout << "+++ Exception backtrace ++++++++++++++" << std::endl;
+		//std::cout << backtrace << std::endl;
+		std::cout << "++++++++++++++++++++++++++++++++++++++" << std::endl;
+	}
 }
 
 
-Exception::~Exception() throw ()
-{
-
-}
 
 void Exception::append(const std::string& add) throw ()
 {
 	m_what += add;
 }
 
+
 const std::string& Exception::str () const throw ()
 {
 	return m_what;
 }
 
+
 const char* Exception::what() const throw()
 {
 	return str().c_str();
 }
+
 
 std::string Exception::full_description () const throw ()
 {
@@ -114,8 +115,9 @@ std::ostream& operator<<(std::ostream& output, OP2A::Common::Exception& exc)
 
 std::ostream& operator<<(std::ostream& output, OP2A::Common::Exception* exc)
 {
-  return output << *exc;
+	return output << *exc;
 }
+
 
 
 }
