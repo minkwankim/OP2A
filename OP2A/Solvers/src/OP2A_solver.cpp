@@ -18,7 +18,6 @@
 #include "Common/include/Array2D.hpp"
 
 #include "Common/include/Common.hpp"
-//#include "Common/include/Time_Info.hpp"
 #include "Common/include/Time_StopWatch.hpp"
 
 
@@ -40,11 +39,9 @@ using namespace OP2A::Config;
 
 int main(int argc, char** argv)
 {
-	Array2D<double> test1;
-	test1.SetElementSize(10);
-	test1.Resize(5);
+	CPUTime time_running;
+	time_running.initStartTime();
 
-	double test2 = test1.Get(0, 120);
 
 
 
@@ -71,7 +68,7 @@ int main(int argc, char** argv)
 #ifdef PARALLEL
 
 #ifdef SP2
-	mpc_environ(&numtask,&taskid);   /* Get number of parallel tasks */
+	mpc_environ(&numtask, &taskid);   /* Get number of parallel tasks */
 #endif
 
 #ifdef MPI
@@ -88,6 +85,11 @@ int main(int argc, char** argv)
 
 
 	//cout << temp2 <<endl;
+	time_running.takeStopTime();
+	double t0 = time_running.getDeltaT();
+
+
+
 	cout << "HAHAHHA END" << endl;
 	return (0);
 }
