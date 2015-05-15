@@ -26,41 +26,40 @@ namespace OP2A{
 class Common_API AssertionManager : public Common::NonCopyable <AssertionManager>
 {
 public:
+	  bool DoAssertions;		// Flag to dynamically turn off assertions
+	  bool AssertionDumps;		// Flag for Assertion Dumps backtraces
+	  bool AssertionThrows;		// Flag for Assettion Throws exceptions
 
-  /// Constructor
-  AssertionManager();
+	  /// Constructor
+	  AssertionManager();
 
-  /// Gets the instance of the manager
-  static AssertionManager& getInstance ();
+	  /*
+	   * Class functions
+	   */
 
-  /// If AssertionManager is not handling assertions and those are
-  /// passed to the standard assert function
-  /// Controlled by the build option ENABLE_STDASSERT
-  static bool notHandlingAssertions ()
-  {
-	  #ifdef ENABLE_STDASSERT
-      	  return true;
-      #else
-      	  return false;
-      #endif
-  }
+	  // [CF-01] Gets the instance of the manager
+	  static	AssertionManager&	getInstance ();
 
-  /// Forward declaration of the function that implements the always present assert
-  static void do_assert (bool condition, const char * cond_str, const char * file, int line, const char * func, const char * desc = 0 );
+	  // [CF-02] If AssertionManager is not handling assertions and those are passed to the standard assert function
+	  // Controlled by the build option ENABLE_STDASSERT
+	  static bool notHandlingAssertions ()
+	  {
+	  	  #ifdef ENABLE_STDASSERT
+		  	  return true;
+	  	  #else
+		  	  return false;
+	  	  #endif
+	  }
 
-  /// flag to  dynamically turn off assertions
-  bool DoAssertions;
-
-  /// assertions dump backtraces
-  bool AssertionDumps;
-
-  /// assertions throw exceptions
-  bool AssertionThrows;
-}; // class AssertionManager
+	  // [CF-03] Forward declaration of the function that implements the always present assert
+	  static void do_assert (bool condition, const char * cond_str, const char * file, int line, const char * func, const char * desc = 0 );
+};
 
 
 
-//////////////////////////////////////////////////////////////////////////////
+
+
+
 #ifndef ENABLE_STDASSERT
 #define op_always_assert(a) \
      { if (!(a)) { ::OP2A::AssertionManager::do_assert((a), #a, __FILE__, __LINE__, __FUNCTION__); } }
@@ -68,7 +67,7 @@ public:
 #define op_always_assert_desc(msg, a) \
      { if (!(a)) { ::OP2A::AssertionManager::do_assert((a), #a, __FILE__, __LINE__, __FUNCTION__, msg); } }
 
-/// COOLFluiD assertion
+
 /// Assertions are off if compiled with DNDEBUG
 #ifndef NDEBUG
 	#define op_assert(a)       		op_always_assert((a))
@@ -77,11 +76,8 @@ public:
 	#define op_assert(a)
 	#define op_assert_desc(m,a)
 #endif
-
-#else //ENABLE_STDASSERT
-/* using standard assertions */
-// Assertion
-/// Assertions are off if compiled with DNDEBUG
+#else
+//ENABLE_STDASSERT
 #ifndef NDEBUG
 	#define op_assert(a)              	 assert(a)
 	#define op_assert_desc(m,a)          assert(a)

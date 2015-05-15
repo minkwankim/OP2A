@@ -20,7 +20,7 @@ using namespace std;
 namespace OP2A{
 namespace Common{
 
-
+// Constructors and Destructor
 ProcessInfo::ProcessInfo()
 {
 
@@ -31,6 +31,12 @@ ProcessInfo::~ProcessInfo()
 
 }
 
+
+
+/*
+ * Class Functions
+ */
+// CF-05: String with the memory usage
 string ProcessInfo::memoryUsage() const
 {
 	const OPdouble bytes = memoryUsageBytes();

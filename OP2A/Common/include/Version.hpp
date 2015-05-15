@@ -31,7 +31,7 @@ namespace Common {
 		public:
 		  explicit Version (int ver_main, int ver_sub, int date_year, int date_month, int date_day, const char * type_info);
 
-		  void info();
+		  void info() const;
 
 		private:
 			int primary;       		/* Primary version number   (i.e. 2 for V2.0) */

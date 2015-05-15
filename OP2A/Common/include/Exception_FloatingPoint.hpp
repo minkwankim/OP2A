@@ -20,7 +20,7 @@ namespace Common{
 
 class Common_API ExceptionFloatingPoint: public Common::Exception
 {
-
+public:
 	ExceptionFloatingPoint ( const Common::Code_location& where, const std::string& what)
 			: Common::Exception(where,what,"ExceptionFloatingPoint")
 	{

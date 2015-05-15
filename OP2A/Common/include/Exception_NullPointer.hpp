@@ -20,6 +20,7 @@ namespace Common{
 
 class Common_API ExceptionNullPointer: public Common::Exception
 {
+public:
 
 	ExceptionNullPointer ( const Common::Code_location& where, const std::string& what)
 			: Common::Exception(where, what, "ExceptionNullPointer")

@@ -29,22 +29,20 @@ Code_location::Code_location(const char * file, int line, const char * function)
 {
 }
 
-//////////////////////////////////////////////////////////////////////
+
 
 std::string Code_location::str () const
 {
-	char line [50];
-	sprintf (line, "%d", m_line);
-
 	std::string place (m_file);
 	place += ":";
-	place += line;
+	place += m_line;
 
 	if (!m_function.empty()) // skip if compiler doees not set function
 	{
 		place += ":";
 		place += m_function;
 	}
+
 	return place;
 }
 

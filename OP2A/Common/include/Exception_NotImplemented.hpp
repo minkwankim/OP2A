@@ -21,6 +21,7 @@ namespace Common{
 
 class Common_API ExceptionNotImplemented: public Common::Exception
 {
+public:
 
 	ExceptionNotImplemented ( const Common::Code_location& where, const std::string& what)
 			: Common::Exception(where, what, "ExceptionNotImplemented")

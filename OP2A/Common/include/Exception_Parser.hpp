@@ -21,6 +21,7 @@ namespace Common{
 
 class Common_API ExceptionParser: public Common::Exception
 {
+public:
 
 	ExceptionParser ( const Common::Code_location& where, const std::string& what)
 			: Common::Exception(where, what, "ExceptionParser")

@@ -17,7 +17,12 @@
 #include <csignal>    // POSIX signal(), SIGFPE and SIGSEGV
 #include <fenv.h>     // floating Common access
 #include <sstream>    // streamstring
+
+#include "Common/include/Common.hpp"
+#include "Common/include/Exception_FloatingPoint.hpp"
+#include "Common/include/ProcessInfo_Linux.hpp"
 #include "Common/include/SignalHandler_Linux.hpp"
+
 
 
 namespace OP2A{
@@ -54,7 +59,7 @@ int SignalHandlerLinux::handleSIGFPE (int signal)
 	printf("\nreceived signal SIGFPE [%d] - 'Floating Point Exception'\n",signal);
 	static std::string dump = ProcessInfoLinux::dumpBacktrace();
 	printf( "%s\n", dump.c_str() );
-	throw Common::FloatingPointException (FromHere(), "Some floating point operation has given an invalid result");
+	throw Common::ExceptionFloatingPoint(FromHere(), "Some floating point operation has given an invalid result");
 }
 
 

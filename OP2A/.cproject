@@ -22,6 +22,7 @@
 								<option id="intel.compilestep.perflibs.tbb.18812346" name="Use Intel(R) Threading Building Blocks Library (-tbb)" superClass="intel.compilestep.perflibs.tbb" value="true" valueType="boolean"/>
 								<option id="intel.compilestep.debug.parallel.1607421948" name="Enable Parallel Debug Checks (-debug parallel)" superClass="intel.compilestep.debug.parallel" value="true" valueType="boolean"/>
 								<option id="intel.compilestep.preprocessor.includedirectories.487193138" name="Additional Include Directories (-I)" superClass="intel.compilestep.preprocessor.includedirectories" valueType="includePath">
+									<listOptionValue builtIn="false" value="/home/user/Software/boost_1_58_0"/>
 									<listOptionValue builtIn="false" value="/home/user/git/OP2A/OP2A"/>
 									<listOptionValue builtIn="false" value="/home/user/intel/include"/>
 									<listOptionValue builtIn="false" value="/home/user/intel/mkl/include"/>
@@ -29,10 +30,11 @@
 								</option>
 								<option id="intel.compilestep.preprocessor.defsym.1303755522" name="Preprocessor Definitions (-D)" superClass="intel.compilestep.preprocessor.defsym" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="OMPI_SKIP_MPICXX"/>
+									<listOptionValue builtIn="false" value="OS_LINUX"/>
 								</option>
 								<option id="intel.compilestep.coptions.917718539" name="Additional Options" superClass="intel.compilestep.coptions" value="-openmp" valueType="string"/>
 								<option id="intel.compilestep.language.ansi_conformance.17130484" name="ANSI Conformance" superClass="intel.compilestep.language.ansi_conformance" value="ansi_conformance.8" valueType="enumerated"/>
-								<option id="intel.compilestep.perflibs.mkl.1060197007" superClass="intel.compilestep.perflibs.mkl" value="perflibs.mkl.parallel" valueType="enumerated"/>
+								<option id="intel.compilestep.perflibs.mkl.1060197007" name="Use Intel(R) Math Kernel Library (-mkl=[arg])" superClass="intel.compilestep.perflibs.mkl" value="perflibs.mkl.parallel" valueType="enumerated"/>
 								<inputType id="intel.cpp.compilestep.input.736512544" superClass="intel.cpp.compilestep.input"/>
 							</tool>
 							<tool id="intel.c.compilestep.linux.x86_64.exe.rel.118504867_14.0.0" name="Intel Intel(R) 64 C Compiler" superClass="intel.c.compilestep.linux.x86_64.exe.rel_14.0.0">
@@ -44,8 +46,14 @@
 								<option id="intel.linkstep.debugparallel.1692315522" name="Enable Parallel Debug Checks (-debug parallel)" superClass="intel.linkstep.debugparallel" value="true" valueType="boolean"/>
 								<option id="intel.linkstep.libpath.514246304" name="Search Directory for Libraries (-L)" superClass="intel.linkstep.libpath" valueType="stringList">
 									<listOptionValue builtIn="false" value="/home/user/intel/mkl/lib"/>
+									<listOptionValue builtIn="false" value="/home/user/Software/boost_1_58_0/libs"/>
 									<listOptionValue builtIn="false" value="/home/user/Software/lapack/lib"/>
 									<listOptionValue builtIn="false" value="/home/user/intel/lib"/>
+								</option>
+								<option id="intel.linkstep.perflibs.mkl.1696238540" name="Use Intel(R) Math Kernel Library (-mkl=[arg])" superClass="intel.linkstep.perflibs.mkl" value="perflibs.mkl.parallel" valueType="enumerated"/>
+								<option id="intel.linkstep.libname.1465768974" name="Additional Libraries (-l)" superClass="intel.linkstep.libname" valueType="libs">
+									<listOptionValue builtIn="false" value="boost_filesystem"/>
+									<listOptionValue builtIn="false" value="boost_system"/>
 								</option>
 								<inputType id="intel.linkstep.input.1898927662" superClass="intel.linkstep.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -54,6 +62,9 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<sourceEntries>
+						<entry excluding="Common/src/SignalHandler.cpp|Common/src/SignalHandler_Linux.cpp|Common/src/ProcessInfo.cpp|Common/src/ProcessInfo_Linux.cpp|Common/src/Parallel.cpp|Common/src/OSystem.cpp|Configure" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+					</sourceEntries>
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
@@ -74,6 +85,10 @@
 							<targetPlatform archList="x86_64" binaryParser="org.eclipse.cdt.core.ELF" id="intel.platform.linux.x86_64.exe.dbg_14.0.0.1473019658" name="Platform.Executable.Debug" osList="linux" superClass="intel.platform.linux.x86_64.exe.dbg_14.0.0"/>
 							<builder buildPath="${workspace_loc:/OP2A}/Debug" id="intel.builder.linux.x86_64.exe.dbg.1128510048_14.0.0" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Intel Builder" superClass="intel.builder.linux.x86_64.exe.dbg_14.0.0"/>
 							<tool id="intel.cpp.compilestep.linux.x86_64.exe.dbg.1725994272_14.0.0" name="Intel Intel(R) 64 C++ Compiler " superClass="intel.cpp.compilestep.linux.x86_64.exe.dbg_14.0.0">
+								<option id="intel.compilestep.preprocessor.defsym.872546277" name="Preprocessor Definitions (-D)" superClass="intel.compilestep.preprocessor.defsym" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="OMPI_SKIP_MPICXX"/>
+									<listOptionValue builtIn="false" value="OS_LINUX"/>
+								</option>
 								<inputType id="intel.cpp.compilestep.input.1205642320" superClass="intel.cpp.compilestep.input"/>
 							</tool>
 							<tool id="intel.c.compilestep.linux.x86_64.exe.dbg.839669989_14.0.0" name="Intel Intel(R) 64 C Compiler" superClass="intel.c.compilestep.linux.x86_64.exe.dbg_14.0.0">
@@ -88,6 +103,9 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<sourceEntries>
+						<entry excluding="Common/src/SignalHandler.cpp|Common/src/SignalHandler_Linux.cpp|Common/src/ProcessInfo.cpp|Common/src/ProcessInfo_Linux.cpp|Common/src/Parallel.cpp|Common/src/OSystem.cpp|Configure" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+					</sourceEntries>
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>

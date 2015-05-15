@@ -20,6 +20,7 @@ namespace Common{
 
 class Common_API ExceptionParallel: public Common::Exception
 {
+public:
 
 	ExceptionParallel ( const Common::Code_location& where, const std::string& what)
 			: Common::Exception(where, what, "ExceptionParallel")
