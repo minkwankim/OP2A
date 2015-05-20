@@ -23,6 +23,7 @@
 namespace OP2A{
 
 #define MAX_NUM_THREADS_PER_CPU	2
+
 class OP2A_Parallel
 {
 public:
@@ -30,13 +31,12 @@ public:
 	OP2A::OPuint		P;		// Current processor number
 	OP2A::OPuint		NT;		// Number of thread
 
+	OP2A_Parallel(bool is_MPI, bool is_OpenMP, bool ) const;
+
 private:
-	bool m_is_MPI;
-	bool m_is_OpenMP;
-	bool m_is_
-
-
-
+	const bool m_is_MPI;
+	const bool m_is_OpenMP;
+	const bool m_is_MIC;
 };
 
 }

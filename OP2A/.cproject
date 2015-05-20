@@ -22,7 +22,6 @@
 								<option id="intel.compilestep.perflibs.tbb.18812346" name="Use Intel(R) Threading Building Blocks Library (-tbb)" superClass="intel.compilestep.perflibs.tbb" value="true" valueType="boolean"/>
 								<option id="intel.compilestep.debug.parallel.1607421948" name="Enable Parallel Debug Checks (-debug parallel)" superClass="intel.compilestep.debug.parallel" value="true" valueType="boolean"/>
 								<option id="intel.compilestep.preprocessor.includedirectories.487193138" name="Additional Include Directories (-I)" superClass="intel.compilestep.preprocessor.includedirectories" valueType="includePath">
-									<listOptionValue builtIn="false" value="/home/user/Software/boost_1_58_0"/>
 									<listOptionValue builtIn="false" value="/home/user/git/OP2A/OP2A"/>
 									<listOptionValue builtIn="false" value="/home/user/intel/include"/>
 									<listOptionValue builtIn="false" value="/home/user/intel/mkl/include"/>
@@ -46,15 +45,11 @@
 								<option id="intel.linkstep.debugparallel.1692315522" name="Enable Parallel Debug Checks (-debug parallel)" superClass="intel.linkstep.debugparallel" value="true" valueType="boolean"/>
 								<option id="intel.linkstep.libpath.514246304" name="Search Directory for Libraries (-L)" superClass="intel.linkstep.libpath" valueType="stringList">
 									<listOptionValue builtIn="false" value="/home/user/intel/mkl/lib"/>
-									<listOptionValue builtIn="false" value="/home/user/Software/boost_1_58_0/libs"/>
 									<listOptionValue builtIn="false" value="/home/user/Software/lapack/lib"/>
 									<listOptionValue builtIn="false" value="/home/user/intel/lib"/>
 								</option>
 								<option id="intel.linkstep.perflibs.mkl.1696238540" name="Use Intel(R) Math Kernel Library (-mkl=[arg])" superClass="intel.linkstep.perflibs.mkl" value="perflibs.mkl.parallel" valueType="enumerated"/>
-								<option id="intel.linkstep.libname.1465768974" name="Additional Libraries (-l)" superClass="intel.linkstep.libname" valueType="libs">
-									<listOptionValue builtIn="false" value="boost_filesystem"/>
-									<listOptionValue builtIn="false" value="boost_system"/>
-								</option>
+								<option id="intel.linkstep.libname.1465768974" name="Additional Libraries (-l)" superClass="intel.linkstep.libname" valueType="libs"/>
 								<inputType id="intel.linkstep.input.1898927662" superClass="intel.linkstep.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -88,6 +83,12 @@
 								<option id="intel.compilestep.preprocessor.defsym.872546277" name="Preprocessor Definitions (-D)" superClass="intel.compilestep.preprocessor.defsym" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="OMPI_SKIP_MPICXX"/>
 									<listOptionValue builtIn="false" value="OS_LINUX"/>
+								</option>
+								<option id="intel.compilestep.preprocessor.includedirectories.397271737" name="Additional Include Directories (-I)" superClass="intel.compilestep.preprocessor.includedirectories" valueType="includePath">
+									<listOptionValue builtIn="false" value="/home/user/git/OP2A/OP2A"/>
+									<listOptionValue builtIn="false" value="/home/user/intel/include"/>
+									<listOptionValue builtIn="false" value="/home/user/intel/mkl/include"/>
+									<listOptionValue builtIn="false" value="/home/user/Software/lapack/include/lapackpp"/>
 								</option>
 								<inputType id="intel.cpp.compilestep.input.1205642320" superClass="intel.cpp.compilestep.input"/>
 							</tool>

@@ -39,6 +39,8 @@ using namespace OP2A::Config;
 
 int main(int argc, char** argv)
 {
+
+
 	CPUTime time_running;
 	time_running.initStartTime();
 
