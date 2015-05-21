@@ -26,7 +26,7 @@
 #ifdef Setup_EXPORT
 #	define Setup_API	OP_EXPORT_API
 #else
-#	define Setup_API		OP_IMPORT_API
+#	define Setup_API	OP_IMPORT_API
 #endif
 
 
