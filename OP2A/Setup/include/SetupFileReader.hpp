@@ -23,6 +23,12 @@ namespace OP2A{
 namespace Setup{
 
 
+/*
+ * Class for setup file reading
+ * @author	Minkwan Kim
+ * @version	1.0	20/05/2015
+ */
+
 class Setup_API SetupFileReader
 {
 public:

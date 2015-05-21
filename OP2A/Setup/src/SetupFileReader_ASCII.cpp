@@ -14,12 +14,15 @@
 
 #include <fstream>
 
+#include "Common/include/CodeLocation.hpp"
 #include "Common/include/StringOps.hpp"
 #include "Common/include/Exception_FileSystem.hpp"
 
 #include "Setup/include/SetupArgs.hpp"
 #include "Setup/include/SetupFileReader.hpp"
 #include "Setup/include/SetupFileReader_ASCII.hpp"
+#include "Setup/include/Exception_BadMatch.hpp"
+
 
 
 using namespace  std;
@@ -30,10 +33,10 @@ namespace Setup
 
 const std::string	SetupFileReader_ASCII::SEPARATOR   = "=";
 const OPchar		SetupFileReader_ASCII::CONTINUATOR = '\\';
-const std::string	SetupFileReader_ASCII::COMMENTOR   = "%";
-const std::string	SetupFileReader_ASCII::METACOMMENTOR   = "%%%";
-const std::string	SetupFileReader_ASCII::BLOCKCOMMENTORBEGIN   = "/%";
-const std::string	SetupFileReader_ASCII::BLOCKCOMMENTOREND   = "%/";
+const std::string	SetupFileReader_ASCII::COMMENTOR   = "//";
+const std::string	SetupFileReader_ASCII::METACOMMENTOR   = "///";
+const std::string	SetupFileReader_ASCII::BLOCKCOMMENTORBEGIN   = "/*";
+const std::string	SetupFileReader_ASCII::BLOCKCOMMENTOREND   = "*/";
 
 
 SetupFileReader_ASCII::SetupFileReader_ASCII()
@@ -47,7 +50,7 @@ SetupFileReader_ASCII::~SetupFileReader_ASCII()
 
 
 
-
+// Get expanded file
 std::string SetupFileReader_ASCII::expandFileName(const std::string& fname) const
 {
 	string	exp	= fname;
@@ -74,11 +77,14 @@ void SetupFileReader_ASCII::parse (const std::string& filename_in, SetupArgs& ar
 {
 	if(!filename_in.empty())
 	{
-		std::string filename = expandFileName(filename_in);
-		std::ifstream iss(filename.c_str());
+		std::string filename = expandFileName(filename_in);	// Get filename
 
+		std::ifstream iss(filename.c_str());				// Open file
 		if(!iss) throw Common::ExceptionFileSystem (FromHere(),"Could not open file: " + filename);
 
+
+
+		// Initialize comment block indicator
 		bool commentedBlock = false;
 
 		while (iss)
@@ -128,6 +134,7 @@ void SetupFileReader_ASCII::parse (const std::string& filename_in, SetupArgs& ar
 				}
 			}
 
+
 			// 3. Check for start of a commented block
 			std::string::size_type blockbegincmtpos = line.find(BLOCKCOMMENTORBEGIN);
 
@@ -145,8 +152,9 @@ void SetupFileReader_ASCII::parse (const std::string& filename_in, SetupArgs& ar
 				line.erase(cmtpos);
 			}
 
-			// strip trailing whitespaces
-			Common::StringOps::trimRear(line);
+
+			// Parse the read line
+			Common::StringOps::trimRear(line);	// strip trailing whitespaces
 
 			if(!line.empty())
 			{
@@ -168,7 +176,8 @@ void SetupFileReader_ASCII::parse (const std::string& filename_in, SetupArgs& ar
 				if (eqpos != std::string::npos)
 				{
 					std::string preSeparator(line, eqpos-1, 1);
-					if(preSeparator =="+")
+
+					if(preSeparator == "+")
 					{
 						shift = 1;
 					}
@@ -179,7 +188,9 @@ void SetupFileReader_ASCII::parse (const std::string& filename_in, SetupArgs& ar
 					Common::StringOps::trim(label); // trim front and back around the label
 					Common::StringOps::trim(value); // they might have leading and tailing whitespace
 
-					if((preSeparator =="+") && (args[label] != ""))
+
+
+					if((preSeparator == "+") && (args[label] != ""))
 					{
 						args[label] = args[label] + " " + value;
 					}
@@ -187,7 +198,7 @@ void SetupFileReader_ASCII::parse (const std::string& filename_in, SetupArgs& ar
 					{
 						if(args[label] != "")
 						{
-							//throw Config::BadMatchException (FromHere(),"Overriding previously specified option for: " + label);
+							throw Setup::ExceptionBadMatch(FromHere(),"Overriding previously specified option for: " + label);
 						}
 						args[label] = value;
 					}

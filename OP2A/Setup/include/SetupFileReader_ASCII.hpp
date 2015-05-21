@@ -37,7 +37,7 @@ public:
 	/// Virtual destructor.
 	virtual ~SetupFileReader_ASCII();
 
-	/// Copys all of the name/value pairs into the supplied map of
+	/// Copy all of the name/value pairs into the supplied map of
 	virtual void parse (const std::string& filename,	SetupArgs& args);
 
 protected:

@@ -21,8 +21,10 @@
 #include "Common/include/Time_StopWatch.hpp"
 
 
-#include "Configure/include/Config.hpp"
-#include "Configure/include/ConfigArgs.hpp"
+#include "Setup/include/SetupAPI.hpp"
+#include "Setup/include/SetupArgs.hpp"
+#include "Setup/include/SetupFileReader.hpp"
+
 
 
 
@@ -32,7 +34,7 @@
 using namespace std;
 using namespace OP2A;
 using namespace OP2A::Common;
-using namespace OP2A::Config;
+using namespace OP2A::Setup;
 
 
 
@@ -44,6 +46,10 @@ int main(int argc, char** argv)
 	CPUTime time_running;
 	time_running.initStartTime();
 
+    // parse configuration options for environment
+    SetupFileReader setup_file_reader;
+    SetupArgs 		setup_args;
+    setup_file_reader.parse ("Problem_setup.prob", setup_args);
 
 
 
