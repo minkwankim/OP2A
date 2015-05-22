@@ -38,7 +38,7 @@ public:
 	}
 
 protected:
-	void		setName(const std::string& name)
+	void	setName(const std::string& name)
 	{
 		m_name	= name;
 	}

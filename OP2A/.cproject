@@ -15,7 +15,7 @@
 					<folderInfo id="intel.linux.x86_64.exe.rel.2005068014._14.0.0" name="/" resourcePath="">
 						<toolChain id="intel.toolchain.linux.x86_64.exe.rel.888108949_14.0.0" name="Intel Toolchain for Executable on Intel(R) 64" superClass="intel.toolchain.linux.x86_64.exe.rel_14.0.0">
 							<targetPlatform archList="x86_64" binaryParser="org.eclipse.cdt.core.ELF" id="intel.platform.linux.x86_64.exe.rel_14.0.0.952539873" name="Platform.Executable.Release" osList="linux" superClass="intel.platform.linux.x86_64.exe.rel_14.0.0"/>
-							<builder buildPath="${workspace_loc:/OP2A}/Release" id="intel.builder.linux.x86_64.exe.rel.1660858505_14.0.0" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Intel Builder" superClass="intel.builder.linux.x86_64.exe.rel_14.0.0"/>
+							<builder arguments="-j12" buildPath="${workspace_loc:/OP2A}/Release" command="make" id="intel.builder.linux.x86_64.exe.rel.1660858505_14.0.0" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Intel Builder" superClass="intel.builder.linux.x86_64.exe.rel_14.0.0"/>
 							<tool command="icpc" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" id="intel.cpp.compilestep.linux.x86_64.exe.rel.1279520942_14.0.0" name="Intel Intel(R) 64 C++ Compiler " superClass="intel.cpp.compilestep.linux.x86_64.exe.rel_14.0.0">
 								<option id="intel.compilestep.general.debug.cpp.x86_64.exe.rel.1828333480_14.0.0" name="Include Debug Information (-g)" superClass="intel.compilestep.general.debug.cpp.x86_64.exe.rel_14.0.0" value="true" valueType="boolean"/>
 								<option id="intel.compilestep.general.warninglevel.572898149" name="Warning Level" superClass="intel.compilestep.general.warninglevel" value="general.warninglevel.remarks" valueType="enumerated"/>
@@ -49,7 +49,7 @@
 									<listOptionValue builtIn="false" value="/home/user/intel/lib"/>
 								</option>
 								<option id="intel.linkstep.perflibs.mkl.1696238540" name="Use Intel(R) Math Kernel Library (-mkl=[arg])" superClass="intel.linkstep.perflibs.mkl" value="perflibs.mkl.parallel" valueType="enumerated"/>
-								<option id="intel.linkstep.libname.1465768974" name="Additional Libraries (-l)" superClass="intel.linkstep.libname" valueType="libs"/>
+								<option id="intel.linkstep.libname.1465768974" name="Additional Libraries (-l)" superClass="intel.linkstep.libname"/>
 								<inputType id="intel.linkstep.input.1898927662" superClass="intel.linkstep.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -58,7 +58,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="Common/src/SignalHandler.cpp|Common/src/SignalHandler_Linux.cpp|Common/src/ProcessInfo.cpp|Common/src/ProcessInfo_Linux.cpp|Common/src/OSystem.cpp|Configure" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Solvers|DSMC|Common/src/SignalHandler.cpp|Common/src/SignalHandler_Linux.cpp|Common/src/ProcessInfo.cpp|Common/src/ProcessInfo_Linux.cpp|Common/src/OSystem.cpp|Configure" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -105,7 +105,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="Common/src/SignalHandler.cpp|Common/src/SignalHandler_Linux.cpp|Common/src/ProcessInfo.cpp|Common/src/ProcessInfo_Linux.cpp|Common/src/OSystem.cpp|Configure" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Solvers|DSMC|Common/src/SignalHandler.cpp|Common/src/SignalHandler_Linux.cpp|Common/src/ProcessInfo.cpp|Common/src/ProcessInfo_Linux.cpp|Common/src/OSystem.cpp|Configure" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -119,5 +119,12 @@
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Release">
+			<resource resourceType="PROJECT" workspacePath="/OP2A"/>
+		</configuration>
+		<configuration configurationName="Debug">
+			<resource resourceType="PROJECT" workspacePath="/OP2A"/>
+		</configuration>
+	</storageModule>
 </cproject>
