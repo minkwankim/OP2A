@@ -25,7 +25,7 @@
 #include <vector>
 
 #include "OP2A_CHEM_constant.hpp"
-#include "../../SETUP/include/OP2A_setup_constants.hpp"
+#include "Problem/include/OP2A_setup_constants.hpp"
 
 using namespace std;
 

@@ -14,7 +14,7 @@
 #ifndef OPPA_WIG_PROBLEM_HPP_
 #define OPPA_WIG_PROBLEM_HPP_
 
-#include "../../SETUP/include/OP2A_setup_problem.hpp"
+#include "Problem/include/OP2A_setup_problem.hpp"
 #include "../../CHEM/include/OP2A_chemistry.hpp"
 
 

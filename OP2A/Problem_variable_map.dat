@@ -1,0 +1,25 @@
+/* OP2A PROBLEM VARIABLE MAP */
+
+/* [General Instructions]
+   - Comments method is same as common C/C++ comments
+   - Meta Comments begin with "///"
+*/
+
+// BASIC INFORMATION FOR PROBLEM SETUP
+basic.title	= TITLE OF PROBLEM
+basic.module	= LOAD MODULE
+
+// GRID INFORMATION FOR PROBLEM SETUP
+grid.file_name	= MESH FILE NAME
+grid.file_type	= MESH FILE TYPE
+grid.gactor	= GRID FACTOR
+grid.cart_grid	= USE CARTESIAN GRID
+
+// OUTPUT FILE INFORMATION FOR PROBLEM SETUP
+output.file_name = OUTPUT FILE NAME
+output.file_type = OUTPUT FILE TYPE
+output.multi_file = MULTI FILE OPTION
+output.intvl_restart = INTERVAL FOR WRITING RESTART DATA
+output.intvl_result = INTERVAL FOR WRITING RESULT DATA
+
+
