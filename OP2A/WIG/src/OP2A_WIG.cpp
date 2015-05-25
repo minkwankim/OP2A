@@ -17,111 +17,33 @@
  * 		Include Header files
  * ===============================
  */
-#include "../../UTIL/include/OP2A_utilities.hpp"
-#include "../../SETUP/include/OP2A_setup_problem.hpp"
-#include "../../MATRIX/include/OPPA_Matrix.hpp"
-#include "../../DATA/include/OP2A_DATA_CFD_solution.hpp"
-#include "../../DATA/include/OP2A_DATA_print.hpp"
-#include "../../GRID/include/OP2A_grid.hpp"
-#include "../../CFD_new/include/OP2A_CFD.hpp"
+#include <iostream>
+#include <fstream>
+#include <time.h>
+#include <omp.h>
+
+#include "../include/OP2A_Application.hpp"
 
 
-#include "../include/OP2A_WIG_Problem.hpp"
-
-/*
-#include "../../Grid/include/OPPA_grid.hpp"
-#include "../../Data_storage/include/OPPA_data.hpp"
-#include "../../chemistry/include/OPPA_chemistry.hpp"
-#include "../../CFD/include/OPPA_CFD_libraries.hpp"
-
-#include "../../utilities/include/general_fns.hpp"
-#include "../../utilities/include/version.hpp"
-#include "../include/problem.hpp"
-#include "../include/OPPA_Plasma.hpp"
-*/
-using namespace std;
-
-
-/*
- * =================================
- * 	Set Global variables
- * ================================
- */
-int		*WHEREIS_CELL;					// Location of cells (cellptr/taskid)
-int		NP					= 1;		// Total number of processor
-int		P					= 0;		// Current processor number
-int		NT					= 23;
-bool	FLAG_TERMINATION	= false;	// Flag for termination signal
 
 
 int main( int argc, char *argv[] )
 {
-	/*
-	 * ==============================================
-	 * STEP 1: Initialize Parallel Communication:
-	 * 		- Development Status : Done
-	 *		- Last modified on: July 23, 2014
-	 *						by: Minkwan Kim
-	 * =============================================
-	 * */
-	time_t	t = time(0);  					// get time now
-	struct	tm * now = localtime( & t );
+	ApplicationOP2A	application(OP2A_OPENMP, OP2A_CPU,  23, "OP2A_setup.prob");
 
-	double 	t0			= 0.0;
-	double 	tstart;								// Simulation time
-	double 	tstop;
-	double 	t_simulation	= 0.0;
-	double 	dt				= 0.0;
-
-	tstart	= dtime();
-#ifdef PARALLEL
-
-#ifdef SP2
-	mpc_environ(&numtask,&taskid);   /* Get number of parallel tasks */
-#endif
-
-#ifdef MPI
-	MPI_Init(&argc,&argv);					// INITIALIZE MPI
-	MPI_Comm_size(MPI_COMM_WORLD, &NP); 	// FINDOUT HOW MANY PROCESSORS IN THERE
-	MPI_Comm_rank(MPI_COMM_WORLD, &P);  	// FINDOUT WHICH PROCESSOR I AM
-	t0 = MPI_Wtime();
-#endif
-
-	if (NP > MAX_N_TASKS)	program_error_type1("Number of processors exceeds MAX_PROCESSOR. Need to adjust value of MAX_N_TASKS");
-#endif
-	kmp_set_defaults("KMP_AFFINITY = scatter");
+	application.preparation(argc, argv, "CFD");
 
 
+/*
 
 
-	/*
-	 * =================================================
-	 * STEP 2: Show Version information:
-	 *		- Development Status : Done
-	 *		- Last modified on: July 23, 2014
-	 *		-				by: Minkwan Kim
-	 * =================================================
-	 */
-	Ver_type ver;							// Version information class
-	ver.primary		= 1;
-	ver.secondary	= 0;
-	ver.type		= "CFD";
-	ver.year		= now->tm_year + 1900;
-	ver.month		= now->tm_mon + 1;
-	ver.date		= now->tm_mday;
-	if (P == 0)	ver.out_info();				// Show the version information
-
-
-
-
-	/*
 	 * =======================================================
 	 * STEP 3: Read Problem information
 	 * 		- Development Status: Version 1.0
 	 * 		- Last modified on: July 23, 2014
 	 * 						by: Minkwan Kim
 	 * =======================================================
-	 */
+
 	OP2A_PROBLEM problem;
 	problem.read("Problem_setup_v2.prob");
 	problem.NP	= NP;
@@ -130,14 +52,14 @@ int main( int argc, char *argv[] )
 
 
 
-	/*
+
 	 * =========================================================
 	 * STEP 4: Read Species/chemistry data (For NOEQ-CFD mode)
 	 * 		- Development Status: Version 1.2a (Need to improve)
 	 * 		- Last modified on: July 23, 2014
 	 * 						by: Minkwan Kim
 	 * =========================================================
-	 */
+
 	vector<SPECIES>	species_entire;
 	read_species_data_set(species_entire, problem.species_file, problem.NS);
 
@@ -173,14 +95,14 @@ int main( int argc, char *argv[] )
 
 
 
-	/*
+
 	 * ======================================================================
 	 * STEP 5: GRID GENERATION and/or READ (Unstructured Catersian grid)
 	 * 		- Development Status: Version 1.0a
 	 * 		- Last modified on: July 23, 2014
 	 * 						by: Minkwan Kim
 	 * ======================================================================
-	 */
+
 	GRID_CLASS 	grid;
 	preprocessing_grid_read_process_ver1(problem.mesh_file_name, problem.mesh_file_type, problem.is_axisymmetric, problem.grid_factor, grid);
 	line_finder(&grid, grid.grid_line.lines, grid.grid_line.lines_bd, grid.grid_line.cell_line_info, grid.grid_line.num_lines);
@@ -192,14 +114,14 @@ int main( int argc, char *argv[] )
 
 
 
-	/*
+
 	 * =========================================================
 	 * STEP 6: CFD Variable setup
 	 * 		- Development Status: Version 1.1a (Need to improve)
 	 * 		- Last modified on: July 23, 2014
 	 * 						by: Minkwan Kim
 	 * =========================================================
-	 */
+
 	vector<SOL_CFD>	Solution_data(problem.multi_fluid);
 	switch(problem.multi_fluid)
 	{
@@ -231,14 +153,14 @@ int main( int argc, char *argv[] )
 
 
 
-	/*
+
 	 * =========================================================
 	 * STEP 7: ICs
 	 * 		- Development Status: Version 1.1a (Need to improve)
 	 * 		- Last modified on: July 23, 2014
 	 * 						by: Minkwan Kim
 	 * =========================================================
-     */
+
 	vector< vector < vector < double > > > 	rho_IC(problem.multi_fluid);
 	vector< vector < vector < double > > > 	u_IC(problem.multi_fluid);
 	vector < vector < double > > 			T_IC(problem.multi_fluid);
@@ -259,14 +181,14 @@ int main( int argc, char *argv[] )
 
 
 
-	/*
+
 	 * =======================================================================
 	 * STEP 8: INITIALIZE FLOW CONDITION/DATA
 	 * 		- Development Status: Version 1.0
 	 * 		- Last modified on: Jan 22, 2015
 	 * 						by: Minkwan Kim
 	 * ======================================================================
-	*/
+
 #ifdef MPI
 	if (P == 0)	cout << endl << "  Initialize flow conditions [t = " << MPI_Wtime()-t0 << endl;
 #else
@@ -317,14 +239,14 @@ int main( int argc, char *argv[] )
 
 
 
-	/*
+
 	 * =====================================================================
 	 * STEP 9: Apply Boundary conditions
 	 * 		- Development Status: Version 1.0
 	 * 		- Last modified on: Jan 22, 2015
 	 * 						by: Minkwan Kim
 	 * ======================================================================
-	 */
+
 #ifdef MPI
 	if (P == 0)	cout << endl << "  Applying boundary conditions [t = " << MPI_Wtime()-t0 << endl;
 #else
@@ -341,7 +263,7 @@ int main( int argc, char *argv[] )
 	{
 		for (int f = 0; f <= problem.multi_fluid-1; f++)
 		{
-			/*
+
 			CFD_assign_BC_viscous(variable_setup[f], grid,
 											Cell_solution_Q[f], 		Cell_solution_V[f], 		Cell_solution_W[f], 			Cell_CFD_data[f], transport_data_c[f],
 											Cell_ghost_solution_Q[f], 	Cell_ghost_solution_V[f], 	Cell_ghost_solution_W[f], 		Cell_CFD_data[f], transport_data_gc[f],
@@ -349,7 +271,7 @@ int main( int argc, char *argv[] )
 											problem_fluid[f].adiabatic, problem_fluid[f].catalytic, problem_fluid[f].radiative, problem_fluid[f].Ys, problem_fluid[f].Tw,
 											problem_fluid[f].use_emissivity, problem_fluid[f].emissivity_Tref, problem_fluid[f].emissivity_below, problem_fluid[f].emissivity_above,
 											problem_fluid[f].NT);
-											*/
+
 		}
 	}
 
@@ -360,14 +282,14 @@ int main( int argc, char *argv[] )
 	#endif
 
 
-	/*
+
 	 * ===================================================================
 	 * STEP 10: Preparing Output data
 	 * 		- Development Status: Version 1.0
 	 * 		- Last modified on: Jan 22, 2015
 	 * 						by: Minkwan Kim
 	 *====================================================================
-	 */
+
 
 	// Step 8.1 Assign Variable names
 	string	density_pre		= "Density, <greek>r</greek><sub>";
@@ -418,14 +340,14 @@ int main( int argc, char *argv[] )
 	#endif
 
 
-	/*
+
 	 * =======================================================
 	 * Physical Solving Loop (CFD)
 	 * 		- Development Status: Version 1.0
 	 * 		- Last modified on: Dec/15/2014
 	 * 						by: Minkwan Kim
 	 * =======================================================
-	 */
+
 	// [PRESETP]: Setting variables
 	int 						n_RHS;
 	double 						RHS_max, 		RHS2;
@@ -462,7 +384,7 @@ int main( int argc, char *argv[] )
 
 	while (problem.n_current < problem.n_total && FLAG_TERMINATION != true)
 	{
-		/*
+
 		 * ========================================================
 		 * 1. Calculate time step
 		 * 												- ver 1.0
@@ -474,7 +396,7 @@ int main( int argc, char *argv[] )
 		 * 									- by Minkwan Kim
 		 * 									- on 27/Jan/2015
 		 * ========================================================
-		 */
+
 #pragma omp parallel for num_threads(problem.NT)
 		for (int i = 0; i <= grid.NCM-1; i++)
 		{
@@ -504,7 +426,7 @@ int main( int argc, char *argv[] )
 		t_simulation	+= dt;
 
 
-		/*
+
 		 * ========================================================
 		 * 2. Calculate Required variables (premitive and other variables)
 		 * 												- ver 1.0
@@ -516,12 +438,12 @@ int main( int argc, char *argv[] )
 		 * 									- by Minkwan Kim
 		 * 									- on 13/Feb/2015
 		 * ========================================================
-		 */
+
 		for (int f = 0; f <= problem.multi_fluid-1; f++)
 			CFD_Calculate_all_required_variables_inviscid(Solution_data[f], grid.NCM, species[f], NT, 0);
 
 
-		/*
+
 		 * ========================================================
 		 * 3. Calculate Inviscid Part
 		 * 												- ver 1.0
@@ -533,7 +455,7 @@ int main( int argc, char *argv[] )
 		 * 									- by Minkwan Kim
 		 * 									- on 27/Jan/2015
 		 * ========================================================
-		 */
+
 		// 3.1. Apply Boundary Conditions
 		for (int f = 0; f <= problem.multi_fluid-1; f++)
 			CFD_assign_BC_inviscid_complete(Solution_data[f], grid, Q_IC[f], V_IC[f], species[f], NT);
@@ -556,7 +478,7 @@ int main( int argc, char *argv[] )
 
 
 
-		/*
+
 		 * ========================================================
 		 * 5. Calculate Non-equilibrium Part
 		 * 												- ver 1.0
@@ -568,7 +490,7 @@ int main( int argc, char *argv[] )
 		 * 									- by Minkwan Kim
 		 * 									- on 27/Jan/2015
 		 * ========================================================
-		 */
+
 		// Chemical rections
 		bool flag_source_term = false;
 		if (problem.NONEQ_Chem == true)
@@ -603,7 +525,7 @@ int main( int argc, char *argv[] )
 
 
 
-		/*
+
 		 * ========================================================
 		 * 6. Residue Norm calculation
 		 * 												- ver 1.0
@@ -615,7 +537,7 @@ int main( int argc, char *argv[] )
 		 * 									- by Minkwan Kim
 		 * 									- on 27/Jan/2015
 		 * ========================================================
-		 */
+
 		CFD_calc_residue_norms(Solution_data[0].setup.NS, Solution_data[0].setup.ND, Solution_data[0].setup.NE, grid, Solution_data[0].Rn, RHS_max, n_RHS, RHS2, NT);
 
 		for (int f = 1; f <= problem.multi_fluid-1; f++)
@@ -646,7 +568,7 @@ int main( int argc, char *argv[] )
 
 
 
-		/*
+
 		 * ========================================================
 		 * 7. Calculate Jacobian of Source terms
 		 * 												- ver 1.0
@@ -658,7 +580,7 @@ int main( int argc, char *argv[] )
 		 * 									- by Minkwan Kim
 		 * 									- on 27/Jan/2015
 		 * ========================================================
-		 */
+
 
 		if (problem.TIME_INTEGRATION_METHOD != 0)
 		{
@@ -683,7 +605,7 @@ int main( int argc, char *argv[] )
 
 
 
-		/*
+
 		 * ========================================================
 		 * 7. Time integral and Update
 		 * 												- ver 1.0
@@ -695,7 +617,7 @@ int main( int argc, char *argv[] )
 		 * 									- by Minkwan Kim
 		 * 									- on 27/Jan/2015
 		 * ========================================================
-		 */
+
 
 		for (int f = 0; f <= problem.multi_fluid-1; f++)
 		{
@@ -711,7 +633,7 @@ int main( int argc, char *argv[] )
 
 
 
-		/*
+
 		 * ========================================================
 		 * 8. Print Result
 		 * 												- ver 1.0
@@ -723,7 +645,7 @@ int main( int argc, char *argv[] )
 		 * 									- by Minkwan Kim
 		 * 									- on 27/Jan/2015
 		 * ========================================================
-		 */
+
 		problem.n_current++;
 #pragma omp parallel for num_threads(problem.multi_fluid)
 		for (int f = 0; f <= problem.multi_fluid-1; f++)	problem_fluid[f].n_current	= problem.n_current;
@@ -760,7 +682,7 @@ int main( int argc, char *argv[] )
 
 
 
-/*
+
 
 
 
@@ -901,10 +823,10 @@ int main( int argc, char *argv[] )
 
 	delete[]	flux_viscous_face;
 	delete[]	transport_data_c;
-	delete[]	transport_data_gc;*/
+	delete[]	transport_data_gc;
 
 	DELETE_vector_2D_ptr(rho_s_ALL, grid.NCM, reactions.NS);
-	DELETE_vector_3D_ptr(Ts_ALL, grid.NCM, reactions.NS, 4);
+	DELETE_vector_3D_ptr(Ts_ALL, grid.NCM, reactions.NS, 4);*/
 	cout << "HAHAHHA END" << endl;
 	return(0);
 }
