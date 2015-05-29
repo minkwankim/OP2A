@@ -18,9 +18,13 @@
 #include "Common/include/Array2D.hpp"
 
 #include "Common/include/Common.hpp"
+#include "Common/include/Time_StopWatch.hpp"
 
-#include "Configure/include/Config.hpp"
-#include "Configure/include/ConfigArgs.hpp"
+
+#include "Setup/include/SetupAPI.hpp"
+#include "Setup/include/SetupArgs.hpp"
+#include "Setup/include/SetupFileReader.hpp"
+
 
 
 
@@ -30,18 +34,22 @@
 using namespace std;
 using namespace OP2A;
 using namespace OP2A::Common;
-using namespace OP2A::Config;
+using namespace OP2A::Setup;
 
 
 
 
 int main(int argc, char** argv)
 {
-	Array2D<double> test1;
-	test1.SetElementSize(10);
-	test1.Resize(5);
 
-	double test2 = test1.Get(0, 120);
+
+	CPUTime time_running;
+	time_running.initStartTime();
+
+    // parse configuration options for environment
+    SetupFileReader setup_file_reader;
+    SetupArgs 		setup_args;
+    setup_file_reader.parse ("Problem_setup.prob", setup_args);
 
 
 
@@ -68,7 +76,7 @@ int main(int argc, char** argv)
 #ifdef PARALLEL
 
 #ifdef SP2
-	mpc_environ(&numtask,&taskid);   /* Get number of parallel tasks */
+	mpc_environ(&numtask, &taskid);   /* Get number of parallel tasks */
 #endif
 
 #ifdef MPI
@@ -85,6 +93,11 @@ int main(int argc, char** argv)
 
 
 	//cout << temp2 <<endl;
+	time_running.takeStopTime();
+	double t0 = time_running.getDeltaT();
+
+
+
 	cout << "HAHAHHA END" << endl;
 	return (0);
 }

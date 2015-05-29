@@ -23,6 +23,11 @@ namespace OP2A{
 
 namespace Common{
 
+/* Exception Manager class
+ *
+ * @author	Minkwan Kim
+ * @version 1.0 20/05/2015
+ */
 class Common_API ExceptionManager : public Common::NonCopyable<ExceptionManager>
 {
 public:
@@ -36,18 +41,27 @@ public:
 };
 
 
+
+/* Exception class
+ *
+ * @author	Minkwan Kim
+ * @version 1.0 20/05/2015
+ */
 class Common_API Exception : public std::exception
 {
 public:
-	  virtual ~Exception () throw ();
+	virtual ~Exception () throw ();
 
-	  std::string full_description ()	const throw ();
-	  const std::string& str () 		const throw ();
+	void append (const std::string& add) throw ();		// Append additional description into m_what
+	const std::string& str () const throw ();				// Get contents of description (m_what)
+	const char* what () const throw (); 					// Get contents of description (m_what) [char]
 
-	  const char* what () const throw ();
-	  void append (const std::string& add) throw ();
+	std::string full_description ()	const throw ();	// Show full description of exception
 
-	  virtual std::string getClassName () throw () { return m_class_name; }
+	virtual std::string getClassName () throw ()
+	{
+		return m_class_name;
+	}
 
 protected:
 	Code_location	m_where;

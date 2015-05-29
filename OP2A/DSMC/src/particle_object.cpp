@@ -1,0 +1,48 @@
+/*
+ * Open-source multi-Physics Phenomena Analyzer (OPPA) ver. 0.0
+ *
+ * 		Copyright (c) 2014 MINKWAN KIM
+ *
+ * 	Initial Developed Date: Dec 12, 2014
+ *      			Author: Minkwan Kim
+ *
+ * particle_object.cpp
+ * 			-  
+ *  
+ */
+
+#include <stddef.h>
+#include "../include/particle_object.hpp"
+
+
+particle_object::particle_object()
+{
+	next = NULL;
+}
+
+particle_object::~particle_object()
+{
+
+}
+
+
+
+/////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
+/*
+ * Internal-functions
+ */
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
+/*
+ * External-functions
+ */
