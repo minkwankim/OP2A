@@ -22,9 +22,19 @@
 #include <omp.h>
 
 #include "../include/OP2A_Application.hpp"
+#include "../include/OP2A_Problem.hpp"
 
-#include"Setup/include/SetupFileReader.hpp"
+#include "Common/include/Map1D.hpp"
+#include "Common/include/Map2D.hpp"
+#include "Common/include/Vector2D.hpp"
+
+#include "DATA/include/DataStorage.hpp"
+
+#include "Setup/include/SetupFileReader.hpp"
+#include "GRID/include/CellGeometry.hpp"
+
 using namespace OP2A::Setup;
+using namespace OP2A;
 
 
 int main(int argc, char *argv[]) {
@@ -32,33 +42,42 @@ int main(int argc, char *argv[]) {
 
 	application.preparation(argc, argv, "CFD");
 
-	// parse configuration options for environment
-	SetupFileReader setup_file_reader;
-	SetupArgs setup_args;
-	setup_file_reader.parse("Problem_variable_map.dat", setup_args);
-	int a = setup_args.size();
-	string temp	= setup_args["grid.file_name"];
-
-	int aaa =1 ;
 
 	/*
-
-
 	 * =======================================================
 	 * STEP 3: Read Problem information
 	 * 		- Development Status: Version 1.0
 	 * 		- Last modified on: July 23, 2014
 	 * 						by: Minkwan Kim
+	 * @todo need to update using Object Oriented programming method
 	 * =======================================================
-
-	 OP2A_PROBLEM problem;
-	 problem.read("Problem_setup_v2.prob");
-	 problem.NP	= NP;
-	 problem.P	= P;
-	 problem.NT	= NT;
+	 */
+	 application.problem_setup.read("Problem_setup_v2.prob");
 
 
 
+
+	 /*
+	  * TEST
+	  */
+	 Map1D <string, int> temp_map(10);
+	 temp_map.insert("rho1", 1);
+	 temp_map.insert("rho2", 2);
+	 temp_map.insert("rho3", 3);
+
+	 Data::DataStorage	data_temp("test", 5, temp_map);
+
+	 int temp;
+	 temp =1;
+
+
+
+
+
+
+
+
+/*
 
 	 * =========================================================
 	 * STEP 4: Read Species/chemistry data (For NOEQ-CFD mode)

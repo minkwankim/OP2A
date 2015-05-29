@@ -24,6 +24,7 @@
 #include "Common/include/OP2A_time.hpp"
 #include "Common/include/Version.hpp"
 
+#include "../include/OP2A_Problem.hpp"
 
 using namespace std;
 using namespace OP2A;
@@ -74,6 +75,9 @@ public:
 	const string		setup_filename;
 
 	CPUTime time_running;						// Simulation time
+
+	OP2A_PROBLEM problem_setup;
+
 
 	/*
 	 * Constructor

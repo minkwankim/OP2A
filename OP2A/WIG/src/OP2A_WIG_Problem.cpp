@@ -12,7 +12,7 @@
  */
 
 
-#include "../include/OP2A_WIG_Problem.hpp"
+#include "../include/OP2A_Problem.hpp"
 
 
 PROBLEM_SPECIES::PROBLEM_SPECIES()
