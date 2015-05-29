@@ -15,7 +15,7 @@
 #define OPPA_CHEMISTRY_HPP_
 
 
-#include "../../SETUP/include/OP2A_setup_constants.hpp"
+#include "Problem/include/OP2A_setup_constants.hpp"
 #include "../../PHYSICS/include/physical_constants.hpp"
 #include "OP2A_CHEM_constant.hpp"
 #include "species.hpp"
