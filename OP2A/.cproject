@@ -58,7 +58,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="Solvers|DSMC|Common/src/SignalHandler.cpp|Common/src/SignalHandler_Linux.cpp|Common/src/ProcessInfo.cpp|Common/src/ProcessInfo_Linux.cpp|Common/src/OSystem.cpp|Configure" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Problem|Solvers|DSMC|Common/src/SignalHandler.cpp|Common/src/SignalHandler_Linux.cpp|Common/src/ProcessInfo.cpp|Common/src/ProcessInfo_Linux.cpp|Common/src/OSystem.cpp|Configure" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -105,7 +105,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="Solvers|DSMC|Common/src/SignalHandler.cpp|Common/src/SignalHandler_Linux.cpp|Common/src/ProcessInfo.cpp|Common/src/ProcessInfo_Linux.cpp|Common/src/OSystem.cpp|Configure" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Problem|Solvers|DSMC|Common/src/SignalHandler.cpp|Common/src/SignalHandler_Linux.cpp|Common/src/ProcessInfo.cpp|Common/src/ProcessInfo_Linux.cpp|Common/src/OSystem.cpp|Configure" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
