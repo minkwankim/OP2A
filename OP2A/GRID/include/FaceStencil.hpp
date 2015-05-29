@@ -23,8 +23,7 @@ using namespace std;
 namespace OP2A{
 namespace GRID{
 
-class CELL;
-class NODE;
+class Cell;
 
 enum StencilLabel
 {
@@ -52,13 +51,19 @@ enum StencilLabel
 class FaceStencil
 {
 public:
-	vector<CELL*>	cl;
-	vector<CELL*>	cr;
+	vector<Cell*>	cl;
+	vector<Cell*>	cr;
+
+	FaceStencil();
+	explicit FaceStencil(bool extendedStencil);
+
+	void apply_extended_sencil();
+	bool is_extended();
 
 	~FaceStencil();
 
-	protected:
-		explicit FaceStencil(bool extendedStencil);
+private:
+	bool extended;
 };
 
 

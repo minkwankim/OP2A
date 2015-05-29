@@ -24,14 +24,18 @@
 #include "../include/OP2A_Application.hpp"
 #include "../include/OP2A_Problem.hpp"
 
+#include "Setup/include/SetupFileReader.hpp"
+#include "GRID/include/Grid.hpp"
+
 #include "Common/include/Map1D.hpp"
 #include "Common/include/Map2D.hpp"
+#include "Common/include/Vector1D.hpp"
 #include "Common/include/Vector2D.hpp"
 
 #include "DATA/include/DataStorage.hpp"
+#include "DATA/include/DataStorageVector.hpp"
 
-#include "Setup/include/SetupFileReader.hpp"
-#include "GRID/include/CellGeometry.hpp"
+
 
 using namespace OP2A::Setup;
 using namespace OP2A;
@@ -65,14 +69,22 @@ int main(int argc, char *argv[]) {
 	 temp_map.insert("rho2", 2);
 	 temp_map.insert("rho3", 3);
 	 temp_map.insert("rho4", 4);
+	 Data::DataStorage	data_temp1("V", 4, temp_map);
+	 Data::DataStorage	data_temp2("Q", 4, temp_map);
+
+	 Data::DataStorageVector	data_temp(2);
+	 data_temp.data[0]	= data_temp1;
+	 data_temp.data[1]	= data_temp2;
+
+
+	 GRID::CellGeometry1	cell_geo_sample(2, GRID::CellType::quadrilateral);
+	 GRID::Cell				cell_sample(cell_geo_sample, data_temp);
+	 vector<GRID::Cell>		cell(10, cell_sample);
 
 
 
-	 Data::DataStorage	data_temp("test", 5, temp_map);
-
-	 int temp;
-	 temp =1;
-
+	 int a_test;
+	 a_test = 1;
 
 
 

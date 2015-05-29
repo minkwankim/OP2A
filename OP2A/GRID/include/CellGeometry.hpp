@@ -27,30 +27,41 @@ namespace GRID{
 class	CellGeometry1 :public CellGeoBasic
 {
 public:
+
+	CellGeometry1()
+	{
+
+	};
+
 	explicit CellGeometry1(const int ND, const CellType c_type) : CellGeoBasic(ND, c_type)
 	{
 
-	}
+	};
 
 	~CellGeometry1()
 	{
 
-	}
+	};
 };
 
 
 class	CellGeometry2 :public CellGeoBasic, public CellGeoCart
 {
 public:
+	CellGeometry2()
+	{
+
+	};
+
 	explicit CellGeometry2(const int ND, const CellType c_type) : CellGeoBasic(ND, c_type)
 	{
 
-	}
+	};
 
 	~CellGeometry2()
 	{
 
-	}
+	};
 };
 
 

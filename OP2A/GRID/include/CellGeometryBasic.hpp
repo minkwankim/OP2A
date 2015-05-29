@@ -23,8 +23,8 @@ using namespace std;
 namespace OP2A{
 namespace GRID{
 
-class FACE;
-class NODE;
+class Face;
+class Node;
 
 enum CellType
 {
@@ -51,10 +51,10 @@ public:
 	CellType	type;
 
 	int NN;
-	vector<NODE *> node_list;
+	vector<Node *> node_list;
 
 	int	NF;
-	vector<FACE *> face_list;
+	vector<Face *> face_list;
 
 	double S;
 	vector<double> x;
@@ -63,10 +63,18 @@ public:
 	double 	dist_wall;						// distance to wall
 
 
+	CellGeoBasic();
+	explicit CellGeoBasic(const int ND, const CellType c_type);
+
 	virtual ~CellGeoBasic() {	}
 
-protected:
-	explicit CellGeoBasic(const int ND, const CellType c_type);
+public:
+	void allocate(const int ND, const CellType c_type);
+	bool is_allocated();
+
+
+private:
+	bool allocated;
 
 };
 

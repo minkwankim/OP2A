@@ -14,9 +14,9 @@
 #define GRID_HPP_
 
 
-#include "NodeGeometry.hpp"
-#include "FaceGeometry.hpp"
-#include "CellGeometry.hpp"
+#include "Node.hpp"
+#include "Face.hpp"
+#include "Cell.hpp"
 
 #include "Common/include/Map1D.hpp"
 #include "Common/include/Map2D.hpp"
@@ -38,6 +38,32 @@ public:
 public:
   <#member functions#>
 };
+
+class Grid
+{
+public:
+	unsigned int NNM;
+	unsigned int NFM;
+	unsigned int NCM;
+	unsigned int NGM;
+
+	vector<Node>	nodes;
+	vector<Face>	faces;
+	vector<Cell>	cells;
+	vector<Cell>	cells_ghost;
+
+public:	// Constructor and desctructor
+	Grid();
+	~Grid();
+
+
+public:	// Functions
+
+
+};
+
+
+
 
 
 

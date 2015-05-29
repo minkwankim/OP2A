@@ -20,13 +20,17 @@
 namespace OP2A{
 namespace Data{
 
+DataStorage::DataStorage():numData(1), dataMap(1)
+{
+
+}
 
 DataStorage::DataStorage(string data_name, const unsigned data_size):name(data_name), numData(data_size), data(data_size, 0.0), dataMap(data_size)
 {
 
 }
 
-DataStorage::DataStorage(string data_name, const unsigned data_size, Common::Map1D<string, int>	data_map):name(data_name), numData(data_size), data(data_size, 0.0), dataMap(data_map)
+DataStorage::DataStorage(string data_name, const unsigned data_size, Common::Map1D<string, int>	&data_map):name(data_name), numData(data_size), data(data_size, 0.0), dataMap(data_map)
 {
 	if (numData != dataMap.size())
 	{
@@ -34,11 +38,50 @@ DataStorage::DataStorage(string data_name, const unsigned data_size, Common::Map
 	}
 }
 
+/*
+DataStorage::DataStorage(DataStorage &data_template): name(data_template.name), numData(data_template.numData), data(data_template.numData, 0.0), dataMap(data_template.dataMap)
+{
+
+}
+*/
 
 DataStorage::~DataStorage()
 {
 
 }
+
+
+
+
+
+void DataStorage::resize(const unsigned int numdata)
+{
+	numData	= numdata;
+	data.resize(numData);
+	dataMap.reserve(numData);
+}
+
+
+void DataStorage::resize(const unsigned int numdata, Common::Map1D<string, int>	&data_map)
+{
+	numData	= numdata;
+	data.resize(numData);
+	dataMap = data_map;
+
+	if (numData != dataMap.size())
+	{
+		throw ExceptionDataStorageSize(FromHere(), "DataStroage size does not match with mapping data");
+	}
+}
+
+
+
+void DataStorage::asgName(const string name_data)
+{
+	name	= name_data;
+}
+
+
 
 
 

@@ -26,12 +26,32 @@ CellGeoCart::CellGeoCart()
 	grid_level	= 0;
 	need_to_refine	= false;
 	has_children	= false;
+
+	numChildren	= 0;
 }
 
 CellGeoCart::~CellGeoCart()
 {
 
 }
+
+
+
+
+void CellGeoCart::resize(unsigned int new_numChildren)
+{
+	numChildren	= new_numChildren;
+	children_list.resize(numChildren);
+}
+
+
+void CellGeoCart::clear()
+{
+	numChildren	= 0;
+	children_list.clear();
+}
+
+
 
 
 

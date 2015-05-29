@@ -36,9 +36,16 @@ public:
 
 	Common::Map1D<string, int>	dataMap;
 
+	DataStorage();
 	explicit DataStorage(string data_name, const unsigned data_size);
-	explicit DataStorage(string data_name, const unsigned data_size, Common::Map1D<string, int>	data_map);
+	explicit DataStorage(string data_name, const unsigned data_size, Common::Map1D<string, int>& data_map);
+	//explicit DataStorage(DataStorage &data_template);
 
+
+	void resize(const unsigned int numdata);
+	void resize(const unsigned int numdata, Common::Map1D<string, int>&	data_map);
+
+	void asgName(const string name_data);
 
 	~DataStorage();
 };

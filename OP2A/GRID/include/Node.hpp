@@ -19,7 +19,7 @@
 using namespace std;
 
 #include "NodeGeometry.hpp"
-#include "NodeGeometry.hpp"
+#include "DATA/include/DataStorage.hpp"
 
 namespace OP2A{
 namespace GRID{
@@ -32,14 +32,21 @@ namespace GRID{
  * @version 1.0 27/5/2015
  */
 
-class NODE
+class Node
 {
 public:
-	NodeGeometry	geo;
-	//NodeData		data;
+	NodeGeometry			geo;
+	Data::DataStorage		data;
 
 
+	Node();
+	explicit	Node(const int ND, const unsigned int nsc, Data::DataStorage	&data_node);
+	explicit	Node(Node& node_sample);
 
+
+	~Node();
+
+	void assign(const unsigned int ND, const unsigned int nsc, Data::DataStorage &data_node);
 };
 
 

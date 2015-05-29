@@ -22,14 +22,13 @@ using namespace std;
 namespace OP2A{
 namespace GRID{
 
-class FACE;
-class NODE;
+class Node;
 
 enum FaceType
 {
-	line			= 2,
-	triangle		= 3,
-	quadrilateral 	= 4
+	f_line				= 2,
+	f_triangle			= 3,
+	f_quadrilateral 	= 4
 };
 
 enum BCType
@@ -59,7 +58,7 @@ public:
 	FaceType	type;
 
 	int NN;
-	vector<NODE *> node_list;
+	vector<Node *> node_list;
 
 
 	double S;
@@ -70,10 +69,16 @@ public:
 	double	dist_wall;
 	double	n_dot_wall;
 
+	FaceGeoBasic();
+	explicit FaceGeoBasic(const int ND, const FaceType f_type);
+
 	~FaceGeoBasic();
 
-protected:
-	explicit FaceGeoBasic(const int ND, const FaceType f_type);
+	void allocate(const int ND, const FaceType f_type);
+	bool allocation();
+
+private:
+	bool is_allocated;
 };
 
 }

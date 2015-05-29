@@ -25,13 +25,27 @@ class NodeGeoBasic
 {
 public:
 	vector<double> x;
-	virtual ~NodeGeoBasic();
+
+	NodeGeoBasic():x(2, 0.0)
+	{
+
+	}
+
+	~NodeGeoBasic(){	};
+
 
 protected:
 	explicit NodeGeoBasic(const int ND): x(ND, 0.0)
 	{
 
 	}
+
+	void reassignBasic(const int ND)
+	{
+		x.resize(ND);
+		for (int i = 0; i <= ND-1; i++)	x[i] = 0.0;
+	}
+
 };
 
 

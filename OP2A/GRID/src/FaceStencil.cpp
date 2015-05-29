@@ -19,7 +19,12 @@ namespace OP2A{
 namespace GRID{
 
 
-FaceStencil::FaceStencil(bool extendedStencil)
+FaceStencil::FaceStencil():cl(2), cr(2), extended(false)
+{
+
+}
+
+FaceStencil::FaceStencil(bool extendedStencil):extended(extendedStencil)
 {
 	if (extendedStencil == true)
 	{
@@ -39,6 +44,22 @@ FaceStencil::~FaceStencil()
 
 }
 
+
+void FaceStencil::apply_extended_sencil()
+{
+	if (extended == false)
+	{
+		cl.resize(5);
+		cr.resize(5);
+		extended = true;
+	}
+}
+
+
+bool FaceStencil::is_extended()
+{
+	return (extended);
+}
 
 
 }

@@ -24,6 +24,11 @@ namespace GRID{
 class	FaceGeometry :public FaceGeoBasic, public FaceStencil
 {
 public:
+	FaceGeometry()
+	{
+
+	}
+
 	explicit FaceGeometry(const int ND, const FaceType f_type, bool extendedStencil) : FaceGeoBasic(ND, f_type), FaceStencil(extendedStencil)
 	{
 
@@ -33,6 +38,10 @@ public:
 	{
 
 	}
+
+public:	// Grid Processing functions
+
+
 };
 
 

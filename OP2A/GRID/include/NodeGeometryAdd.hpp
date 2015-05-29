@@ -22,14 +22,14 @@ using namespace std;
 namespace OP2A{
 namespace GRID{
 
-class CELL;
+class Cell;
 
 
 class NodeGeoAdd
 {
 public:
 	unsigned int	NSC;
-	vector<CELL *>	CellList;
+	vector<Cell *>	CellList;
 	vector<double> 	WeightShairedCell;
 
 	NodeGeoAdd()
@@ -37,12 +37,22 @@ public:
 		NSC = 0;
 	}
 
-	NodeGeoAdd(unsigned int const nsc) : NSC(nsc), CellList(vector<CELL*> [nsc]), WeightShairedCell(vector<double> [nsc, 0.0])
+	NodeGeoAdd(unsigned int const nsc) : NSC(nsc), CellList(nsc), WeightShairedCell(nsc, 0.0)
 	{
 
 	}
 
-	virtual ~NodeGeoAdd();
+
+	~NodeGeoAdd(){	};
+
+protected:
+	void reassignAdd(unsigned int const nsc)
+	{
+		NSC	= nsc;
+		CellList.resize(NSC);
+		WeightShairedCell.resize(NSC);
+	}
+
 };
 
 

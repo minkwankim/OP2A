@@ -24,13 +24,26 @@ namespace GRID{
 
 class NodeGeometry : public NodeGeoBasic , public NodeGeoAdd
 {
-	explicit NodeGeometry(const int ND) : NodeGeoBasic(ND)
+public:
+	NodeGeometry() : NodeGeoBasic()
 	{
 
 	}
 
+	explicit NodeGeometry(const int ND, unsigned int const nsc) : NodeGeoBasic(ND), NodeGeoAdd(nsc)
+	{
 
-	~NodeGeometry();
+	}
+
+	void assign(const int ND, unsigned int const nsc)
+	{
+		reassignBasic(ND);
+		reassignAdd(nsc);
+	}
+
+
+
+	~NodeGeometry()	{	}
 };
 
 

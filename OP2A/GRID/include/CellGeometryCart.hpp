@@ -23,7 +23,7 @@ using namespace std;
 namespace OP2A{
 namespace GRID{
 
-class CELL;
+class Cell;
 
 enum CellTypeCart
 {
@@ -41,10 +41,14 @@ public:
 	int grid_level;
 	bool need_to_refine;
 	bool has_children;
-	vector<CELL*>	children_list;
+	int	numChildren;
+	vector<Cell*>	children_list;
 
 	CellGeoCart();
 	~CellGeoCart();
+
+	void resize(const unsigned int new_numChildren);
+	void clear();
 };
 
 
