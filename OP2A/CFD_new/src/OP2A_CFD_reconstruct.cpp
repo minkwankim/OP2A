@@ -19,7 +19,7 @@
 
 #include "../include/OP2A_CFD_reconstruct.hpp"
 #include "../../UTIL/include/OP2A_utilities.hpp"
-#include "../../SETUP/include/OP2A_setup_problem.hpp"
+#include "Problem/include/OP2A_setup_problem.hpp"
 #include "../../MATRIX/include/OPPA_Matrix.hpp"
 
 using namespace std;

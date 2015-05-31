@@ -17,7 +17,6 @@
 
 
 namespace OP2A{
-namespace Common{
 
 
 #define OPNULL	0
@@ -46,7 +45,6 @@ void deletePtrAtrray(TYPE *&ptr)
 	op_assert(ptr == OPNULL);
 }
 
-}
 }
 
 

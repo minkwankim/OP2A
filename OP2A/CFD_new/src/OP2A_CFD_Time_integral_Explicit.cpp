@@ -18,7 +18,7 @@
 
 
 #include "../../UTIL/include/OP2A_utilities.hpp"
-#include "../../SETUP/include/OP2A_setup_problem.hpp"
+#include "Problem/include/OP2A_setup_problem.hpp"
 #include "../../MATRIX/include/OPPA_Matrix.hpp"
 #include "../../DATA/include/OP2A_DATA_CFD_solution.hpp"
 #include "../../GRID/include/OP2A_grid.hpp"
