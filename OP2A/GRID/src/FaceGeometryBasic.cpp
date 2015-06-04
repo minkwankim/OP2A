@@ -12,8 +12,9 @@
  */
 
 
-
+#include "../include/GridConstant.hpp"
 #include "../include/FaceGeometryBasic.hpp"
+
 #include "UTIL/include/OP2A_multi_dimension.hpp"
 
 namespace OP2A{

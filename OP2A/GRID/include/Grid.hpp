@@ -17,6 +17,7 @@
 #include "Node.hpp"
 #include "Face.hpp"
 #include "Cell.hpp"
+#include "GridConstant.hpp"
 
 #include "Common/include/Map1D.hpp"
 #include "Common/include/Map2D.hpp"
@@ -26,22 +27,10 @@
 namespace OP2A{
 namespace GRID{
 
-
-class GridInfO {
-public:
-    const unsigned int NCM;
-    const unsigned int NFM;
-    const unsigned int NCM;
-    const unsigned int NGM;
-    
-
-public:
-  <#member functions#>
-};
-
 class Grid
 {
 public:
+	unsigned int ND;
 	unsigned int NNM;
 	unsigned int NFM;
 	unsigned int NCM;
@@ -56,10 +45,12 @@ public:	// Constructor and desctructor
 	Grid();
 	~Grid();
 
+private:
+	vector<int>	bc_zone;
+	bool is_read_basic_info;
 
 public:	// Functions
-
-
+	void readMeahDataInfo(const string& mesh_file_name, GridDataType type);
 };
 
 

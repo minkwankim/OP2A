@@ -76,10 +76,10 @@ int main(int argc, char *argv[]) {
 	 data_temp.data[0]	= data_temp1;
 	 data_temp.data[1]	= data_temp2;
 
+	 GRID::Grid	grid_test;
+	 grid_test.readMeahDataInfo("Stardust.msh", GRID::GridDataType::FLUENT);
 
-	 GRID::CellGeometry1	cell_geo_sample(2, GRID::CellType::quadrilateral);
-	 GRID::Cell				cell_sample(cell_geo_sample, data_temp);
-	 vector<GRID::Cell>		cell(10, cell_sample);
+
 
 
 

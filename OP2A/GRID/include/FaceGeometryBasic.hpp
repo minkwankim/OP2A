@@ -31,19 +31,6 @@ enum FaceType
 	f_quadrilateral 	= 4
 };
 
-enum BCType
-{
-	interior		= 0,
-	wall			= 1,
-	inlet			= 2,
-	outlet			= 3,
-	freestream		= 4,
-	symmetric		= 5,
-	axis			= 6,
-	anode			= 7,
-	cathode			= 8,
-	dielectricwall	= 9
-};
 
 
 /*
