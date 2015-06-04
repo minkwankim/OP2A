@@ -51,7 +51,7 @@ void Grid::processingFaceData()
 	for (int f = 0; f <= NFM-1; f++)
 	{
 		// 1. Calculate Xc
-		for (int k = 0; k <= DIM-1; k++)
+		for (int k = 0; k <= ND-1; k++)
 		{
 			faces[f]->x[k]	= 0.0;
 
