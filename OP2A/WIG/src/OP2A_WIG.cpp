@@ -78,8 +78,8 @@ int main(int argc, char *argv[]) {
 
 
 	 GRID::Grid	grid_test;
-	 grid_test.readMeahDataInfo("Stardust.msh", GRID::GridDataType::FLUENT);
-	 grid_test.readMeahDataNode("Stardust.msh", GRID::GridDataType::FLUENT);
+	 grid_test.readMeahData("Stardust.msh", GRID::GridDataType::FLUENT);
+
 
 
 

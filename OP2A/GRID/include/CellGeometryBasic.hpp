@@ -28,7 +28,8 @@ class Node;
 
 enum CellType
 {
-	ghost			= 0,
+	ghost			= -1,
+	c_mixed			= 0,
 	triangle		= 1,
 	tetrahedron		= 2,
 	quadrilateral 	= 3,
@@ -49,6 +50,7 @@ class CellGeoBasic
 {
 public:
 	CellType	type;
+	unsigned int BC;
 
 	int NN;
 	vector<Node *> node_list;

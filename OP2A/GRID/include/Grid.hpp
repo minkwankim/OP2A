@@ -50,9 +50,16 @@ private:
 	bool is_read_basic_info;
 
 public:	// Functions
+	void readMeahData(const string& mesh_file_name, GridDataType type);
+	void processingNodeData(const double mesh_factor, bool is_axisymmetric);
+	void processingFaceData();
+
+
+private:
 	void readMeahDataInfo(const string& mesh_file_name, GridDataType type);
 	void readMeahDataNode(const string& mesh_file_name, GridDataType type);
-
+	void readMeahDataFace(const string& mesh_file_name, GridDataType type);
+	void readMeahDataCell(const string& mesh_file_name, GridDataType type);
 };
 
 

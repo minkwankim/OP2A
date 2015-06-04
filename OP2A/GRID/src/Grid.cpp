@@ -46,15 +46,17 @@ void Grid::readMeahDataInfo(const string& mesh_file_name, GridDataType type)
 	}
 
 	is_read_basic_info	= true;
+
+	nodes.resize(NNM+1);
+	faces.resize(NFM+1);
+	cells.resize(NCM+1);
+	cells_ghost.resize(NGM+1);
 }
 
 
 void Grid::readMeahDataNode(const string& mesh_file_name, GridDataType type)
 {
-
 	if (is_read_basic_info == false)	readMeahDataInfo(mesh_file_name, type);
-
-	nodes.resize(NNM);
 
 	switch (type)
 	{
@@ -62,9 +64,38 @@ void Grid::readMeahDataNode(const string& mesh_file_name, GridDataType type)
 		read_mesh_node_fluent(mesh_file_name, ND, NNM, nodes);
 	break;
 	}
-
-	is_read_basic_info	= true;
 }
+
+
+void Grid::readMeahDataFace(const string& mesh_file_name, GridDataType type)
+{
+	if (is_read_basic_info == false)	readMeahDataInfo(mesh_file_name, type);
+
+	switch (type)
+	{
+	case GridDataType::FLUENT:
+		read_mesh_face_fluent(mesh_file_name, ND, NFM, nodes, faces, cells, bc_zone);
+	break;
+	}
+}
+
+void Grid::readMeahDataCell(const string& mesh_file_name, GridDataType type)
+{
+	if (is_read_basic_info == false)	readMeahDataInfo(mesh_file_name, type);
+
+	switch (type)
+	{
+	case GridDataType::FLUENT:
+		read_mesh_cell_fluent(mesh_file_name, ND, NCM, cells, bc_zone);
+	break;
+	}
+}
+
+
+
+
+
+
 
 
 

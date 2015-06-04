@@ -39,7 +39,7 @@ void read_mesh_node_fluent(const string& mesh_file_name,		// Mesh file name
 	if(!mesh_file) throw Common::ExceptionFileSystem (FromHere(), "Could not open file: " + mesh_file_name);
 
 	// Step 2: Read Data
-	n = 0;
+	n = 1;
 	while (! mesh_file.eof())
 	{
 		// STEP 1: GET INDEX
@@ -75,8 +75,8 @@ void read_mesh_node_fluent(const string& mesh_file_name,		// Mesh file name
 						if (fabs(x) <= MATH_ZERO_MESH)	x = 0.0;
 						if (fabs(y) <= MATH_ZERO_MESH)	y = 0.0;
 
-						nodes[n].geo.x[0]	= x;
-						nodes[n].geo.x[1]	= y;
+						nodes[i].geo.x[0]	= x;
+						nodes[i].geo.x[1]	= y;
 						n++;
 					}
 					break;
@@ -94,9 +94,9 @@ void read_mesh_node_fluent(const string& mesh_file_name,		// Mesh file name
 						if (fabs(y) <= MATH_ZERO_MESH)	y = 0.0;
 						if (fabs(z) <= MATH_ZERO_MESH)	z = 0.0;
 
-						nodes[n].geo.x[0]	= x;
-						nodes[n].geo.x[1]	= y;
-						nodes[n].geo.x[2]	= z;
+						nodes[i].geo.x[0]	= x;
+						nodes[i].geo.x[1]	= y;
+						nodes[i].geo.x[2]	= z;
 						n++;
 					}
 					break;
@@ -106,7 +106,7 @@ void read_mesh_node_fluent(const string& mesh_file_name,		// Mesh file name
 	}
 
 	// Step 3: Check error
-	if (n != NNM)
+	if ((n-1) != NNM)
 	{
 		throw ExceptionGridDataMismatch (FromHere(), "PROBLEM IN NODE DATA. TOTAL NUMBER OF NODE DATA DOES NOT MATHCH WITH MESH INFOMATION DATA");
 	}

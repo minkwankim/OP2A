@@ -61,6 +61,31 @@ void read_mesh_node_fluent(const string& mesh_file_name,		// Mesh file name
 							unsigned int	NNM,				// Grid information
 							vector<Node>	&nodes);
 
+
+
+/*
+ * Read Face Data
+ */
+void read_mesh_face_fluent(const string& mesh_file_name,		// Mesh file name
+							unsigned int	DIM,
+							unsigned int	NFM,				// Grid information
+							vector<Node>	&nodes,
+							vector<Face>	&faces,
+							vector<Cell>	&cells,
+							vector<int>		&bc_zone);
+
+
+
+
+/*
+ * Read Cell Data
+ */
+void read_mesh_cell_fluent(const string& mesh_file_name,		// Mesh file name
+							unsigned int	DIM,
+							unsigned int	NCM,				// Grid information
+							vector<Cell>	&cells,
+							vector<int>		&bc_zone);
+
 }
 }
 

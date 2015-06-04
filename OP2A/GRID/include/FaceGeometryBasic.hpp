@@ -26,6 +26,7 @@ class Node;
 
 enum FaceType
 {
+	f_mixed				= 0,
 	f_line				= 2,
 	f_triangle			= 3,
 	f_quadrilateral 	= 4
