@@ -49,6 +49,23 @@ void Grid::readMeahDataInfo(const string& mesh_file_name, GridDataType type)
 }
 
 
+void Grid::readMeahDataNode(const string& mesh_file_name, GridDataType type)
+{
+
+	if (is_read_basic_info == false)	readMeahDataInfo(mesh_file_name, type);
+
+	nodes.resize(NNM);
+
+	switch (type)
+	{
+	case GridDataType::FLUENT:
+		read_mesh_node_fluent(mesh_file_name, ND, NNM, nodes);
+	break;
+	}
+
+	is_read_basic_info	= true;
+}
+
 
 
 }

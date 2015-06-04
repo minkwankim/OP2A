@@ -51,6 +51,8 @@ private:
 
 public:	// Functions
 	void readMeahDataInfo(const string& mesh_file_name, GridDataType type);
+	void readMeahDataNode(const string& mesh_file_name, GridDataType type);
+
 };
 
 

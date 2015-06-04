@@ -25,7 +25,12 @@ namespace GRID{
 class NodeGeometry : public NodeGeoBasic , public NodeGeoAdd
 {
 public:
-	NodeGeometry() : NodeGeoBasic()
+	NodeGeometry()
+	{
+
+	}
+
+	explicit NodeGeometry(const int ND) : NodeGeoBasic(ND)
 	{
 
 	}

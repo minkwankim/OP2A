@@ -41,8 +41,7 @@ public:
 
 	Node();
 	explicit	Node(const int ND, const unsigned int nsc, Data::DataStorage	&data_node);
-	explicit	Node(Node& node_sample);
-
+	//explicit	Node(Node& node_sample);
 
 	~Node();
 

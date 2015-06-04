@@ -32,10 +32,12 @@ Node::Node(const int ND, const unsigned int nsc, Data::DataStorage	&data_node):g
 
 }
 
+/*
 Node::Node(Node& node_sample):geo(node_sample.geo), data(node_sample.data)
 {
 
 }
+*/
 
 
 void Node::assign(const unsigned int ND, const unsigned int nsc, Data::DataStorage &data_node)

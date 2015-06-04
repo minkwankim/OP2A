@@ -25,6 +25,7 @@
 #include <cstdio>
 
 #include "GridConstant.hpp"
+#include "Grid.hpp"
 
 
 using namespace std;
@@ -35,6 +36,9 @@ namespace GRID{
 
 
 #define MAX_ZONE_READ_MESH	1000
+#define	MATH_ZERO_MESH	1.0e-20
+
+
 
 /*
  * 1. Fluent format
@@ -49,6 +53,13 @@ void read_mesh_info_fluent(const string& mesh_file_name,		// Mesh file name
 
 
 
+/*
+ * Read Node Data
+ */
+void read_mesh_node_fluent(const string& mesh_file_name,		// Mesh file name
+							unsigned int	DIM,
+							unsigned int	NNM,				// Grid information
+							vector<Node>	&nodes);
 
 }
 }

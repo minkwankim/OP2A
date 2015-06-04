@@ -76,8 +76,10 @@ int main(int argc, char *argv[]) {
 	 data_temp.data[0]	= data_temp1;
 	 data_temp.data[1]	= data_temp2;
 
+
 	 GRID::Grid	grid_test;
 	 grid_test.readMeahDataInfo("Stardust.msh", GRID::GridDataType::FLUENT);
+	 grid_test.readMeahDataNode("Stardust.msh", GRID::GridDataType::FLUENT);
 
 
 
