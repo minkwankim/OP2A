@@ -27,8 +27,17 @@ namespace OP2A{
 namespace GRID{
 
 
+class GridInfO {
+public:
+    const unsigned int NCM;
+    const unsigned int NFM;
+    const unsigned int NCM;
+    const unsigned int NGM;
+    
 
-
+public:
+  <#member functions#>
+};
 
 
 
