@@ -17,8 +17,14 @@
 #include <vector>
 using namespace std;
 
+#include <limits>
 #include "../include/Grid.hpp"
 #include "../include/GridRead.hpp"
+#include "Common/include/Exception_InfiniteValue.hpp"
+#include "Common/include/Exception_NaNValue.hpp"
+#include "Common/include/Exception_NegativeValue.hpp"
+
+#include "Math/include/AreaCalculation.hpp"
 
 
 namespace OP2A{
@@ -53,75 +59,35 @@ void Grid::processingFaceData()
 		// 1. Calculate Xc
 		for (int k = 0; k <= ND-1; k++)
 		{
-			faces[f]->x[k]	= 0.0;
+			faces[f].geo.x[k]	= 0.0;
 
-			for (int n	= 0; n <= faces[f]->NN-1; n++)
-			{
-				int n_ID;
-				n_ID	= faces[f]->node[n];
+			for (int n	= 0; n <= faces[f].geo.NN-1; n++)	faces[f].geo.x[k]	+= faces[f].geo.node_list[n]->geo.x[k];
+			faces[f].geo.x[k]	/= faces[f].geo.NN;
 
-				faces[f]->x[k]	+= nodes[whereis_node[n_ID]]->x[k];
-			}
-
-			faces[f]->x[k]	/= faces[f]->NN;
-
-			if (faces[f]->x[k]	!= faces[f]->x[k] || fabs(faces[f]->x[k]) == numeric_limits<double>::infinity())
-			{
-				Error_message_type	error_message;
-
-				error_message.module_name	="COMMON-GRID";
-				error_message.location_primary_name	= "Face";
-				error_message.location_primary		= faces[f]->ID;
-				error_message.location_secondary_name	= "Direction";
-				error_message.location_secondary		= k;
-				error_message.message	= " Cannot find center of a face!";
-				error_message.print_message();
-			}
+			if (faces[f].geo.x[k]	!= faces[f].geo.x[k]) throw Common::ExceptionNaNValue (FromHere(), "Nan value for face center location ");
+			if (fabs(faces[f].geo.x[k]) == numeric_limits<double>::infinity()) throw Common::ExceptionInfiniteValue (FromHere(), "Inifnite Value for face center location");
 		}
-
 
 
 		// 2. Calculate S (Area/ Volume)
-		switch (faces[f]->type)
+		switch (faces[f].geo.type)
 		{
-		case F_LINE:
-			faces[f]->S	= length(nodes[whereis_node[faces[f]->node[0]]]->x,
-								nodes[whereis_node[faces[f]->node[1]]]->x,
-								DIM);
+		case FaceType::f_line:
+			faces[f].geo.S	= Math::length(faces[f].geo.node_list[0]->geo.x, faces[f].geo.node_list[1]->geo.x);
 			break;
 
-		case F_TRIANGLE:
-			faces[f]->S	= area_triangle(nodes[whereis_node[faces[f]->node[0]]]->x,
-										nodes[whereis_node[faces[f]->node[1]]]->x,
-										nodes[whereis_node[faces[f]->node[2]]]->x,
-										DIM);
+		case FaceType::f_triangle:
+			faces[f].geo.S	= Math::CalAreaTriangle(faces[f].geo.node_list[0]->geo.x, faces[f].geo.node_list[1]->geo.x, faces[f].geo.node_list[2]->geo.x);
 			break;
 
-		case F_QUADRILATERAL:
-			faces[f]->S	= area_quadrilateral(nodes[whereis_node[faces[f]->node[0]]]->x,
-											nodes[whereis_node[faces[f]->node[1]]]->x,
-											nodes[whereis_node[faces[f]->node[2]]]->x,
-											nodes[whereis_node[faces[f]->node[3]]]->x,
-											DIM);
+		case FaceType::f_quadrilateral:
+			faces[f].geo.S	= Math::CalAreaQuadrilateral(faces[f].geo.node_list[0]->geo.x, faces[f].geo.node_list[1]->geo.x, faces[f].geo.node_list[2]->geo.x, faces[f].geo.node_list[3]->geo.x);
 			break;
-		}
-
-		if (faces[f]->S < 0.0 || faces[f]->S != faces[f]->S || fabs(faces[f]->S) == numeric_limits<double>::infinity())
-		{
-			Error_message_type	error_message;
-			error_message.module_name	="COMMON-GRID";
-			error_message.location_primary_name	= "Face";
-			error_message.location_primary		= faces[f]->ID;
-			error_message.location_secondary_name	= "NONE";
-			error_message.location_secondary		= 0;
-			error_message.message	= " Cannot calculate the area of a face!";
-			error_message.print_message();
 		}
 
 
 
-
-		// 3. Find directional vectors
+	/*	// 3. Find directional vectors
 		int n1, n2, n3, n4;
 		double x1, y1, z1;
 		double x2, y2, z2;
@@ -314,7 +280,7 @@ void Grid::processingFaceData()
 					error_message.print_message();
 				}
 				break;
-		}
+		}*/
 	}
 }
 

@@ -35,6 +35,7 @@
 #include "DATA/include/DataStorage.hpp"
 #include "DATA/include/DataStorageVector.hpp"
 
+#include "Math/include/OP2A_Vector.hpp"
 
 
 using namespace OP2A::Setup;
@@ -83,9 +84,11 @@ int main(int argc, char *argv[]) {
 
 
 
+	 Math::VECTOR	vector_test1(1.0, 2.0, 3.0);
+	 double test = vector_test1(1);
 
+	 int a_test	= vector_test1.dimension();
 
-	 int a_test;
 	 a_test = 1;
 
 
