@@ -86,12 +86,16 @@ void read_mesh_face_fluent(const string& mesh_file_name,		// Mesh file name
 							sscanf(line.c_str(), "%d %x %x %x %x", &type, &nodes_num[0], &nodes_num[1], &cl, &cr);
 
 							faces[i].geo.allocate(DIM, FaceType::f_line);
+							faces[i].geo.ID = i;
 
 							faces[i].geo.node_list[0] = &nodes[nodes_num[0]];
 							faces[i].geo.node_list[1] = &nodes[nodes_num[1]];
 
-							faces[i].geo.cl[0]	= &cells[cl];
-							faces[i].geo.cr[0]	= &cells[cr];
+							if (cl == 0)	faces[i].geo.cl[0]  = NULL;
+							else			faces[i].geo.cl[0]	= &cells[cl];
+
+							if (cr == 0)	faces[i].geo.cr[0] = NULL;
+							else			faces[i].geo.cr[0]	= &cells[cr];
 
 							break;
 
@@ -99,27 +103,35 @@ void read_mesh_face_fluent(const string& mesh_file_name,		// Mesh file name
 							sscanf(line.c_str(), "%d %x %x %x %x %x", &type, &nodes_num[0], &nodes_num[1], &nodes_num[2], &cl, &cr);
 
 							faces[i].geo.allocate(DIM, FaceType::f_triangle);
+							faces[i].geo.ID = i;
 
 							faces[i].geo.node_list[0] = &nodes[nodes_num[0]];
 							faces[i].geo.node_list[1] = &nodes[nodes_num[1]];
 							faces[i].geo.node_list[2] = &nodes[nodes_num[2]];
 
-							faces[i].geo.cl[0]	= &cells[cl];
-							faces[i].geo.cr[0]	= &cells[cr];
+							if (cl == 0)	faces[i].geo.cl[0]  = NULL;
+							else			faces[i].geo.cl[0]	= &cells[cl];
+
+							if (cr == 0)	faces[i].geo.cr[0] = NULL;
+							else			faces[i].geo.cr[0]	= &cells[cr];
 							break;
 
 						case FaceType::f_quadrilateral: // QUADRILATERAL
 							sscanf(line.c_str(), "%d %x %x %x %x %x %x", &type, &nodes_num[0], &nodes_num[1], &nodes_num[2], &nodes_num[3], &cl, &cr);
 
 							faces[i].geo.allocate(DIM, FaceType::f_quadrilateral);
+							faces[i].geo.ID = i;
 
 							faces[i].geo.node_list[0] = &nodes[nodes_num[0]];
 							faces[i].geo.node_list[1] = &nodes[nodes_num[1]];
 							faces[i].geo.node_list[2] = &nodes[nodes_num[2]];
 							faces[i].geo.node_list[3] = &nodes[nodes_num[3]];
 
-							faces[i].geo.cl[0]	= &cells[cl];
-							faces[i].geo.cr[0]	= &cells[cr];
+							if (cl == 0)	faces[i].geo.cl[0]  = NULL;
+							else			faces[i].geo.cl[0]	= &cells[cl];
+
+							if (cr == 0)	faces[i].geo.cr[0] = NULL;
+							else			faces[i].geo.cr[0]	= &cells[cr];
 
 							break;
 
@@ -141,6 +153,7 @@ void read_mesh_face_fluent(const string& mesh_file_name,		// Mesh file name
 						sscanf(line.c_str(), "%x %x %x %x", &nodes_num[0], &nodes_num[1], &cl, &cr);
 
 						faces[i].geo.allocate(DIM, FaceType::f_line);
+						faces[i].geo.ID = i;
 
 						faces[i].geo.node_list[0] = &nodes[nodes_num[0]];
 						faces[i].geo.node_list[1] = &nodes[nodes_num[1]];
@@ -160,6 +173,7 @@ void read_mesh_face_fluent(const string& mesh_file_name,		// Mesh file name
 						sscanf(line.c_str(), "%x %x %x %x %x", &nodes_num[0], &nodes_num[1], &nodes_num[2], &cl, &cr);
 
 						faces[i].geo.allocate(DIM, FaceType::f_triangle);
+						faces[i].geo.ID = i;
 
 						faces[i].geo.node_list[0] = &nodes[nodes_num[0]];
 						faces[i].geo.node_list[1] = &nodes[nodes_num[1]];
@@ -181,6 +195,7 @@ void read_mesh_face_fluent(const string& mesh_file_name,		// Mesh file name
 						sscanf(line.c_str(), "%x %x %x %x %x %x", &nodes_num[0], &nodes_num[1], &nodes_num[2], &nodes_num[3], &cl, &cr);
 
 						faces[i].geo.allocate(DIM, FaceType::f_triangle);
+						faces[i].geo.ID = i;
 
 						faces[i].geo.node_list[0] = &nodes[nodes_num[0]];
 						faces[i].geo.node_list[1] = &nodes[nodes_num[1]];

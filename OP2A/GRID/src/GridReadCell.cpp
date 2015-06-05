@@ -71,6 +71,7 @@ void read_mesh_cell_fluent(const string& mesh_file_name,		// Mesh file name
 					{
 						for (i = first_index; i <= last_index; i++)
 						{
+							cells[i].geo.ID	= i;
 							cells[i].geo.allocate(DIM, static_cast<CellType>(element_type));
 							cells[i].geo.BC	= bc_zone[zone];
 							n++;
@@ -81,6 +82,7 @@ void read_mesh_cell_fluent(const string& mesh_file_name,		// Mesh file name
 						for (i = first_index; i <= last_index; i++)
 						{
 							mesh_file >> element_type;
+							cells[i].geo.ID	= i;
 							cells[i].geo.allocate(DIM, static_cast<CellType>(element_type));
 							cells[i].geo.BC	= bc_zone[zone];
 							n++;

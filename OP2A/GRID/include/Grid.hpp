@@ -53,6 +53,8 @@ public:	// Functions
 	void readMeahData(const string& mesh_file_name, GridDataType type);
 	void processingNodeData(const double mesh_factor, bool is_axisymmetric);
 	void processingFaceData();
+	void processingNodeData();
+
 
 
 private:

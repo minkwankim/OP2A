@@ -22,7 +22,7 @@ namespace GRID{
 
 
 
-FaceGeoBasic::FaceGeoBasic(const int ND, const FaceType f_type): type(f_type), x(ND, 0.0), n(ND, vector<double>(ND, 0.0))
+FaceGeoBasic::FaceGeoBasic(const int ND, const FaceType f_type): ID(-1), type(f_type), x(ND, 0.0), n(ND, vector<double>(ND, 0.0))
 {
 	switch(type)
 	{
@@ -54,6 +54,7 @@ FaceGeoBasic::FaceGeoBasic(const int ND, const FaceType f_type): type(f_type), x
 
 FaceGeoBasic::FaceGeoBasic()
 {
+	ID		= -1;
 	type	= f_line;
 	NN		= -1;
 	S		= 0;

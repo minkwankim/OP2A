@@ -20,6 +20,8 @@ using namespace std;
 #include <limits>
 #include "../include/Grid.hpp"
 #include "../include/GridRead.hpp"
+#include "../include/Exception_CellConstruction.hpp"
+
 #include "Common/include/Exception_InfiniteValue.hpp"
 #include "Common/include/Exception_NaNValue.hpp"
 #include "Common/include/Exception_NegativeValue.hpp"
@@ -169,6 +171,99 @@ void Grid::processingFaceData()
 }
 
 
+void Grid::processingNodeData()
+{
+	// 2. Find face and node information of a cell
+	int	flag;
+	vector <int>	filled_nodes(NCM+1, 0);
+	vector <int>	face_counter(NCM+1, 0);
+
+	for (int f = 1; f <= NFM; f++)
+	{
+		if (faces[f].geo.cr[0]->geo.BC != NULL)
+		{
+			switch(faces[f].geo.cr[0]->geo.type)
+			{
+			case CellType::triangle:
+				if (faces[f].geo.type == FaceType::f_line)
+				{
+					if (filled_nodes[faces[f].geo.cr[0]->geo.ID] == 0)		// FIRST FILLING
+					{
+						faces[f].geo.cr[0]->geo.node_list[0]	= faces[f].geo.node_list[1];
+						faces[f].geo.cr[0]->geo.node_list[1]	= faces[f].geo.node_list[0];
+						filled_nodes[faces[f].geo.cr[0]->geo.ID] = 2;
+
+						faces[f].geo.cr[0]->geo.face_list[0]	= &faces[f];
+						face_counter[faces[f].geo.cr[0]->geo.ID] = 1;
+					}
+					else if(filled_nodes[faces[f].geo.cr[0]->geo.ID] == 2)	// SECOND FILLEING
+					{
+						if (faces[f].geo.node_list[0] == faces[f].geo.cr[0]->geo.node_list[0])
+						{
+							faces[f].geo.cr[0]->geo.node_list[2]	= faces[f].geo.node_list[1];
+							filled_nodes[faces[f].geo.cr[0]->geo.ID] = 3;
+
+							faces[f].geo.cr[0]->geo.face_list[2]	= &faces[f];
+							face_counter[faces[f].geo.cr[0]->geo.ID] = 2;
+						}
+						else if(faces[f].geo.node_list[1] == faces[f].geo.cr[0]->geo.node_list[1])
+						{
+							faces[f].geo.cr[0]->geo.node_list[2]	= faces[f].geo.node_list[0];
+							filled_nodes[faces[f].geo.cr[0]->geo.ID] = 3;
+
+							faces[f].geo.cr[0]->geo.face_list[1]	= &faces[f];
+							face_counter[faces[f].geo.cr[0]->geo.ID] = 2;
+						}
+						else
+						{
+							throw ExceptionCellConstruction (FromHere(), "PROBLEM DURING CELL MESH CONSTRUCTION: Triangular cell");
+						}
+					}
+					else if(filled_nodes[faces[f].geo.cr[0]->geo.ID] == 3)	// LAST FILLING AND CHECK
+					{
+						if (face_counter[faces[f].geo.cr[0]->geo.ID] == 2)
+						{
+							if (faces[f].geo.cr[0]->geo.face_list[1] == NULL)
+							{
+								faces[f].geo.cr[0]->geo.face_list[1] = &faces[f];
+								face_counter[faces[f].geo.cr[0]->geo.ID] =3;
+							}
+							else if (faces[f].geo.cr[0]->geo.face_list[2] == NULL)
+							{
+								faces[f].geo.cr[0]->geo.face_list[2] = &faces[f];
+								face_counter[faces[f].geo.cr[0]->geo.ID] =3;
+							}
+						}
+					}
+				}
+				else
+				{
+					throw ExceptionCellConstruction (FromHere(), "PROBLEM DURING CELL MESH CONSTRUCTION: Triangular cell --ONLY LINE TYPE FACE IS ALLOWEED. PLEASE CHECK THE MESH DATA");
+				}
+				break;
+
+			case CellType::tetrahedron:
+				break;
+
+				break;
+			case CellType::quadrilateral:
+				break;
+
+			case CellType::hexahedron:
+				break;
+			case CellType::pryramid:
+				break;
+			case CellType::wedge:
+				break;
+			}
+		}
+
+
+
+	}
+
+
+}
 
 
 

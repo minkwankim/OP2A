@@ -20,13 +20,13 @@
 namespace OP2A{
 namespace GRID{
 
-CellGeoBasic::CellGeoBasic():type(ghost), NN(0), NF(0), S(0), characteristic_length(0), dist_wall(0), allocated(false), BC(0)
+CellGeoBasic::CellGeoBasic():ID(-1), type(ghost), NN(0), NF(0), S(0), characteristic_length(0), dist_wall(0), allocated(false), BC(0)
 {
 
 }
 
 
-CellGeoBasic::CellGeoBasic(const int ND, const CellType c_type): type(c_type), x(ND, 0.0), allocated(true), BC(0)
+CellGeoBasic::CellGeoBasic(const int ND, const CellType c_type): ID(-1), type(c_type), x(ND, 0.0), allocated(true), BC(0)
 {
 
 	switch(type)

@@ -49,6 +49,7 @@ enum CellType
 class CellGeoBasic
 {
 public:
+	int	ID;
 	CellType	type;
 	unsigned int BC;
 

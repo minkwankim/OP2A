@@ -43,6 +43,7 @@ enum FaceType
 class FaceGeoBasic
 {
 public:
+	int	ID;
 	FaceType	type;
 
 	int NN;
