@@ -23,8 +23,12 @@ using namespace std;
 #include "Common/include/Exception_InfiniteValue.hpp"
 #include "Common/include/Exception_NaNValue.hpp"
 #include "Common/include/Exception_NegativeValue.hpp"
+#include "Common/include/Exception_NoSuchValue.hpp"
+
 
 #include "Math/include/AreaCalculation.hpp"
+#include "Math/include/OP2A_Vector.hpp"
+
 
 
 namespace OP2A{
@@ -54,7 +58,7 @@ void Grid::processingNodeData(const double mesh_factor, bool is_axisymmetric)
 
 void Grid::processingFaceData()
 {
-	for (int f = 0; f <= NFM-1; f++)
+	for (int f = 1; f <= NFM; f++)
 	{
 		// 1. Calculate Xc
 		for (int k = 0; k <= ND-1; k++)
@@ -87,200 +91,80 @@ void Grid::processingFaceData()
 
 
 
-	/*	// 3. Find directional vectors
-		int n1, n2, n3, n4;
-		double x1, y1, z1;
-		double x2, y2, z2;
-		double x3, y3, z3;
-		double S, length_x1, length_x2;
-		double error_ck;
+		// 3. Find directional vectors
+		Math::VECTOR	face_normal;
+		Math::VECTOR 	face_tan;
 
-		switch (faces[f]->type)
+		if (faces[f].geo.type == FaceType::f_line)
 		{
-			case F_LINE:
-				n1	= faces[f]->node[0];
-				n2	= faces[f]->node[1];
+			Math::VECTOR	n12(faces[f].geo.node_list[0]->geo.x, faces[f].geo.node_list[1]->geo.x);
+			n12.normalize();
 
-				x1	= nodes[whereis_node[n2]]->x[0]	- nodes[whereis_node[n1]]->x[0];
-				y1	= nodes[whereis_node[n2]]->x[1]	- nodes[whereis_node[n1]]->x[1];
-				S	= sqrt(x1*x1 + y1*y1);
-
-				faces[f]->n[0][0]	= y1/S;
-				faces[f]->n[0][1]	= -x1/S;
-
-				faces[f]->n[1][0]	= -faces[f]->n[0][1];
-				faces[f]->n[1][1]	= faces[f]->n[0][0];
-
-				// ERROR CHECK
-				error_ck = sqrt(faces[f]->n[0][0]*faces[f]->n[0][0] + faces[f]->n[0][1]*faces[f]->n[0][1]);
-				if (error_ck != error_ck || fabs(error_ck) == numeric_limits<double>::infinity() || fabs(error_ck - 1.0) > 1.0e-10)
-				{
-					Error_message_type	error_message;
-					error_message.module_name	="COMMON-GRID";
-					error_message.location_primary_name	= "Face";
-					error_message.location_primary		= faces[f]->ID;
-					error_message.location_secondary_name	= "NONE";
-					error_message.location_secondary		= 0;
-					error_message.message	= " Cannot find the normal direction vector of a face!";
-					error_message.print_message();
-				}
-
-				error_ck = sqrt(faces[f]->n[1][0]*faces[f]->n[1][0] + faces[f]->n[1][1]*faces[f]->n[1][1]);
-				if (error_ck != error_ck || fabs(error_ck) == numeric_limits<double>::infinity() || fabs(error_ck - 1.0) > 1.0e-10)
-				{
-					Error_message_type	error_message;
-					error_message.module_name	="COMMON-GRID";
-					error_message.location_primary_name	= "Face";
-					error_message.location_primary		= faces[f]->ID;
-					error_message.location_secondary_name	= "NONE";
-					error_message.location_secondary		= 0;
-					error_message.message	= " Cannot find the tangential direction vector of a face!";
-					error_message.print_message();
-				}
-				break;
-
-			case F_TRIANGLE:
-				n1	= faces[f]->node[0];
-				n2	= faces[f]->node[1];
-				n3	= faces[f]->node[3];
-
-				x1	= nodes[whereis_node[n2]]->x[0]	- nodes[whereis_node[n1]]->x[0];
-				y1	= nodes[whereis_node[n2]]->x[1]	- nodes[whereis_node[n1]]->x[1];
-				z1	= nodes[whereis_node[n2]]->x[2]	- nodes[whereis_node[n1]]->x[2];
-				length_x1	= sqrt(x1*x1 + y1*y1 + z1*z1);
-
-				x2	= nodes[whereis_node[n3]]->x[0]	- nodes[whereis_node[n1]]->x[0];
-				y2	= nodes[whereis_node[n3]]->x[1]	- nodes[whereis_node[n1]]->x[1];
-				z2	= nodes[whereis_node[n3]]->x[2]	- nodes[whereis_node[n1]]->x[2];
-
-				faces[f]->n[0][0]	=  0.5*(y1*z2 - z1*y2) 	/ faces[f]->S;
-				faces[f]->n[0][1]	=  -0.5*(x1*z2 - z1*x2) / faces[f]->S;
-				faces[f]->n[0][2]	=  0.5*(x1*y2 - y1*x2) 	/ faces[f]->S;
-
-				faces[f]->n[1][0]	= x1 / length_x1;
-				faces[f]->n[1][1]	= y1 / length_x1;
-				faces[f]->n[1][2]	= z1 / length_x1;
-
-				faces[f]->n[2][0]	=  faces[f]->n[0][1]*faces[f]->n[1][2] - faces[f]->n[0][2]*faces[f]->n[1][1];
-				faces[f]->n[2][1]	= -faces[f]->n[0][0]*faces[f]->n[1][2] + faces[f]->n[0][2]*faces[f]->n[1][0];
-				faces[f]->n[2][2]	=  faces[f]->n[0][0]*faces[f]->n[1][1] - faces[f]->n[0][1]*faces[f]->n[1][0];
+			face_normal = n12.rotate(-MATH_PI/2, Math::VectorDirection::VectorDirection_Z);
 
 
-				// ERROR CHECK
-				error_ck = sqrt(faces[f]->n[0][0]*faces[f]->n[0][0] + faces[f]->n[0][1]*faces[f]->n[0][1] + faces[f]->n[0][2]*faces[f]->n[0][2]);
-				if (error_ck != error_ck || fabs(error_ck) == numeric_limits<double>::infinity() || fabs(error_ck - 1.0) > 1.0e-10)
-				{
-					Error_message_type	error_message;
-					error_message.module_name	="COMMON-GRID";
-					error_message.location_primary_name	= "Face";
-					error_message.location_primary		= faces[f]->ID;
-					error_message.location_secondary_name	= "NONE";
-					error_message.location_secondary		= 0;
-					error_message.message	= " Cannot find the normal direction vector of a face!";
-					error_message.print_message();
-				}
+			faces[f].geo.n[0][0]	= face_normal(1);
+			faces[f].geo.n[0][1]	= face_normal(2);
 
-				error_ck = sqrt(faces[f]->n[1][0]*faces[f]->n[1][0] + faces[f]->n[1][1]*faces[f]->n[1][1] + faces[f]->n[1][2]*faces[f]->n[1][2]);
-				if (error_ck != error_ck || fabs(error_ck) == numeric_limits<double>::infinity() || fabs(error_ck - 1.0) > 1.0e-10)
-				{
-					Error_message_type	error_message;
-					error_message.module_name	="COMMON-GRID";
-					error_message.location_primary_name	= "Face";
-					error_message.location_primary		= faces[f]->ID;
-					error_message.location_secondary_name	= "NONE";
-					error_message.location_secondary		= 0;
-					error_message.message	= " Cannot find the tangential direction_1 vector of a face!";
-					error_message.print_message();
-				}
+			faces[f].geo.n[1][0]	= n12(1);
+			faces[f].geo.n[1][1]	= n12(2);
+		}
+		else if(faces[f].geo.type == FaceType::f_triangle)
+		{
+			Math::VECTOR X1(faces[f].geo.node_list[1]->geo.x, faces[f].geo.node_list[0]->geo.x);
+			Math::VECTOR X2(faces[f].geo.node_list[2]->geo.x, faces[f].geo.node_list[0]->geo.x);
 
-				error_ck = sqrt(faces[f]->n[2][0]*faces[f]->n[2][0] + faces[f]->n[2][1]*faces[f]->n[2][1] + faces[f]->n[2][2]*faces[f]->n[2][2]);
-				if (error_ck != error_ck || fabs(error_ck) == numeric_limits<double>::infinity() || fabs(error_ck - 1.0) > 1.0e-10)
-				{
-					Error_message_type	error_message;
-					error_message.module_name	="COMMON-GRID";
-					error_message.location_primary_name	= "Face";
-					error_message.location_primary		= faces[f]->ID;
-					error_message.location_secondary_name	= "NONE";
-					error_message.location_secondary		= 0;
-					error_message.message	= " Cannot find the tangential direction_2 vector of a face!";
-					error_message.print_message();
-				}
-				break;
+			face_normal	= VectorCrossProduct(X1, X2);
 
-			case F_QUADRILATERAL:
-				n1	= faces[f]->node[0];
-				n2	= faces[f]->node[1];
-				n3	= faces[f]->node[3];
-				n4	= faces[f]->node[4];
+			face_normal.normalize();
+			X1.normalize();
 
-				x1	= nodes[whereis_node[n2]]->x[0]	- nodes[whereis_node[n1]]->x[0];
-				y1	= nodes[whereis_node[n2]]->x[1]	- nodes[whereis_node[n1]]->x[1];
-				z1	= nodes[whereis_node[n2]]->x[2]	- nodes[whereis_node[n1]]->x[2];
+			face_tan	= VectorCrossProduct(face_normal, X1);
+			face_tan.normalize();
 
-				x2	= nodes[whereis_node[n3]]->x[0]	- nodes[whereis_node[n1]]->x[0];
-				y2	= nodes[whereis_node[n3]]->x[1]	- nodes[whereis_node[n1]]->x[1];
-				z2	= nodes[whereis_node[n3]]->x[2]	- nodes[whereis_node[n1]]->x[2];
-				length_x2	= sqrt(x2*x2 + y2*y2 + z2*z2);
+			faces[f].geo.n[0][0]	=  face_normal(1);
+			faces[f].geo.n[0][1]	=  face_normal(2);
+			faces[f].geo.n[0][2]	=  face_normal(3);
 
-				x3	= nodes[whereis_node[n4]]->x[0]	- nodes[whereis_node[n1]]->x[0];
-				y3	= nodes[whereis_node[n4]]->x[1]	- nodes[whereis_node[n1]]->x[1];
-				z3	= nodes[whereis_node[n4]]->x[2]	- nodes[whereis_node[n1]]->x[2];
+			faces[f].geo.n[1][0]	=  X1(1);
+			faces[f].geo.n[1][1]	=  X1(2);
+			faces[f].geo.n[1][2]	=  X1(3);
 
+			faces[f].geo.n[2][0]	=  face_tan(1);
+			faces[f].geo.n[2][1]	=  face_tan(2);
+			faces[f].geo.n[2][2]	=  face_tan(3);
+		}
+		else if(faces[f].geo.type == FaceType::f_quadrilateral)
+		{
+			Math::VECTOR V1(faces[f].geo.node_list[1]->geo.x, faces[f].geo.node_list[0]->geo.x);
+			Math::VECTOR V2(faces[f].geo.node_list[2]->geo.x, faces[f].geo.node_list[0]->geo.x);
+			Math::VECTOR V3(faces[f].geo.node_list[3]->geo.x, faces[f].geo.node_list[0]->geo.x);
 
-				faces[f]->n[0][0]	=   0.5*(y1*z2 - z1*y2 + y2*z3 - z2*y3) / faces[f]->S;
-				faces[f]->n[0][1]	=  -0.5*(x1*z2 - z1*x2 + x2*z3 - z2*x3) / faces[f]->S;
-				faces[f]->n[0][2]	=   0.5*(x1*y2 - y1*x2 + x2*y3 - y2*x3) / faces[f]->S;
+			face_normal	= NormalFromThreePoint(V1, V2, V3);
+			face_normal.normalize();
 
-				faces[f]->n[1][0]	= x2 / length_x2;
-				faces[f]->n[1][1]	= y2 / length_x2;
-				faces[f]->n[1][2]	= z2 / length_x2;
+			V2.normalize();
 
-				faces[f]->n[2][0]	=  faces[f]->n[0][1]*faces[f]->n[1][2] - faces[f]->n[0][2]*faces[f]->n[1][1];
-				faces[f]->n[2][1]	= -faces[f]->n[0][0]*faces[f]->n[1][2] + faces[f]->n[0][2]*faces[f]->n[1][0];
-				faces[f]->n[2][2]	=  faces[f]->n[0][0]*faces[f]->n[1][1] - faces[f]->n[0][1]*faces[f]->n[1][0];
+			face_tan	= VectorCrossProduct(face_normal, V2);
+			face_tan.normalize();
 
+			faces[f].geo.n[0][0]	=  face_normal(1);
+			faces[f].geo.n[0][1]	=  face_normal(2);
+			faces[f].geo.n[0][2]	=  face_normal(3);
 
-				// ERROR CHECK
-				error_ck = sqrt(faces[f]->n[0][0]*faces[f]->n[0][0] + faces[f]->n[0][1]*faces[f]->n[0][1] + faces[f]->n[0][2]*faces[f]->n[0][2]);
-				if (error_ck != error_ck || fabs(error_ck) == numeric_limits<double>::infinity() || fabs(error_ck - 1.0) > 1.0e-10)
-				{
-					Error_message_type	error_message;
-					error_message.module_name	="COMMON-GRID";
-					error_message.location_primary_name	= "Face";
-					error_message.location_primary		= faces[f]->ID;
-					error_message.location_secondary_name	= "NONE";
-					error_message.location_secondary		= 0;
-					error_message.message	= " Cannot find the normal direction vector of a face!";
-					error_message.print_message();
-				}
+			faces[f].geo.n[1][0]	=  V2(1);
+			faces[f].geo.n[1][1]	=  V2(2);
+			faces[f].geo.n[1][2]	=  V2(3);
 
-				error_ck = sqrt(faces[f]->n[1][0]*faces[f]->n[1][0] + faces[f]->n[1][1]*faces[f]->n[1][1] + faces[f]->n[1][2]*faces[f]->n[1][2]);
-				if (error_ck != error_ck || fabs(error_ck) == numeric_limits<double>::infinity() || fabs(error_ck - 1.0) > 1.0e-10)
-				{
-					Error_message_type	error_message;
-					error_message.module_name	="COMMON-GRID";
-					error_message.location_primary_name	= "Face";
-					error_message.location_primary		= faces[f]->ID;
-					error_message.location_secondary_name	= "NONE";
-					error_message.location_secondary		= 0;
-					error_message.message	= " Cannot find the tangential direction_1 vector of a face!";
-					error_message.print_message();
-				}
+			faces[f].geo.n[2][0]	=  face_tan(1);
+			faces[f].geo.n[2][1]	=  face_tan(2);
+			faces[f].geo.n[2][2]	=  face_tan(3);
+		}
+		else
+		{
+			throw Common::ExceptionNoSuchValue (FromHere(), "Selected Face type is not supported");
+		}
 
-				error_ck = sqrt(faces[f]->n[2][0]*faces[f]->n[2][0] + faces[f]->n[2][1]*faces[f]->n[2][1] + faces[f]->n[2][2]*faces[f]->n[2][2]);
-				if (error_ck != error_ck || fabs(error_ck) == numeric_limits<double>::infinity() || fabs(error_ck - 1.0) > 1.0e-10)
-				{
-					Error_message_type	error_message;
-					error_message.module_name	="COMMON-GRID";
-					error_message.location_primary_name	= "Face";
-					error_message.location_primary		= faces[f]->ID;
-					error_message.location_secondary_name	= "NONE";
-					error_message.location_secondary		= 0;
-					error_message.message	= " Cannot find the tangential direction_2 vector of a face!";
-					error_message.print_message();
-				}
-				break;
-		}*/
 	}
 }
 

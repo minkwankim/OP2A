@@ -80,6 +80,8 @@ int main(int argc, char *argv[]) {
 
 	 GRID::Grid	grid_test;
 	 grid_test.readMeahData("Stardust.msh", GRID::GridDataType::FLUENT);
+	 grid_test.processingNodeData(1000, false);
+	 grid_test.processingFaceData();
 
 
 

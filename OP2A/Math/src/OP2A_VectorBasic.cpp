@@ -27,6 +27,11 @@ VECTOR::VECTOR():ND(2), m_data(2, 0.0), is_allocated(false)
 
 }
 
+VECTOR::VECTOR(const unsigned int dim):ND(dim), m_data(dim, 0.0), is_allocated(true)
+{
+
+}
+
 
 VECTOR::VECTOR(const double x, const double y):ND(2), m_data(2,0.0), is_allocated(true)
 {
@@ -53,6 +58,8 @@ VECTOR::VECTOR(const std::vector<double>& s, const std::vector<double>& e)
 	if (s.size() != e.size())	throw Common::ExceptionDimensionMatch (FromHere(), "Dimenction of X and Y values do not match");
 
 	ND	= e.size();
+	m_data.resize(ND);
+
 	for (int i = 0; i <= ND-1; i++)	m_data[i]	= e[i] - s[i];
 
 	is_allocated = true;

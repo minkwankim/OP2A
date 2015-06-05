@@ -19,11 +19,18 @@
 namespace OP2A{
 namespace Math{
 
+enum VectorDirection
+{
+	VectorDirection_X	= 0,
+	VectorDirection_Y	= 1,
+	VectorDirection_Z	= 2
+};
 
 class VECTOR
 {
 public:
 	VECTOR();
+	VECTOR(const unsigned int dim);
 	VECTOR(const double x, const double y);
 	VECTOR(const double x, const double y, double z);
 	VECTOR(const std::vector<double>& x);
@@ -40,6 +47,7 @@ public:	//Basic functions
 	void normalize();
 	double val(const unsigned int i) const;
 
+
 public:	// Operators
 	double& operator() (const unsigned int i);
 	void operator *= (double const & s);
@@ -51,6 +59,7 @@ public:	// Operators
 	void operator += (const VECTOR & S);
 
 public: // Linear Algebra
+	VECTOR rotate(const double angle, VectorDirection direction);
 
 
 

@@ -22,6 +22,55 @@ namespace OP2A{
 namespace Math{
 
 
+VECTOR VECTOR::rotate(const double angle, VectorDirection direction)
+{
+	VECTOR ans(ND);
+
+	double cos_theta = cos(angle);
+	double sin_theta = sin(angle);
+
+	if (ND == 2)
+	{
+		ans(1)	= cos_theta*m_data[0] - sin_theta*m_data[1];
+		ans(2)	= sin_theta*m_data[0] + cos_theta*m_data[1];
+	}
+	else
+	{
+		switch(direction)
+		{
+		case VectorDirection_X:
+			ans(1)	= m_data[0];
+			ans(2)	= cos_theta*m_data[1] - sin_theta*m_data[2];
+			ans(3)	= sin_theta*m_data[1] + cos_theta*m_data[2];
+			break;
+
+		case VectorDirection_Y:
+			ans(1)	= cos_theta*m_data[0] + sin_theta*m_data[2];
+			ans(2)	= m_data[1];
+			ans(3)	= -sin_theta*m_data[0] + cos_theta*m_data[2];
+			break;
+
+		case VectorDirection_Z:
+			ans(1)	= cos_theta*m_data[0] - sin_theta*m_data[1];
+			ans(2)	= sin_theta*m_data[0] + cos_theta*m_data[1];
+			ans(3)	= m_data[2];
+			break;
+		}
+	}
+
+	return (ans);
+}
+
+
+
+
+
+
+
+
+
+
+
 VECTOR VectorCrossProduct(const VECTOR &A, const VECTOR &B)
 {
 	unsigned int N = A.size();
