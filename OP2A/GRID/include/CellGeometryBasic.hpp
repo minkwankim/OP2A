@@ -34,7 +34,7 @@ enum CellType
 	tetrahedron		= 2,
 	quadrilateral 	= 3,
 	hexahedron		= 4,
-	pryramid		= 5,
+	pyramid			= 5,
 	wedge			= 6
 };
 

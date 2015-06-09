@@ -36,7 +36,7 @@ Grid::~Grid()
 /*
  * Internal functions
  */
-void Grid::readMeahDataInfo(const string& mesh_file_name, GridDataType type)
+void Grid::readMeshDataInfo(const string& mesh_file_name, GridDataType type)
 {
 	switch (type)
 	{
@@ -54,9 +54,9 @@ void Grid::readMeahDataInfo(const string& mesh_file_name, GridDataType type)
 }
 
 
-void Grid::readMeahDataNode(const string& mesh_file_name, GridDataType type)
+void Grid::readMeshDataNode(const string& mesh_file_name, GridDataType type)
 {
-	if (is_read_basic_info == false)	readMeahDataInfo(mesh_file_name, type);
+	if (is_read_basic_info == false)	readMeshDataInfo(mesh_file_name, type);
 
 	switch (type)
 	{
@@ -67,9 +67,9 @@ void Grid::readMeahDataNode(const string& mesh_file_name, GridDataType type)
 }
 
 
-void Grid::readMeahDataFace(const string& mesh_file_name, GridDataType type)
+void Grid::readMeshDataFace(const string& mesh_file_name, GridDataType type)
 {
-	if (is_read_basic_info == false)	readMeahDataInfo(mesh_file_name, type);
+	if (is_read_basic_info == false)	readMeshDataInfo(mesh_file_name, type);
 
 	switch (type)
 	{
@@ -79,9 +79,9 @@ void Grid::readMeahDataFace(const string& mesh_file_name, GridDataType type)
 	}
 }
 
-void Grid::readMeahDataCell(const string& mesh_file_name, GridDataType type)
+void Grid::readMeshDataCell(const string& mesh_file_name, GridDataType type)
 {
-	if (is_read_basic_info == false)	readMeahDataInfo(mesh_file_name, type);
+	if (is_read_basic_info == false)	readMeshDataInfo(mesh_file_name, type);
 
 	switch (type)
 	{

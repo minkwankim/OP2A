@@ -24,12 +24,12 @@
 namespace OP2A{
 namespace GRID{
 
-void Grid::readMeahData(const string& mesh_file_name, GridDataType type)
+void Grid::readMeshData(const string& mesh_file_name, GridDataType type)
 {
-	 readMeahDataInfo(mesh_file_name, type);
-	 readMeahDataNode(mesh_file_name, type);
-	 readMeahDataFace(mesh_file_name, type);
-	 readMeahDataCell(mesh_file_name, type);
+	 readMeshDataInfo(mesh_file_name, type);
+	 readMeshDataNode(mesh_file_name, type);
+	 readMeshDataFace(mesh_file_name, type);
+	 readMeshDataCell(mesh_file_name, type);
 }
 
 

@@ -56,7 +56,7 @@ CellGeoBasic::CellGeoBasic(const int ND, const CellType c_type): ID(-1), type(c_
 		NN	= 8;
 		break;
 
-	case CellType::pryramid:
+	case CellType::pyramid:
 		NF	= 5;
 		NN	= 5;
 		break;
@@ -110,7 +110,7 @@ void CellGeoBasic::allocate(const int ND, const CellType c_type)
 		NN	= 8;
 		break;
 
-	case CellType::pryramid:
+	case CellType::pyramid:
 		NF	= 5;
 		NN	= 5;
 		break;
