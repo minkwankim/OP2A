@@ -51,8 +51,7 @@ private:
 
 public:	// Functions
 	void readMeshData(const string& mesh_file_name, GridDataType type);
-	void processingGridData(const double mesh_factor, bool is_axisymmetric);
-
+	void processingGridData(const double mesh_factor, bool is_axisymmetric, bool extended_stencill);
 
 
 private:
@@ -65,6 +64,11 @@ private:
 	void processingFaceData();
 	void processingCellData();
 	void processingGhostData();
+
+
+protected:
+	void find_stencil(bool extended_stencill);
+	void calculate_distance_to_wall();
 
 
 };

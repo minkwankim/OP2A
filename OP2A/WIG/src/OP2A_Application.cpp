@@ -63,6 +63,23 @@ void ApplicationOP2A::preparation(int argc, char *argv[], string modulename)
 	if (P == 0)
 	{
 		versionOP2A.info();			// Show the version information
-		cout << " --> t = " << time_running.getDeltaT() << "[sec]" << endl;
+		cout << " --> t = " << time_running.getDeltaT() << "[sec]" << endl << endl;
+	}
+}
+
+
+
+
+/*
+ * FN-02: Elapsed time check OP2A
+ * @author	Minkwan Kim
+ * @version 1.0	9/6/2015
+ */
+void ApplicationOP2A::check_elapsed_time(string workname)
+{
+	if (P == 0)
+	{
+		cout << "[Done] ==> " << workname << endl;
+		cout << " --> t = " << time_running.getDeltaT() << "[sec]" << endl << endl;
 	}
 }

@@ -76,6 +76,7 @@ public:
 
 	CPUTime time_running;						// Simulation time
 
+	bool	use_extended_Stencil;
 	OP2A_PROBLEM problem_setup;
 
 
@@ -97,6 +98,8 @@ public:
 
 		m_t	= time(0);
 		m_now = localtime(& m_t);
+
+		use_extended_Stencil = false;
 	}
 
 	~ApplicationOP2A()
@@ -105,6 +108,7 @@ public:
 
 public:
 	void preparation(int argc, char *argv[], string modulename);
+	void check_elapsed_time(string workname);
 
 
 private:

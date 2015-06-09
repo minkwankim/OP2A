@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
 
 	/*
 	 * =======================================================
-	 * STEP 3: Read Problem information
+	 * STEP 1: Read Problem information
 	 * 		- Development Status: Version 1.0
 	 * 		- Last modified on: July 23, 2014
 	 * 						by: Minkwan Kim
@@ -58,6 +58,22 @@ int main(int argc, char *argv[]) {
 	 * =======================================================
 	 */
 	 application.problem_setup.read("Problem_setup_v2.prob");
+
+
+
+	/* ======================================================================
+	 * STEP 1: GRID GENERATION and/or READ (Unstructured Catersian grid)
+	 * 		- Development Status: Version 1.0a
+	 * 		- Last modified on: July 23, 2014
+	 * 						by: Minkwan Kim
+	 * ======================================================================
+	 */
+
+	 GRID::Grid	grid_OP2A;
+	 grid_OP2A.readMeshData(application.problem_setup.mesh_file_name, static_cast<GRID::GridDataType>(application.problem_setup.mesh_file_type));
+	 grid_OP2A.processingGridData(application.problem_setup.grid_factor, application.problem_setup.is_axisymmetric, application.use_extended_Stencil);
+	 application.check_elapsed_time("Reading/Processing Grid data");
+	 //line_finder(&grid, grid.grid_line.lines, grid.grid_line.lines_bd, grid.grid_line.cell_line_info, grid.grid_line.num_lines);
 
 
 
@@ -76,14 +92,6 @@ int main(int argc, char *argv[]) {
 	 Data::DataStorageVector	data_temp(2);
 	 data_temp.data[0]	= data_temp1;
 	 data_temp.data[1]	= data_temp2;
-
-
-	 GRID::Grid	grid_test;
-	 grid_test.readMeshData("Stardust.msh", GRID::GridDataType::FLUENT);
-	 grid_test.processingGridData(1000, false);
-
-
-
 
 
 	 Math::VECTOR	vector_test1(1.0, 2.0, 3.0);
@@ -142,22 +150,6 @@ int main(int argc, char *argv[]) {
 
 
 
-
-
-	 * ======================================================================
-	 * STEP 5: GRID GENERATION and/or READ (Unstructured Catersian grid)
-	 * 		- Development Status: Version 1.0a
-	 * 		- Last modified on: July 23, 2014
-	 * 						by: Minkwan Kim
-	 * ======================================================================
-
-	 GRID_CLASS 	grid;
-	 preprocessing_grid_read_process_ver1(problem.mesh_file_name, problem.mesh_file_type, problem.is_axisymmetric, problem.grid_factor, grid);
-	 line_finder(&grid, grid.grid_line.lines, grid.grid_line.lines_bd, grid.grid_line.cell_line_info, grid.grid_line.num_lines);
-
-	 vector < vector<int> >		node_shared_cell_list		= vector_2D<int>(grid.NNM+1, 9, 0);
-	 vector < vector<double> >	node_shared_cell_weighting	= vector_2D<double>(grid.NNM+1, 9, 0.0);
-	 calculate_node_value_find_make_lists(grid, node_shared_cell_list, node_shared_cell_weighting, problem.NT);
 
 
 

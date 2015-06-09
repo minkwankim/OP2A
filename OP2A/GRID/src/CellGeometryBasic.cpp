@@ -69,6 +69,7 @@ CellGeoBasic::CellGeoBasic(const int ND, const CellType c_type): ID(-1), type(c_
 
 	node_list.resize(NN);
 	face_list.resize(NF);
+	neighbor_list.resize(NF);
 
 	S						= 0.0;
 	characteristic_length	= 0.0;
@@ -123,6 +124,7 @@ void CellGeoBasic::allocate(const int ND, const CellType c_type)
 
 	node_list.resize(NN);
 	face_list.resize(NF);
+	neighbor_list.resize(NF);
 
 	S						= 0.0;
 	characteristic_length	= 0.0;

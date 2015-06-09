@@ -27,17 +27,17 @@ class Cell;
 
 enum StencilLabel
 {
-	cl			= 0,
-	cll			= 1,
-	clll		= 2,
-	clupper		= 3,
-	cllower		= 4,
+	CL			= 0,
+	CLL			= 1,
+	CLLL		= 2,
+	CLupper		= 3,
+	CLlower		= 4,
 
-	cr			= 0,
-	crr			= 1,
-	crrr		= 2,
-	crupper		= 3,
-	crlower		= 4,
+	CR			= 0,
+	CRR			= 1,
+	CRRR		= 2,
+	CRupper		= 3,
+	CRlower		= 4,
 };
 
 

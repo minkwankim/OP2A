@@ -25,6 +25,8 @@ namespace GRID{
 
 class Face;
 class Node;
+class Cell;
+
 
 enum CellType
 {
@@ -58,6 +60,8 @@ public:
 
 	int	NF;
 	vector<Face *> face_list;
+	vector<Cell *> neighbor_list;
+
 
 	double S;
 	vector<double> x;

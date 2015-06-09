@@ -22,16 +22,6 @@ namespace OP2A{
 namespace Common{
 
 
-template <typename TYPE>
-std::vector< std::vector<TYPE> > vector_2D(int n, int m, TYPE value)
-{
-	std::vector< std::vector<TYPE> > myVector(n, vector<TYPE>(m, value));
-	return myVector;
-}
-
-
-
-
 template <class TYPE>
 class Vector2D
 {

@@ -651,14 +651,14 @@ void Grid::processingCellData()
 							faces[f].geo.cl[0]->geo.face_list[2]	= &faces[f];
 							face_counter[faces[f].geo.cl[0]->geo.ID] += 1;
 						}
-						else if(faces[f].geo.node_list[1] == faces[f].geo.cl[0]->geo.node_list[1] &&
-								faces[f].geo.node_list[0] != faces[f].geo.cl[0]->geo.node_list[2])
+						else if(faces[f].geo.node_list[0] == faces[f].geo.cl[0]->geo.node_list[1] &&
+								faces[f].geo.node_list[1] != faces[f].geo.cl[0]->geo.node_list[2])
 						{
 							faces[f].geo.cl[0]->geo.face_list[1]	= &faces[f];
 							face_counter[faces[f].geo.cl[0]->geo.ID] += 1;
 						}
-						else if(faces[f].geo.node_list[0] == faces[f].geo.cl[0]->geo.node_list[0] &&
-								faces[f].geo.node_list[1] != faces[f].geo.cl[0]->geo.node_list[3])
+						else if(faces[f].geo.node_list[1] == faces[f].geo.cl[0]->geo.node_list[0] &&
+								faces[f].geo.node_list[0] != faces[f].geo.cl[0]->geo.node_list[3])
 						{
 							faces[f].geo.cl[0]->geo.face_list[3]	= &faces[f];
 							face_counter[faces[f].geo.cl[0]->geo.ID] += 1;
@@ -993,6 +993,7 @@ void Grid::processingGhostData()
 
 			cells_ghost[counter].geo.face_list[0]	= &faces[f];
 			cells_ghost[counter].geo.BC				= faces[f].geo.BC;
+			cells_ghost[counter].geo.type			= CellType::ghost;
 		}
 		else if (faces[f].geo.cl[0]	== NULL)
 		{
@@ -1017,6 +1018,8 @@ void Grid::processingGhostData()
 
 			cells_ghost[counter].geo.face_list[0]	= &faces[f];
 			cells_ghost[counter].geo.BC				= faces[f].geo.BC;
+			cells_ghost[counter].geo.type			= CellType::ghost;
+
 		}
 	}
 
@@ -1029,13 +1032,15 @@ void Grid::processingGhostData()
 
 
 // Grid processing function
-void Grid::processingGridData(const double mesh_factor, bool is_axisymmetric)
+void Grid::processingGridData(const double mesh_factor, bool is_axisymmetric, bool extended_stencill)
 {
 	processingNodeData(mesh_factor, is_axisymmetric);
 	processingFaceData();
 	processingCellData();
 	processingGhostData();
 
+	find_stencil(extended_stencill);
+	calculate_distance_to_wall();
 }
 
 

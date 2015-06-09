@@ -18,6 +18,7 @@
 namespace OP2A{
 namespace GRID{
 
+#define	GRID_MAX_NUM_PATH		1000
 
 enum GridDataType
 {
@@ -52,6 +53,11 @@ enum BCType
 	dielectricwall	= 9
 };
 
+inline bool is_wall_typeBC(const int& bctype)
+{
+	if (bctype == BCType::wall || bctype == BCType::axis || bctype == BCType::cathode || bctype == BCType::dielectricwall)	return (true);
+	else return (false);
+}
 
 
 }
