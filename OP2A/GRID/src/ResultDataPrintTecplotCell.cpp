@@ -12,8 +12,7 @@
  */
 
 #include <fstream>
-#include "GRID/include/Grid.hpp"
-
+#include "GRID/include/PrintResult.hpp"
 
 namespace OP2A{
 namespace GRID{

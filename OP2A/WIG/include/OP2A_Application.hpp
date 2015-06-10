@@ -24,6 +24,10 @@
 #include "Common/include/OP2A_time.hpp"
 #include "Common/include/Version.hpp"
 
+#include "GRID/include/Grid.hpp"
+#include "GRID/include/PrintResult.hpp"
+
+
 #include "../include/OP2A_Problem.hpp"
 
 using namespace std;
@@ -40,16 +44,16 @@ using namespace OP2A::Common;
 enum	OP2A_ParallelMethod
 {
 	OP2A_NONE	= 0,
-	OP2A_MPI		= 1,
+	OP2A_MPI	= 1,
 	OP2A_OPENMP	= 2,
 	OP2A_HYBRID	= 3
 };
 
 enum	OP2A_ParallelProcessor
 {
-	OP2A_CPU				= 0,
-	OP2A_GPU				= 1,
-	OP2A_MIC				= 2,
+	OP2A_CPU			= 0,
+	OP2A_GPU			= 1,
+	OP2A_MIC			= 2,
 	OP2A_HYBRID_CPUGPU	= 3,
 	OP2A_HYBRID_CPUMIC	= 4,
 	OP2A_HYBRID_GPUMIC	= 5

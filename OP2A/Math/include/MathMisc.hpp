@@ -21,6 +21,13 @@ namespace OP2A{
 namespace Math{
 
 // Misc functions
+template <class T> T fabs(T a)
+{
+	if (a < 0) a = -a;
+	return a;
+}
+
+
 template <typename T>
 T fsgn(T val)
 {

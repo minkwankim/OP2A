@@ -21,6 +21,8 @@ namespace GRID{
 
 void ResultDataPrintTecplotCell(int P, Grid& grid, const string& title, const string& file_name, string& data_to_print);
 
+void RestartDataPrintCFD(int P, unsigned int iter, Grid& grid, const string& file_name, string& data_used_to_restart);
+
 
 
 }

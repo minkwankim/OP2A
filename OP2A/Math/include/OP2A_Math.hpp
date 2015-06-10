@@ -15,6 +15,7 @@
 
 
 #include "Common/include/OP2A.hpp"
+#include "Math/include/MathMisc.hpp"
 
 namespace OP2A{
 namespace Math{
@@ -26,23 +27,7 @@ namespace Math{
 
 
 
-template <class T> T fabs(T a)
-{
-	if (a < 0) a = -a;
-	return a;
-}
 
-
-
-
-// AREA/LENGTH FUNCTIONS
-double length(double n1[3], double n2[3], int ND);
-double area_triangle(double n1[3], double n2[3], double n3[3], int ND);
-double area_quadrilateral(double n1[3], double n2[3], double n3[3], double n4[3], int ND);
-double volume_tetrahedron(double n1[3], double n2[3], double n3[3], double n4[3]);
-double volume_pyramid(double n1[3], double n2[3], double n3[3], double n4[3], double n5[3]);
-double volume_wedge(double n1[3], double n2[3], double n3[3], double n4[3], double n5[3], double n6[3]);
-double volume_hexahedron(double n1[3], double n2[3], double n3[3], double n4[3], double n5[3], double n6[3], double n7[3], double n8[3]);
 
 
 }

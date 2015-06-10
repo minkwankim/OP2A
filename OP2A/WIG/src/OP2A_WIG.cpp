@@ -37,6 +37,8 @@
 #include "DATA/include/DataStorage.hpp"
 #include "DATA/include/DataStorageVector.hpp"
 
+#include "CHEM/include/SpeciesBasic.hpp"
+
 #include "Math/include/OP2A_Vector.hpp"
 
 
@@ -105,11 +107,10 @@ int main(int argc, char *argv[]) {
 	 GRID::ResultDataPrintTecplotCell(0, grid_OP2A, "Test", "test.plt", test_int);
 
 
-	 Math::VECTOR	vector_test1(1.0, 2.0, 3.0);
-	 double test = vector_test1(1);
+	 CHEM::SpeciesBasic	species("N2");
 
-	 int a_test	= vector_test1.dimension();
 
+	 int a_test;
 	 a_test = 1;
 
 
