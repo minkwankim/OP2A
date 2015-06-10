@@ -24,9 +24,10 @@ namespace GRID{
 class NodeGeoBasic
 {
 public:
+	int	ID;
 	vector<double> x;
 
-	NodeGeoBasic():x(2, 0.0)
+	NodeGeoBasic():x(2, 0.0), ID(-1)
 	{
 
 	}
@@ -35,7 +36,7 @@ public:
 
 
 protected:
-	explicit NodeGeoBasic(const int ND): x(ND, 0.0)
+	explicit NodeGeoBasic(const int ND): x(ND, 0.0), ID(-1)
 	{
 
 	}

@@ -26,6 +26,8 @@
 
 #include "Setup/include/SetupFileReader.hpp"
 #include "GRID/include/Grid.hpp"
+#include "GRID/include/PrintResult.hpp"
+
 
 #include "Common/include/Map1D.hpp"
 #include "Common/include/Map2D.hpp"
@@ -77,7 +79,6 @@ int main(int argc, char *argv[]) {
 
 
 
-
 	 /*
 	  * TEST
 	  */
@@ -86,12 +87,22 @@ int main(int argc, char *argv[]) {
 	 temp_map.insert("rho2", 2);
 	 temp_map.insert("rho3", 3);
 	 temp_map.insert("rho4", 4);
+
+	 Map1D <string, int> temp_map2(2);
+	 temp_map2 = temp_map;
+
 	 Data::DataStorage	data_temp1("V", 4, temp_map);
 	 Data::DataStorage	data_temp2("Q", 4, temp_map);
 
 	 Data::DataStorageVector	data_temp(2);
 	 data_temp.data[0]	= data_temp1;
 	 data_temp.data[1]	= data_temp2;
+	 data_temp.mapping();
+
+	 for (int c = 0; c <= grid_OP2A.NCM; c++)	grid_OP2A.cells[c].data = data_temp;
+
+	 string test_int = "V";
+	 GRID::ResultDataPrintTecplotCell(0, grid_OP2A, "Test", "test.plt", test_int);
 
 
 	 Math::VECTOR	vector_test1(1.0, 2.0, 3.0);

@@ -77,6 +77,7 @@ void read_mesh_node_fluent(const string& mesh_file_name,		// Mesh file name
 
 						nodes[i].geo.x[0]	= x;
 						nodes[i].geo.x[1]	= y;
+						nodes[i].geo.ID		= i;
 						n++;
 					}
 					break;
@@ -97,6 +98,7 @@ void read_mesh_node_fluent(const string& mesh_file_name,		// Mesh file name
 						nodes[i].geo.x[0]	= x;
 						nodes[i].geo.x[1]	= y;
 						nodes[i].geo.x[2]	= z;
+						nodes[i].geo.ID		= i;
 						n++;
 					}
 					break;

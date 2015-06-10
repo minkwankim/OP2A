@@ -38,6 +38,7 @@ public:
 
 	void clean();
 	void resize(unsigned int new_size);
+	void mapping();
 
 	const Data::DataStorage& operator() (const unsigned int i);
 
@@ -45,6 +46,7 @@ public:
 
 private:
 	bool is_allocated;
+	bool is_mapped;
 
 
 };
