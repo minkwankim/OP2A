@@ -67,11 +67,11 @@ public:
 
 	~SpeciesBasic();
 
-	void AssignData(const std::string& species_name);
-	bool is_assigned();
+	void AssignDataBasic(const std::string& species_name);
+	bool is_assignedBasic();
 
 private:
-	bool data_assigned;
+	bool data_assignedBasic;
 };
 
 

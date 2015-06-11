@@ -20,6 +20,9 @@ namespace CHEM{
 #define Ru 8314.0
 #define Ru_cgs 8.314
 
+#define C_BOLTZMANN_CGS 1.3806E-16
+#define C_BOLTZMANN_SI 1.3806E-23
+
 #define N_AVOGADRO_SI 6.022E26
 #define N_AVOGADRO_CGS 6.022E23
 

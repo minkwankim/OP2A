@@ -38,13 +38,13 @@ SpeciesBasic::SpeciesBasic()
 	Ds		= 0.0;									/* Dissociation energy [J/kg] */
 	I		= 0.0;									/* Ionization energy [J/kg] */
 
-	data_assigned = false;
+	data_assignedBasic = false;
 }
 
 
 SpeciesBasic::SpeciesBasic(const string& species_name)
 {
-	AssignData(species_name);
+	AssignDataBasic(species_name);
 }
 
 
@@ -57,7 +57,7 @@ SpeciesBasic::~SpeciesBasic()
 /*
  * Internal Functions
  */
-void SpeciesBasic::AssignData(const string& species_name)
+void SpeciesBasic::AssignDataBasic(const string& species_name)
 {
 	// Basic information
 	string 		name_temp;
@@ -96,7 +96,7 @@ void SpeciesBasic::AssignData(const string& species_name)
 			recombination_to	= recombination_temp;
 			R					= Ru / M;
 
-			data_assigned		= true;
+			data_assignedBasic		= true;
 		}
 	}
 
@@ -104,9 +104,9 @@ void SpeciesBasic::AssignData(const string& species_name)
 }
 
 
-bool SpeciesBasic::is_assigned()
+bool SpeciesBasic::is_assignedBasic()
 {
-	return (data_assigned);
+	return (data_assignedBasic);
 }
 
 

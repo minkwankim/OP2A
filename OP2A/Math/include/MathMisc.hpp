@@ -15,10 +15,14 @@
 
 #include <vector>
 #include "Common/include/OP2A.hpp"
-#include "Math/include/OP2A_Math.hpp"
+//#include "Math/include/OP2A_Math.hpp"
 
 namespace OP2A{
 namespace Math{
+
+#define MATH_PI		3.14159265359
+#define MATH_ZERO	1.0e-15
+
 
 // Misc functions
 template <class T> T fabs(T a)

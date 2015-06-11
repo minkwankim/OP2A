@@ -45,8 +45,8 @@ SpeciesThermo::SpeciesThermo()
 	n_elec_lvl	= 0;
 	n_LeRC		= 0;
 
-	data_assigned	= false;
-	data_assignedCv	= false;
+	data_assignedThermo	= false;
+	data_assignedCv		= false;
 	data_assignedRot	= false;
 	data_assignedVib	= false;
 	data_assignedEle	= false;
@@ -280,6 +280,27 @@ void SpeciesThermo::AssignEnthalpy(const std::string& species_name)
 	database.close();
 }
 
+
+
+void SpeciesThermo::AssignThermoData(const std::string& species_name, const double& R, const int& type)
+{
+	if (data_assignedThermo == false)
+	{
+		if (data_assignedCv == false)	AssignCv(R, type);
+		if (data_assignedRot == false)	AssignRot(species_name, type);
+		if (data_assignedVib == false)	AssignVib(species_name, type);
+		if (data_assignedEle == false)	AssignEle(species_name);
+		if (data_assignedEnthalpy == false) AssignEnthalpy(species_name);
+
+		data_assignedThermo = true;
+	}
+}
+
+
+bool SpeciesThermo::is_data_assignedThermo()
+{
+	return (data_assignedThermo);
+}
 
 
 

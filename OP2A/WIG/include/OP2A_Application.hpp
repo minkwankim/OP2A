@@ -24,9 +24,12 @@
 #include "Common/include/OP2A_time.hpp"
 #include "Common/include/Version.hpp"
 
+#include "DATA/include/DataStorageVector.hpp"
+
 #include "GRID/include/Grid.hpp"
 #include "GRID/include/PrintResult.hpp"
 
+#include "CHEM/include/SpeciesSet.hpp"
 
 #include "../include/OP2A_Problem.hpp"
 
@@ -81,7 +84,8 @@ public:
 	CPUTime time_running;						// Simulation time
 
 	bool	use_extended_Stencil;
-	OP2A_PROBLEM problem_setup;
+	OP2A_PROBLEM 		problem_setup;
+	CHEM::SpeciesSet	species_set;
 
 
 	/*
@@ -108,6 +112,7 @@ public:
 
 	~ApplicationOP2A()
 	{
+
 	}
 
 public:
@@ -120,6 +125,9 @@ private:
 
 	time_t	m_t;
 	struct	tm * m_now;
+
+protected:
+	Data::DataStorage
 };
 
 

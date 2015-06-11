@@ -21,8 +21,6 @@ namespace OP2A{
 namespace Math{
 
 
-#define MATH_PI		3.14159265359
-#define MATH_ZERO	1.0e-15
 
 
 

@@ -37,7 +37,7 @@
 #include "DATA/include/DataStorage.hpp"
 #include "DATA/include/DataStorageVector.hpp"
 
-#include "CHEM/include/SpeciesBasic.hpp"
+#include "CHEM/include/SpeciesSet.hpp"
 
 #include "Math/include/OP2A_Vector.hpp"
 
@@ -62,6 +62,19 @@ int main(int argc, char *argv[]) {
 	 * =======================================================
 	 */
 	 application.problem_setup.read("Problem_setup_v2.prob");
+
+	/*
+	 * =========================================================
+	 * STEP 2: Read Species/chemistry data (For NOEQ-CFD mode)
+	 * 		- Development Status: Version 1.2a (Need to improve)
+	 * 		- Last modified on: July 23, 2014
+	 * 						by: Minkwan Kim
+	 * =========================================================
+	 */
+	 application.species_set.read_SpeciesSet(application.problem_setup.species_file, application.problem_setup.NS);
+	 application.species_set.showInfo();
+	 application.check_elapsed_time("Reading Species data set");
+
 
 
 
@@ -107,7 +120,6 @@ int main(int argc, char *argv[]) {
 	 GRID::ResultDataPrintTecplotCell(0, grid_OP2A, "Test", "test.plt", test_int);
 
 
-	 CHEM::SpeciesBasic	species("N2");
 
 
 	 int a_test;
@@ -121,12 +133,6 @@ int main(int argc, char *argv[]) {
 
 /*
 
-	 * =========================================================
-	 * STEP 4: Read Species/chemistry data (For NOEQ-CFD mode)
-	 * 		- Development Status: Version 1.2a (Need to improve)
-	 * 		- Last modified on: July 23, 2014
-	 * 						by: Minkwan Kim
-	 * =========================================================
 
 	 vector<SPECIES>	species_entire;
 	 read_species_data_set(species_entire, problem.species_file, problem.NS);

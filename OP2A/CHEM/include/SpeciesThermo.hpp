@@ -73,7 +73,7 @@ public:
 	~SpeciesThermo();
 
 private:
-	bool data_assigned;
+	bool data_assignedThermo;
 	bool data_assignedCv;
 	bool data_assignedRot;
 	bool data_assignedVib;
@@ -82,8 +82,13 @@ private:
 	bool include_kev;
 
 
-
 public:	// Internal functions
+	void AssignThermoData(const std::string& species_name, const double& R, const int& type);
+	bool is_data_assignedThermo();
+
+
+
+private:
 	void AssignCv(const double& R, const int& type);
 	void AssignRot(const std::string& species_name, const int& type);
 	void AssignVib(const std::string& species_name, const int& type);
