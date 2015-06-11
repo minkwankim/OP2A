@@ -41,6 +41,11 @@ public:
 
 	}
 
+	Trio(const T1& a, const T2& b, const T3& c) : first(a), second(b), third(c)
+	{
+
+	}
+
 	template <typename U1, typename U2, typename U3>
 	Trio(const Trio<U1, U2, U3>& p) : first(p.first), second(p.second), third(p.third)
 	{

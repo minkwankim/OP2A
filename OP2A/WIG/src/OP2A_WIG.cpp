@@ -35,6 +35,7 @@
 #include "Common/include/Vector2D.hpp"
 
 #include "DATA/include/DataStorage.hpp"
+#include "DATA/include/DataStorage2D.hpp"
 #include "DATA/include/DataStorageVector.hpp"
 
 #include "CHEM/include/SpeciesSet.hpp"
@@ -76,6 +77,7 @@ int main(int argc, char *argv[]) {
 	 application.check_elapsed_time("Reading Species data set");
 
 
+	 application.create_sampleDataCFD();
 
 
 	/* ======================================================================
@@ -93,10 +95,20 @@ int main(int argc, char *argv[]) {
 	 //line_finder(&grid, grid.grid_line.lines, grid.grid_line.lines_bd, grid.grid_line.cell_line_info, grid.grid_line.num_lines);
 
 
-
 	 /*
 	  * TEST
 	  */
+	 Data::DataStorage2D	data_test2D(4,3);
+	 data_test2D.mapInsert("A", "1", 0, 0);
+	 data_test2D.mapInsert("A", "2", 0, 1);
+	 data_test2D.mapInsert("A", "3", 0, 2);
+	 data_test2D("A", "2") = 2.0;
+
+
+
+
+
+
 	 Map1D <string, int> temp_map(10);
 	 temp_map.insert("rho1", 1);
 	 temp_map.insert("rho2", 2);

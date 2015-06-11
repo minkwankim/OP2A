@@ -86,6 +86,8 @@ public:
 	bool	use_extended_Stencil;
 	OP2A_PROBLEM 		problem_setup;
 	CHEM::SpeciesSet	species_set;
+	GRID::Grid			grid;
+
 
 
 	/*
@@ -126,8 +128,33 @@ private:
 	time_t	m_t;
 	struct	tm * m_now;
 
+
 protected:
-	Data::DataStorage
+	Data::DataStorage	data_CFD_Q;
+	Data::DataStorage	data_CFD_V;
+	Data::DataStorage	data_CFD_W;
+	Data::DataStorage	data_CFD_mixture;
+	Data::DataStorage	data_CFD_Xs;
+	Data::DataStorage	data_CFD_Ys;
+
+	Data::DataStorage	data_CFD_R;
+	Data::DataStorage	data_CFD_dQ;
+	Data::DataStorage	data_CFD_Source;
+
+	Data::DataStorage	data_CFD_Flux_inviscid;
+	Data::DataStorage	data_CFD_Flux_viscous;
+
+
+
+
+
+
+
+
+
+public:
+	void create_sampleDataCFD();
+
 };
 
 

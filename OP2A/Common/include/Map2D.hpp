@@ -59,7 +59,7 @@ public:
 
 	// F01- Reserve
 	// @brief	Reserve memory for the indicated size
-	void reserve(const size_t* maxSize)
+	void reserve(const size_t& maxSize)
 	{
 		m_vectorMap.reserve(maxSize);
 	}
