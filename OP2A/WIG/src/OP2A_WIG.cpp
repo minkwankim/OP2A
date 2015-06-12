@@ -47,9 +47,9 @@ using namespace OP2A::Setup;
 using namespace OP2A;
 
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 	ApplicationOP2A application(OP2A_OPENMP, OP2A_CPU, 23, "OP2A_setup.prob");
-
 	application.preparation(argc, argv, "CFD");
 
 
@@ -64,6 +64,9 @@ int main(int argc, char *argv[]) {
 	 */
 	 application.problem_setup.read("Problem_setup_v2.prob");
 
+
+
+
 	/*
 	 * =========================================================
 	 * STEP 2: Read Species/chemistry data (For NOEQ-CFD mode)
@@ -72,28 +75,18 @@ int main(int argc, char *argv[]) {
 	 * 						by: Minkwan Kim
 	 * =========================================================
 	 */
-	 application.species_set.read_SpeciesSet(application.problem_setup.species_file, application.problem_setup.NS);
-	 application.species_set.showInfo();
-	 application.check_elapsed_time("Reading Species data set");
+	 application.preprocessing_species();
 
-
-	 application.create_sampleDataCFD();
 
 
 	/* ======================================================================
-	 * STEP 1: GRID GENERATION and/or READ (Unstructured Catersian grid)
+	 * STEP 3: GRID GENERATION and/or READ (Unstructured Catersian grid)
 	 * 		- Development Status: Version 1.0a
-	 * 		- Last modified on: July 23, 2014
+	 * 		- Last modified on: June 12, 2015
 	 * 						by: Minkwan Kim
 	 * ======================================================================
 	 */
-
-	 GRID::Grid	grid_OP2A;
-	 grid_OP2A.readMeshData(application.problem_setup.mesh_file_name, static_cast<GRID::GridDataType>(application.problem_setup.mesh_file_type));
-	 grid_OP2A.processingGridData(application.problem_setup.grid_factor, application.problem_setup.is_axisymmetric, application.use_extended_Stencil);
-	 application.check_elapsed_time("Reading/Processing Grid data");
-	 //line_finder(&grid, grid.grid_line.lines, grid.grid_line.lines_bd, grid.grid_line.cell_line_info, grid.grid_line.num_lines);
-
+	 application.preprocessing_grid();
 
 	 /*
 	  * TEST
@@ -121,15 +114,15 @@ int main(int argc, char *argv[]) {
 	 Data::DataStorage	data_temp1("V", 4, temp_map);
 	 Data::DataStorage	data_temp2("Q", 4, temp_map);
 
-	 Data::DataStorageVector	data_temp(2);
+	 Data::DataStorageVector<Data::DataStorage>	data_temp(2);
 	 data_temp.data[0]	= data_temp1;
 	 data_temp.data[1]	= data_temp2;
 	 data_temp.mapping();
 
-	 for (int c = 0; c <= grid_OP2A.NCM; c++)	grid_OP2A.cells[c].data = data_temp;
+	// for (int c = 0; c <= grid_OP2A.NCM; c++)	grid_OP2A.cells[c].data1D = data_temp;
 
 	 string test_int = "V";
-	 GRID::ResultDataPrintTecplotCell(0, grid_OP2A, "Test", "test.plt", test_int);
+	// GRID::ResultDataPrintTecplotCell(0, grid_OP2A, "Test", "test.plt", test_int);
 
 
 

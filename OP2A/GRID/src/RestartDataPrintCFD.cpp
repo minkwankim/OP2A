@@ -25,8 +25,8 @@ void RestartDataPrintCFD(int P, unsigned int iter, Grid& grid, const string& fil
 {
 	ofstream restart_file(file_name.c_str());
 
-	int data_index = grid.cells[1].data.dataMap.find(data_used_to_restart);
-	int NV	= grid.cells[1].data.data[data_index].numData;
+	int data_index = grid.cells[1].data1D.dataMap.find(data_used_to_restart);
+	int NV	= grid.cells[1].data1D.data[data_index].numData;
 
 
 	restart_file << "[ITERATION]: " << iter << endl;
@@ -39,7 +39,7 @@ void RestartDataPrintCFD(int P, unsigned int iter, Grid& grid, const string& fil
 
 		for (int i = 0; i <=  NV-1; i++)
 		{
-			restart_file << grid.cells[c].data.data[data_index].data[i] << "  ";
+			restart_file << grid.cells[c].data1D.data[data_index].data[i] << "  ";
 		}
 
 		restart_file << endl;

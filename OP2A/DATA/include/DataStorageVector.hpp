@@ -25,25 +25,96 @@ namespace OP2A{
 namespace Data{
 
 
+template <typename TYPE>
 class DataStorageVector
 {
 public:
 	int numDataVector;
-	vector<Data::DataStorage>		data;
+	vector<TYPE>					data;
 	Common::Map1D<string, int>		dataMap;
 
-	DataStorageVector();
-	explicit DataStorageVector(const unsigned int size_data);
-	explicit DataStorageVector(const unsigned int size_data, Common::Map1D<string, int> &data_map);
+	DataStorageVector():numDataVector(0), dataMap(1), is_allocated(false), is_mapped(false)
+	{
+
+	}
+
+	explicit DataStorageVector(const unsigned int size_data):numDataVector(size_data), dataMap(size_data), is_mapped(false)
+	{
+		data.resize(numDataVector);
+		is_allocated	= true;
+	}
 
 
-	void clean();
-	void resize(unsigned int new_size);
-	void mapping();
+	explicit DataStorageVector(const unsigned int size_data, Common::Map1D<string, int> &data_map):numDataVector(size_data), dataMap(data_map)
+	{
+		data.resize(numDataVector);
+		is_allocated	= true;
+		is_mapped		= true;
 
-	const Data::DataStorage& operator() (const unsigned int i);
+		if (numDataVector != dataMap.size())	throw ExceptionDataStorageSize(FromHere(), "DataStroageVector size does not match with mapping data");
+	}
 
-	~DataStorageVector();
+
+
+	void clean()
+	{
+		if (is_allocated == true)
+		{
+			data.clear();
+
+			is_allocated = false;
+			is_mapped	 = false;
+
+			numDataVector	= 0;
+			dataMap.clear();
+		}
+		else
+		{
+			numDataVector	= 0;
+
+			is_mapped	= false;
+			dataMap.clear();
+		}
+	}
+
+
+
+	void resize(unsigned int new_size)
+	{
+		data.resize(new_size);
+		numDataVector = new_size;
+		dataMap.reserve(numDataVector);
+
+		is_mapped	= false;
+	}
+
+
+	void mapping()
+	{
+		dataMap.clear();
+		dataMap.reserve(numDataVector);
+
+		for (int i = 0; i <= numDataVector-1; i++)	dataMap.insert(data[i].name, i);
+
+		is_mapped	= true;
+	}
+
+
+	const TYPE& operator() (const unsigned int i)
+	{
+		if (i >= numDataVector)
+		{
+			throw ExceptionDataStorageVector(FromHere(), "Exceed the data size of DataStorageVector");
+		}
+
+		return data[i];
+	}
+
+
+	~DataStorageVector()
+	{
+
+	}
 
 private:
 	bool is_allocated;
@@ -51,6 +122,13 @@ private:
 
 
 };
+
+
+
+
+
+
+
 
 }
 }

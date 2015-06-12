@@ -24,6 +24,8 @@
 #include "Common/include/OP2A_time.hpp"
 #include "Common/include/Version.hpp"
 
+#include "DATA/include/DataStorage.hpp"
+#include "DATA/include/DataStorage2D.hpp"
 #include "DATA/include/DataStorageVector.hpp"
 
 #include "GRID/include/Grid.hpp"
@@ -117,9 +119,7 @@ public:
 
 	}
 
-public:
-	void preparation(int argc, char *argv[], string modulename);
-	void check_elapsed_time(string workname);
+
 
 
 private:
@@ -144,16 +144,41 @@ protected:
 	Data::DataStorage	data_CFD_Flux_inviscid;
 	Data::DataStorage	data_CFD_Flux_viscous;
 
+	Data::DataStorage	data_CFD_dp_dQ;
+
+	Data::DataStorage	data_CFD_diffusion_coeff;
+	Data::DataStorage	data_CFD_viscosity_coeff;
 
 
 
+	Data::DataStorage2D	data_CFD_Jacobian_inviscid_minus;
+	Data::DataStorage2D	data_CFD_Jacobian_inviscid_plus;
 
+	Data::DataStorage2D	data_CFD_Jacobian_viscous_minus;
+	Data::DataStorage2D	data_CFD_Jacobian_viscous_plus;
 
+	Data::DataStorage2D	data_CFD_Jacobian_source;
 
+	Data::DataStorage2D	data_CFD_dT_dQ;
+
+	Data::DataStorage2D	data_CFD_thermal_conductivity_coeff;
+
+	Data::DataStorageVector<Data::DataStorage>		cell_data1D_template;
+	Data::DataStorageVector<Data::DataStorage2D>	cell_data2D_template;
+	Data::DataStorageVector<Data::DataStorage>		face_data1D_template;
+	Data::DataStorageVector<Data::DataStorage2D>	face_data2D_template;
 
 
 public:
+	void preparation(int argc, char *argv[], string modulename);
+	void check_elapsed_time(string workname);
 	void create_sampleDataCFD();
+
+	void preprocessing_species();
+	void preprocessing_grid();
+
+
+
 
 };
 

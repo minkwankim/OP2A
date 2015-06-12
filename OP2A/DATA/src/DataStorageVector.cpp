@@ -22,22 +22,22 @@ namespace OP2A{
 namespace Data{
 
 
-
-DataStorageVector::DataStorageVector():numDataVector(0), dataMap(1), is_allocated(false), is_mapped(false)
+template <typename TYPE>
+DataStorageVector<TYPE>::DataStorageVector():numDataVector(0), dataMap(1), is_allocated(false), is_mapped(false)
 {
 
 }
 
-
-DataStorageVector::DataStorageVector(const unsigned int size_data):numDataVector(size_data), dataMap(size_data), is_mapped(false)
+template <typename TYPE>
+DataStorageVector<TYPE>::DataStorageVector(const unsigned int size_data):numDataVector(size_data), dataMap(size_data), is_mapped(false)
 {
 	//data			= new Data::DataStorage	[numDataVector];
 	data.resize(numDataVector);
 	is_allocated	= true;
 }
 
-
-DataStorageVector::DataStorageVector(const unsigned int size_data, Common::Map1D<string, int> &data_map):numDataVector(size_data), dataMap(data_map)
+template <typename TYPE>
+DataStorageVector<TYPE>::DataStorageVector(const unsigned int size_data, Common::Map1D<string, int> &data_map):numDataVector(size_data), dataMap(data_map)
 {
 	//data			= new Data::DataStorage	[numDataVector];
 	data.resize(numDataVector);
@@ -48,7 +48,8 @@ DataStorageVector::DataStorageVector(const unsigned int size_data, Common::Map1D
 }
 
 
-void DataStorageVector::clean()
+template <typename TYPE>
+void DataStorageVector<TYPE>::clean()
 {
 	if (is_allocated == true)
 	{
@@ -70,7 +71,8 @@ void DataStorageVector::clean()
 }
 
 
-void DataStorageVector::resize(unsigned int new_size)
+template <typename TYPE>
+void DataStorageVector<TYPE>::resize(unsigned int new_size)
 {
 	data.resize(new_size);
 	numDataVector = new_size;
@@ -81,8 +83,8 @@ void DataStorageVector::resize(unsigned int new_size)
 
 
 
-
-const Data::DataStorage &DataStorageVector::operator() (const unsigned int i)
+template <typename TYPE>
+const TYPE& DataStorageVector<TYPE>::operator() (const unsigned int i)
 {
 	if (i >= numDataVector)
 	{
@@ -93,9 +95,8 @@ const Data::DataStorage &DataStorageVector::operator() (const unsigned int i)
 }
 
 
-
-
-DataStorageVector::~DataStorageVector()
+template <typename TYPE>
+DataStorageVector<TYPE>::~DataStorageVector()
 {
 	/*
 	if (is_allocated == true)
@@ -117,7 +118,8 @@ DataStorageVector::~DataStorageVector()
 /*
  * Internal Functions
  */
-void DataStorageVector::mapping()
+template <typename TYPE>
+void DataStorageVector<TYPE>::mapping()
 {
 	dataMap.clear();
 	dataMap.reserve(numDataVector);

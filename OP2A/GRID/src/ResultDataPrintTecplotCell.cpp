@@ -34,12 +34,12 @@ void ResultDataPrintTecplotCell(int P, Grid& grid, const string& title, const st
 	tecplot_file << "\"x-direction, [m]\"  \"y-direction, [m]\" ";
 	if (grid.ND == 3)	tecplot_file << "\"z-direction, [m]\" ";
 
-	int data_index = grid.cells[1].data.dataMap.find(data_to_print);
-	int NV	= grid.cells[1].data.data[data_index].numData;
+	int data_index = grid.cells[1].data1D.dataMap.find(data_to_print);
+	int NV	= grid.cells[1].data1D.data[data_index].numData;
 
 	for (int v = 0; v <= NV-1; v++)
 	{
-		tecplot_file << "\""<< grid.cells[1].data.data[data_index].dataMap.getKey(v) << " \"  ";
+		tecplot_file << "\""<< grid.cells[1].data1D.data[data_index].dataMap.getKey(v) << " \"  ";
 	}
 	tecplot_file << endl;
 
@@ -85,7 +85,7 @@ void ResultDataPrintTecplotCell(int P, Grid& grid, const string& title, const st
 	{
 		for (int c = 1; c <= grid.NCM; c++)
 		{
-			tecplot_file << grid.cells[c].data.data[data_index].data[v] <<endl;
+			tecplot_file << grid.cells[c].data1D.data[data_index].data[v] <<endl;
 		}
 	}
 

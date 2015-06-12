@@ -20,6 +20,7 @@ using namespace std;
 #include "CellGeometry.hpp"
 
 #include "DATA/include/DataStorage.hpp"
+#include "DATA/include/DataStorage2D.hpp"
 #include "DATA/include/DataStorageVector.hpp"
 
 namespace OP2A{
@@ -42,18 +43,40 @@ namespace GRID{
 class Cell
 {
 public:
-	CellGeometry				geo;
-	Data::DataStorageVector		data;
+	CellGeometry									geo;
+	Data::DataStorageVector<Data::DataStorage>		data1D;
+	Data::DataStorageVector<Data::DataStorage2D>	data2D;
 
-	Cell()
+
+	Cell():allocated_geo(false), allocated_data1D(false), allocated_data2D(false)
 	{
 
 	};
 
-	explicit	Cell(const int ND, const CellType c_type,	Data::DataStorageVector& data_template);
-	explicit	Cell(CellGeometry& Cellgeo_template, Data::DataStorageVector& data_template);
+	explicit	Cell(const int ND, const CellType c_type,	Data::DataStorageVector<Data::DataStorage>& data_template);
+	explicit	Cell(CellGeometry& Cellgeo_template, Data::DataStorageVector<Data::DataStorage>& data_template);
+
+	explicit	Cell(const int ND, const CellType c_type,	Data::DataStorageVector<Data::DataStorage>& data_template, Data::DataStorageVector<Data::DataStorage2D>& data2D_template);
+	explicit	Cell(CellGeometry& Cellgeo_template, Data::DataStorageVector<Data::DataStorage>& data_template, Data::DataStorageVector<Data::DataStorage2D>& data2D_template);
 
 	~Cell();
+
+
+public:
+	void allocate_geo_type(const int ND, const CellType c_type);
+	void allocate_geo_type(CellGeometry& geo_template);
+	void allocate_data1D_type(Data::DataStorageVector<Data::DataStorage>& data1D_template);
+	void allocate_data2D_type(Data::DataStorageVector<Data::DataStorage2D>& data2D_template);
+
+	bool is_allocated_geo();
+	bool is_allocated_data1D();
+	bool is_allocated_data2D();
+
+
+private:
+	bool allocated_geo;
+	bool allocated_data1D;
+	bool allocated_data2D;
 };
 
 
