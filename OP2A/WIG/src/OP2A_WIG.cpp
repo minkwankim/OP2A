@@ -62,7 +62,9 @@ int main(int argc, char *argv[])
 	 * @todo need to update using Object Oriented programming method
 	 * =======================================================
 	 */
-	 application.problem_setup.read("Problem_setup_v2.prob");
+	application.show_starting_task("Read Problem Information");
+	application.problem_setup.read("Problem_setup_v2.prob");
+	application.check_elapsed_time("Read Problem Information");
 
 
 
@@ -75,7 +77,8 @@ int main(int argc, char *argv[])
 	 * 						by: Minkwan Kim
 	 * =========================================================
 	 */
-	 application.preprocessing_species();
+	application.show_starting_task("Read Species/Chemisty Data");
+	application.preprocessing_species();
 
 
 
@@ -86,53 +89,35 @@ int main(int argc, char *argv[])
 	 * 						by: Minkwan Kim
 	 * ======================================================================
 	 */
-	 application.preprocessing_grid();
-
-	 /*
-	  * TEST
-	  */
-	 Data::DataStorage2D	data_test2D(4,3);
-	 data_test2D.mapInsert("A", "1", 0, 0);
-	 data_test2D.mapInsert("A", "2", 0, 1);
-	 data_test2D.mapInsert("A", "3", 0, 2);
-	 data_test2D("A", "2") = 2.0;
+	application.show_starting_task("Read/Generate Grid and allocate solution Data");
+	application.preprocessing_grid();
 
 
 
+	/*
+	 * ===================================================================
+	 * STEP 10: Preparing Output data
+	 * 		- Development Status: Version 1.0
+	 * 		- Last modified on: June 15, 2015
+	 * 						by: Minkwan Kim
+	 *====================================================================
+	 */
+	application.show_starting_task("Print solution Data");
+	application.print_result();
+
+	application.show_starting_task("Save restart Data");
+	application.print_restartCFD();
+
+/*
+int	time_strand_ID = 0;
+vector < vector < vector <double> > > V_print(problem.multi_fluid);
+for (int f = 0; f <= problem.multi_fluid-1; f++)	V_print[f]	= Solution_data[f].Vc;
+OP2A_data_print_tecplot_multi_ver1(P, grid, V_print, variable_names, problem.name, problem.output_file_name, problem.multi_fluid);
+OP2A_data_print_restart(P, grid, V_print, "restart.dat", problem.multi_fluid, problem.n_current, 0);
 
 
 
-	 Map1D <string, int> temp_map(10);
-	 temp_map.insert("rho1", 1);
-	 temp_map.insert("rho2", 2);
-	 temp_map.insert("rho3", 3);
-	 temp_map.insert("rho4", 4);
-
-	 Map1D <string, int> temp_map2(2);
-	 temp_map2 = temp_map;
-
-	 Data::DataStorage	data_temp1("V", 4, temp_map);
-	 Data::DataStorage	data_temp2("Q", 4, temp_map);
-
-	 Data::DataStorageVector<Data::DataStorage>	data_temp(2);
-	 data_temp.data[0]	= data_temp1;
-	 data_temp.data[1]	= data_temp2;
-	 data_temp.mapping();
-
-	// for (int c = 0; c <= grid_OP2A.NCM; c++)	grid_OP2A.cells[c].data1D = data_temp;
-
-	 string test_int = "V";
-	// GRID::ResultDataPrintTecplotCell(0, grid_OP2A, "Test", "test.plt", test_int);
-
-
-
-
-	 int a_test;
-	 a_test = 1;
-
-
-
-
+*/
 
 
 
@@ -175,42 +160,6 @@ int main(int argc, char *argv[])
 
 
 
-
-
-
-	 * =========================================================
-	 * STEP 6: CFD Variable setup
-	 * 		- Development Status: Version 1.1a (Need to improve)
-	 * 		- Last modified on: July 23, 2014
-	 * 						by: Minkwan Kim
-	 * =========================================================
-
-	 vector<SOL_CFD>	Solution_data(problem.multi_fluid);
-	 switch(problem.multi_fluid)
-	 {
-	 case 1:
-	 Solution_data[0].setup.NS	= species[0].NS;
-	 Solution_data[0].setup.ND	= problem_fluid[0].DIM;
-	 Solution_data[0].setup.NE	= problem_fluid[0].NE;
-	 Solution_data[0].setup.assign_variables(problem_fluid[0].NER, problem_fluid[0].NEV, problem_fluid[0].NEE, fluid_info[0]);
-	 break;
-
-	 case 2:
-	 Solution_data[0].setup.NS	= species[0].NS;
-	 Solution_data[0].setup.ND	= problem_fluid[0].DIM;
-	 Solution_data[0].setup.NE	= problem_fluid[0].NE;
-	 Solution_data[0].setup.assign_variables(problem_fluid[0].NER, problem_fluid[0].NEV, 0, fluid_info[0]);
-
-
-	 Solution_data[1].setup.NS	= 1;
-	 Solution_data[1].setup.ND	= problem_fluid[0].DIM;
-	 Solution_data[1].setup.NE	= 1;
-	 Solution_data[1].setup.assign_variables(problem_fluid[0].NER, 0, 0, fluid_info[1]);
-	 break;
-	 }
-
-	 for (int f = 0; f <= problem.multi_fluid-1; f++)
-	 Solution_data[f].allocate_size(grid.NNM, grid.NFM, grid.NCM, grid.NGM, problem_fluid[f].is_viscous, problem_fluid[f].TIME_INTEGRATION_METHOD, problem_fluid[f].is_axisymmetric);
 
 
 
@@ -343,64 +292,8 @@ int main(int argc, char *argv[])
 	 #else
 	 cout << "  --->Done" << endl;
 	 #endif
+*====================================================================
 
-
-
-	 * ===================================================================
-	 * STEP 10: Preparing Output data
-	 * 		- Development Status: Version 1.0
-	 * 		- Last modified on: Jan 22, 2015
-	 * 						by: Minkwan Kim
-	 *====================================================================
-
-
-	 // Step 8.1 Assign Variable names
-	 string	density_pre		= "Density, <greek>r</greek><sub>";
-	 string	density_end		= "</sub> [kg/m<sup>-3</sup>]";
-	 string	velocity_pre	= "veclocity, ";
-	 string	velocity_end	= " [m/s]";
-	 string	temperature_pre	= "Temperature, T<sub>";
-	 string	temperature_end	= "</sub> [K]";
-
-	 vector < vector <string> > variable_names(problem.multi_fluid);
-	 for (int f = 0; f <= problem.multi_fluid-1; f++)
-	 {
-	 variable_names[f].resize(Solution_data[f].setup.VAR);
-
-	 for (int s = 0; s <= Solution_data[f].setup.NS-1; s++)
-	 {
-	 int s_ID			= species[f].whereis[s];
-	 variable_names[f][s]	= density_pre + species_entire[s_ID].basic_data.name + density_end;
-	 }
-
-	 variable_names[f][Solution_data[f].setup.NS]	= velocity_pre + "u" + velocity_end;
-	 variable_names[f][Solution_data[f].setup.NS+1]	= velocity_pre + "v" + velocity_end;
-	 if (Solution_data[f].setup.ND == 3)	variable_names[f][Solution_data[f].setup.NS+2]	= velocity_pre + "w" + velocity_end;
-
-	 variable_names[f][Solution_data[f].setup.NS + Solution_data[f].setup.ND]	= temperature_pre + "tra" + temperature_end;
-	 if (Solution_data[f].setup.ID_T[ROT] != 0)	variable_names[f][Solution_data[f].setup.NS+Solution_data[f].setup.ND+Solution_data[f].setup.ID_T[ROT]]	= temperature_pre + "rot" 	+ temperature_end;
-	 if (Solution_data[f].setup.ID_T[VIB] != 0)	variable_names[f][Solution_data[f].setup.NS+Solution_data[f].setup.ND+Solution_data[f].setup.ID_T[VIB]]	= temperature_pre + "vib" 	+ temperature_end;
-	 if (Solution_data[f].setup.ID_T[ELE] != 0)	variable_names[f][Solution_data[f].setup.NS+Solution_data[f].setup.ND+Solution_data[f].setup.ID_T[ELE]]	= temperature_pre + "e" 	+ temperature_end;
-	 }
-
-	 #ifdef MPI
-	 if (P == 0)	cout << "  Write initial Output file  [t = " << MPI_Wtime()-t0 << endl;
-	 #else
-	 cout << "  Write initial Output file" << endl;
-	 #endif
-
-	 // Step 8.2 Write Initial data
-	 int	time_strand_ID = 0;
-	 vector < vector < vector <double> > > V_print(problem.multi_fluid);
-	 for (int f = 0; f <= problem.multi_fluid-1; f++)	V_print[f]	= Solution_data[f].Vc;
-	 OP2A_data_print_tecplot_multi_ver1(P, grid, V_print, variable_names, problem.name, problem.output_file_name, problem.multi_fluid);
-	 OP2A_data_print_restart(P, grid, V_print, "restart.dat", problem.multi_fluid, problem.n_current, 0);
-
-	 #ifdef MPI
-	 if (P == 0)	cout << "  --->Done  [t = " << MPI_Wtime()-t0 << endl;
-	 #else
-	 cout << "  --->Done" << endl;
-	 #endif
 
 
 

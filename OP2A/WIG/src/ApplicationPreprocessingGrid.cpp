@@ -38,6 +38,7 @@ void ApplicationOP2A::preprocessing_grid()
 	int nBasic_face_1D	= 1;
 	int nBasic_face_2D	= 0;
 
+	if (problem_setup.is_axisymmetric != true)	nBasic_cell_1D++;
 
 
 	if (problem_setup.TIME_INTEGRATION_METHOD != 0)
@@ -84,6 +85,11 @@ void ApplicationOP2A::preprocessing_grid()
 	nBasic_face_1D	= 1;
 	nBasic_face_2D	= 0;
 
+	if (problem_setup.is_axisymmetric != true)
+	{
+		cell_data1D_template.data[nBasic_cell_1D]	= data_CFD_divVc;	nBasic_cell_1D++;
+	}
+
 
 	if (problem_setup.TIME_INTEGRATION_METHOD != 0)
 	{
@@ -110,9 +116,28 @@ void ApplicationOP2A::preprocessing_grid()
 			face_data2D_template.data[nBasic_face_2D]	= data_CFD_Jacobian_viscous_minus; nBasic_face_2D++;
 			face_data2D_template.data[nBasic_face_2D]	= data_CFD_Jacobian_viscous_plus; nBasic_face_2D++;
 		}
-
 	}
 
+	cell_data1D_template.mapping();
+	cell_data2D_template.mapping();
+
+	face_data1D_template.mapping();
+	face_data2D_template.mapping();
+
+
+	/*
+	 * Assign data type for
+	 * 	- cell
+	 * 	- face
+	 * 	- ghost cell
+	 */
+	// Cell
+	for (int c = 0; c <= grid.NCM; c++)	grid.cells[c].data1D	= cell_data1D_template;
+	for (int c = 0; c <= grid.NCM; c++)	grid.cells[c].data2D	= cell_data2D_template;
+
+	// Face
+	for (int f = 0; f <= grid.NFM; f++)	grid.faces[f].data1D	= face_data1D_template;
+	for (int f = 0; f <= grid.NFM; f++)	grid.faces[f].data2D	= face_data2D_template;
 
 
 

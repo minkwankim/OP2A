@@ -59,9 +59,9 @@ void ApplicationOP2A::create_sampleDataCFD()
 		V[s]	= "rho_" + species_set.species[s].name;
 		F[s]	= "F_rho_" + species_set.species[s].name;
 
-		QnameMap.insert("rho<sub>" + species_set.species[s].name + "</sub> [kg/m<sup>-3</sup>]", s);
-		VnameMap.insert("rho<sub>" + species_set.species[s].name + "</sub> [kg/m<sup>-3</sup>]", s);
-		WnameMap.insert("rho<sub>" + species_set.species[s].name + "</sub> [kg/m<sup>-3</sup>]", s);
+		QnameMap.insert("rho<sub>" + species_set.species[s].name + "</sub> [kg/m<sup>3</sup>]", s);
+		VnameMap.insert("rho<sub>" + species_set.species[s].name + "</sub> [kg/m<sup>3</sup>]", s);
+		WnameMap.insert("rho<sub>" + species_set.species[s].name + "</sub> [kg/m<sup>3</sup>]", s);
 
 		FluxInvnameMap.insert("Finv_s" + Common::StringOps::to_str<int>(s), s);
 		FluxVisnameMap.insert("Fvis_s" + Common::StringOps::to_str<int>(s), s);
@@ -271,6 +271,13 @@ void ApplicationOP2A::create_sampleDataCFD()
 	data_CFD_dp_dQ.resize(numData, dpdQMap); data_CFD_dp_dQ.asgName("dp/dQ");
 
 
+	/*
+	 * Assign sample data format for
+	 * 	- div Vc
+	 */
+	Common::Map1D<std::string, int>	divVcMap (1);
+	divVcMap.insert("divergence V", 0);
+	data_CFD_divVc.resize(1, divVcMap); data_CFD_divVc.asgName("divergence Vc");
 
 
 	// 2D Data

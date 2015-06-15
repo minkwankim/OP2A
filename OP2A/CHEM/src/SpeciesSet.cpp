@@ -12,6 +12,7 @@
  */
 #include <fstream>
 #include <sstream>
+#include <vector>
 
 #include "CHEM/include/SpeciesSet.hpp"
 #include "Common/include/Exception_FileSystem.hpp"
@@ -42,6 +43,7 @@ SpeciesSet::SpeciesSet(const std::string& file_name, unsigned int ns): NS(ns), n
 
 SpeciesSet::~SpeciesSet()
 {
+
 
 }
 
@@ -106,9 +108,9 @@ void SpeciesSet::read_SpeciesSet(const std::string& file_name)
 		}
 	}
 
-	if (n_atom > 0)	atoms.resize(n_atom);
-	if (n_molecule > 0)	molecules.resize(n_atom);
-	if (n_electron > 0)	electrons.resize(n_atom);
+	if (n_atom > 0)	atoms.resize(n_atom, NULL);
+	if (n_molecule > 0)	molecules.resize(n_molecule, NULL);
+	if (n_electron > 0)	electrons.resize(n_electron, NULL);
 
 
 	n_atom	= 0;
@@ -192,9 +194,10 @@ void SpeciesSet::read_SpeciesSet(const std::string& file_name, unsigned int ns)
 		}
 	}
 
-	if (n_atom > 0)	atoms.resize(n_atom);
-	if (n_molecule > 0)	molecules.resize(n_atom);
-	if (n_electron > 0)	electrons.resize(n_atom);
+
+	if (n_atom > 0)	atoms.resize(n_atom, NULL);
+	if (n_molecule > 0)	molecules.resize(n_molecule, NULL);
+	if (n_electron > 0)	electrons.resize(n_electron, NULL);
 
 
 	n_atom	= 0;
@@ -223,6 +226,7 @@ void SpeciesSet::read_SpeciesSet(const std::string& file_name, unsigned int ns)
 
 	if ((n_atom + n_molecule + n_electron) != NS)	throw Common::ExceptionDimensionMatch (FromHere(), "Size of species data does not match[atom/molecule/electron]. Need to check data");
 	else											data_assigned = true;
+
 }
 
 

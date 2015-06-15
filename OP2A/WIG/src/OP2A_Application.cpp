@@ -79,7 +79,16 @@ void ApplicationOP2A::check_elapsed_time(string workname)
 {
 	if (P == 0)
 	{
-		cout << "[Done] ==> " << workname << endl;
-		cout << " --> t = " << time_running.getDeltaT() << "[sec]" << endl << endl;
+		cout << "[Done] ==> " << workname << " \t\t\t\t [t = " << time_running.getDeltaT() << "[sec]]" << endl << endl;
 	}
 }
+
+
+void ApplicationOP2A::show_starting_task(string workname)
+{
+	if (P == 0)
+	{
+		cout << "[TASK]:  " << workname << " (Starting....) \t\t [t = " << time_running.getDeltaT() << "[sec]]" << endl;
+	}
+}
+

@@ -39,7 +39,7 @@ void ResultDataPrintTecplotCell(int P, Grid& grid, const string& title, const st
 
 	for (int v = 0; v <= NV-1; v++)
 	{
-		tecplot_file << "\""<< grid.cells[1].data1D.data[data_index].dataMap.getKey(v) << " \"  ";
+		tecplot_file << "\""<< grid.cells[1].data1D.data[data_index].dataMap.findKey(v) << " \"  ";
 	}
 	tecplot_file << endl;
 

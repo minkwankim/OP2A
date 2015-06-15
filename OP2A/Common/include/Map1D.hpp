@@ -290,6 +290,26 @@ public:
 		return m_vectorMap[i].first;
 	}
 
+	// F16 - get Key corresponding value
+	KEY findKey(VALUE value)
+	{
+		KEY	key;
+
+		if(m_vectorMap.empty())	keyNotFound(value);
+
+		for (int i = 0; i <= m_vectorMap.size(); i++)
+		{
+			if (m_vectorMap[i].second == value)
+			{
+				key = m_vectorMap[i].first;
+				return(key);
+			}
+		}
+
+		if(m_vectorMap.empty())	keyNotFound(value);
+		return(key);
+	}
+
 
 
 /* ============================================
@@ -360,6 +380,12 @@ private:
 		throw Common::ExceptionNoSuchValue (FromHere(),msg);
 	}
 
+	void keyNotFound(const VALUE& aValue)
+	{
+		std::string msg = "CFMap: VALUE not found: ";
+		msg += Common::StringOps::to_str(aValue);
+		throw Common::ExceptionNoSuchValue (FromHere(),msg);
+	}
 
 private:
 	bool m_sorted;

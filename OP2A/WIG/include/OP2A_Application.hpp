@@ -71,9 +71,10 @@ public:
 	OP2A_ParallelMethod		parallel_method;
 	OP2A_ParallelProcessor	parallel_processor;
 
+	unsigned int	iter;
 	int			P;
 	int			NT;
-	int	NP;
+	int			NP;
 	bool		FLAG_TERMINATION;
 
 	double 		t0;
@@ -85,7 +86,7 @@ public:
 
 	CPUTime time_running;						// Simulation time
 
-	bool	use_extended_Stencil;
+	bool				use_extended_Stencil;
 	OP2A_PROBLEM 		problem_setup;
 	CHEM::SpeciesSet	species_set;
 	GRID::Grid			grid;
@@ -100,6 +101,7 @@ public:
 	explicit ApplicationOP2A(OP2A_ParallelMethod app_parallel_method, OP2A_ParallelProcessor app_parallel_processor, int app_NT, string app_setup_filename)
 						: parallel_method(app_parallel_method), parallel_processor(app_parallel_processor), NT(app_NT), setup_filename(app_setup_filename)
 	{
+		iter	= 0;
 		P	= 0;
 		NP	= 1;
 		FLAG_TERMINATION = false;
@@ -140,6 +142,7 @@ protected:
 	Data::DataStorage	data_CFD_R;
 	Data::DataStorage	data_CFD_dQ;
 	Data::DataStorage	data_CFD_Source;
+	Data::DataStorage	data_CFD_divVc;
 
 	Data::DataStorage	data_CFD_Flux_inviscid;
 	Data::DataStorage	data_CFD_Flux_viscous;
@@ -172,10 +175,16 @@ protected:
 public:
 	void preparation(int argc, char *argv[], string modulename);
 	void check_elapsed_time(string workname);
+	void show_starting_task(string workname);
+
 	void create_sampleDataCFD();
 
 	void preprocessing_species();
 	void preprocessing_grid();
+
+	void print_result();
+	void print_restartCFD();
+
 
 
 
