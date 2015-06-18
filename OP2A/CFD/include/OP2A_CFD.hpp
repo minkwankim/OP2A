@@ -31,10 +31,16 @@ namespace CFD{
 
 static unsigned int CFD_type;
 static unsigned int CFD_NT;
+static unsigned variableType;
+
+void assignVariableType(int NER, int NEV, int NEE);
+
 
 
 }
 }
+
+
 
 
 #endif /* OPPA_CFD_HPP_ */

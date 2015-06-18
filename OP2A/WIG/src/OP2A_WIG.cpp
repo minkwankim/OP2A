@@ -93,8 +93,7 @@ int main(int argc, char *argv[])
 	 */
 	application.show_starting_task("Read/Generate Grid and allocate solution Data");
 	application.preprocessing_grid();
-
-	//application.InitializeData(0);
+	application.InitializeData(0);
 
 
 	/*
