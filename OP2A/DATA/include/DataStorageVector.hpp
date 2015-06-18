@@ -17,6 +17,7 @@
 #include <vector>
 
 #include "DATA/include/DataStorage.hpp"
+#include "DATA/include/Exception_DataStorageVector.hpp"
 
 using namespace std;
 
@@ -100,7 +101,7 @@ public:
 	}
 
 
-	const TYPE& operator() (const unsigned int i)
+	TYPE& operator() (const unsigned int i)
 	{
 		if (i >= numDataVector)
 		{
@@ -109,6 +110,43 @@ public:
 
 		return data[i];
 	}
+
+
+
+
+	TYPE& operator()(const string var_main)
+	{
+		int index_main	= dataMap.find(var_main);
+
+
+		return data[index_main];
+	}
+
+
+	double& operator()(const string var_main, const string var1)
+	{
+		int index_main	= dataMap.find(var_main);
+
+
+		return data[index_main](var1);
+	}
+
+	double& operator()(const string var_main, const string var1, const string var2)
+	{
+		int index_main	= dataMap.find(var_main);
+
+
+		return data[index_main](var1, var2);
+	}
+
+
+
+
+
+
+
+
+
 
 
 	~DataStorageVector()

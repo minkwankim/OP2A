@@ -182,8 +182,10 @@ public:
 	void preprocessing_species();
 	void preprocessing_grid();
 
-	void print_result();
-	void print_restartCFD();
+	void print_result(const string& i_variablename);
+	void print_restartCFD(const string& i_variablename);
+
+	void InitializeData(unsigned int num_ic);
 
 
 

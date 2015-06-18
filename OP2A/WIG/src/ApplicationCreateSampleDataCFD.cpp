@@ -18,6 +18,7 @@
 #include "Common/include/StringOps.hpp"
 
 #include "../include/OP2A_Application.hpp"
+#include "../include/ApplicationConstants.hpp"
 
 
 
@@ -52,122 +53,124 @@ void ApplicationOP2A::create_sampleDataCFD()
 	Common::Map1D<std::string, int>	FluxInvnameMap (numData);
 	Common::Map1D<std::string, int>	FluxVisnameMap (numData);
 
-
+	// Species
 	for (int s = 0; s <= species_set.NS-1; s++)
 	{
-		Q[s]	= "rho_" + species_set.species[s].name;
-		V[s]	= "rho_" + species_set.species[s].name;
-		F[s]	= "F_rho_" + species_set.species[s].name;
+		Q[s]	= string(VAR_RHO) + species_set.species[s].name;
+		V[s]	= string(VAR_RHO) + species_set.species[s].name;
+		F[s]	= string(VAR_FLUX) + string(VAR_RHO) + species_set.species[s].name;
 
-		QnameMap.insert("rho<sub>" + species_set.species[s].name + "</sub> [kg/m<sup>3</sup>]", s);
-		VnameMap.insert("rho<sub>" + species_set.species[s].name + "</sub> [kg/m<sup>3</sup>]", s);
-		WnameMap.insert("rho<sub>" + species_set.species[s].name + "</sub> [kg/m<sup>3</sup>]", s);
+		QnameMap.insert(string(VAR_RHO_PRE) + species_set.species[s].name + string(VAR_RHO_POST), s);
+		VnameMap.insert(string(VAR_RHO_PRE) + species_set.species[s].name + string(VAR_RHO_POST), s);
+		WnameMap.insert(string(VAR_RHO_PRE) + species_set.species[s].name + string(VAR_RHO_POST), s);
 
-		FluxInvnameMap.insert("Finv_s" + Common::StringOps::to_str<int>(s), s);
-		FluxVisnameMap.insert("Fvis_s" + Common::StringOps::to_str<int>(s), s);
+		FluxInvnameMap.insert(string(VAR_F_INV) + string(VAR_SPECIES) + Common::StringOps::to_str<int>(s), s);
+		FluxVisnameMap.insert(string(VAR_F_VIS) + string(VAR_SPECIES) + Common::StringOps::to_str<int>(s), s);
 	}
 
-	Q[species_set.NS]	= "rho_u";
-	V[species_set.NS]	= "u";
-	F[species_set.NS]	= "F_rho_u";
-	QnameMap.insert("rho u", species_set.NS);
-	VnameMap.insert("u [m/s]", species_set.NS);
-	WnameMap.insert("u [m/s]", species_set.NS);
+	// Momentum
+	//  - X
+	Q[species_set.NS]	= VAR_RHO_U;
+	V[species_set.NS]	= VAR_U_WO_UNIT;
+	F[species_set.NS]	= string(VAR_FLUX) + string(VAR_RHO_U);
+	QnameMap.insert(VAR_RHO_U, species_set.NS);
+	VnameMap.insert(VAR_U, species_set.NS);
+	WnameMap.insert(VAR_U, species_set.NS);
 
-	FluxInvnameMap.insert("Finv_rhou", species_set.NS);
-	FluxVisnameMap.insert("Fvis_rhou", species_set.NS);
+	FluxInvnameMap.insert(string(VAR_F_INV)+string(VAR_RHO_U), species_set.NS);
+	FluxVisnameMap.insert(string(VAR_F_VIS)+string(VAR_RHO_U), species_set.NS);
 
+	//  - Y
+	Q[species_set.NS+1]	= VAR_RHO_V;
+	V[species_set.NS+1]	= VAR_V_WO_UNIT;
+	F[species_set.NS+1]	= string(VAR_FLUX) + string(VAR_RHO_V);
+	QnameMap.insert(VAR_RHO_V, species_set.NS+1);
+	VnameMap.insert(VAR_V, species_set.NS+1);
+	WnameMap.insert(VAR_V, species_set.NS+1);
 
-	Q[species_set.NS+1]	= "rho_v";
-	V[species_set.NS+1]	= "v";
-	F[species_set.NS+1]	= "F_rho_v";
-	QnameMap.insert("rho v", species_set.NS+1);
-	VnameMap.insert("v [m/s]", species_set.NS+1);
-	WnameMap.insert("v [m/s]", species_set.NS+1);
+	FluxInvnameMap.insert(string(VAR_F_INV)+string(VAR_RHO_V), species_set.NS+1);
+	FluxVisnameMap.insert(string(VAR_F_VIS)+string(VAR_RHO_V), species_set.NS+1);
 
-	FluxInvnameMap.insert("Finv_rhov", species_set.NS+1);
-	FluxVisnameMap.insert("Fvis_rhov", species_set.NS+1);
-
-
+	//  - Z
 	if (grid.ND == 3)
 	{
-		Q[species_set.NS+2]	= "rho_w";
-		V[species_set.NS+2]	= "w";
-		F[species_set.NS+2]	= "F_rho_w";
+		Q[species_set.NS+2]	= VAR_RHO_W;
+		V[species_set.NS+2]	= VAR_W_WO_UNIT;
+		F[species_set.NS+2]	= string(VAR_FLUX) + string(VAR_RHO_W);
 
-		QnameMap.insert("rho w", species_set.NS+2);
-		VnameMap.insert("w [m/s]", species_set.NS+2);
-		WnameMap.insert("w [m/s]", species_set.NS+2);
+		QnameMap.insert(VAR_RHO_W, species_set.NS+2);
+		VnameMap.insert(VAR_W, species_set.NS+2);
+		WnameMap.insert(VAR_W, species_set.NS+2);
 
-		FluxInvnameMap.insert("Finv_rhow", species_set.NS+2);
-		FluxVisnameMap.insert("Fvis_rhow", species_set.NS+2);
+		FluxInvnameMap.insert(string(VAR_F_INV)+string(VAR_RHO_W), species_set.NS+2);
+		FluxVisnameMap.insert(string(VAR_F_VIS)+string(VAR_RHO_W), species_set.NS+2);
 	}
 
-	Q[species_set.NS+grid.ND]	= "E";
-	V[species_set.NS+grid.ND]	= "T";
-	F[species_set.NS+grid.ND]	= "F_E";
-	QnameMap.insert("E <sub>total</sub> [J]", species_set.NS+grid.ND);
-	VnameMap.insert("T <sub>tra</sub> [K]", species_set.NS+grid.ND);
-	WnameMap.insert("P [N/m<sup>2</sup>]", species_set.NS+grid.ND);
 
+	// Total Energy
+	Q[species_set.NS+grid.ND]	= VAR_E_WO_UNIT;
+	V[species_set.NS+grid.ND]	= VAR_T_WO_UNIT;
+	F[species_set.NS+grid.ND]	= string(VAR_FLUX) + string(VAR_E_WO_UNIT);;
+	QnameMap.insert(VAR_E, species_set.NS+grid.ND);
+	VnameMap.insert(VAR_T, species_set.NS+grid.ND);
+	WnameMap.insert(VAR_P, species_set.NS+grid.ND);
 
 	int ne	= 0;
-	FluxInvnameMap.insert("Finv_E", species_set.NS+grid.ND+ne);
-	FluxVisnameMap.insert("Fvis_E", species_set.NS+grid.ND+ne);
+	FluxInvnameMap.insert(string(VAR_F_INV)+string(VAR_E_WO_UNIT), species_set.NS+grid.ND+ne);
+	FluxVisnameMap.insert(string(VAR_F_VIS)+string(VAR_E_WO_UNIT), species_set.NS+grid.ND+ne);
 	ne++;
 
+	// Rotational energy
 	if (problem_setup.NER != 0)
 	{
-		Q[species_set.NS+grid.ND+ne]	= "E_rot";
-		V[species_set.NS+grid.ND+ne]	= "T_rot";
-		F[species_set.NS+grid.ND+ne]	= "F_Erot";
-		QnameMap.insert("E <sub>rot</sub> [J]", species_set.NS+grid.ND+ne);
-		VnameMap.insert("T <sub>rot</sub> [K]", species_set.NS+grid.ND+ne);
-		WnameMap.insert("T <sub>rot</sub> [K]", species_set.NS+grid.ND+ne);
+		Q[species_set.NS+grid.ND+ne]	= VAR_E_ROT_WO_UNIT;
+		V[species_set.NS+grid.ND+ne]	= VAR_T_ROT_WO_UNIT;
+		F[species_set.NS+grid.ND+ne]	= string(VAR_FLUX) + string(VAR_E_ROT_WO_UNIT);
+		QnameMap.insert(VAR_E_ROT, species_set.NS+grid.ND+ne);
+		VnameMap.insert(VAR_T_ROT, species_set.NS+grid.ND+ne);
+		WnameMap.insert(VAR_T_ROT, species_set.NS+grid.ND+ne);
 
-		FluxInvnameMap.insert("Finv_Erot", species_set.NS+grid.ND+ne);
-		FluxVisnameMap.insert("Fvis_Erot", species_set.NS+grid.ND+ne);
-
+		FluxInvnameMap.insert(string(VAR_F_INV) + string(VAR_E_ROT_WO_UNIT), species_set.NS+grid.ND+ne);
+		FluxVisnameMap.insert(string(VAR_F_INV) + string(VAR_E_ROT_WO_UNIT), species_set.NS+grid.ND+ne);
 		ne++;
 	}
 
 	if (problem_setup.NEV != 0)
 	{
-		Q[species_set.NS+grid.ND+ne]	= "E_vib";
-		V[species_set.NS+grid.ND+ne]	= "T_vib";
-		F[species_set.NS+grid.ND+ne]	= "F_Evib";
-		QnameMap.insert("E <sub>vib</sub> [J]", species_set.NS+grid.ND+ne);
-		VnameMap.insert("T <sub>vib</sub> [K]", species_set.NS+grid.ND+ne);
-		WnameMap.insert("T <sub>vib</sub> [K]", species_set.NS+grid.ND+ne);
+		Q[species_set.NS+grid.ND+ne]	= VAR_E_VIB_WO_UNIT;
+		V[species_set.NS+grid.ND+ne]	= VAR_T_VIB_WO_UNIT;
+		F[species_set.NS+grid.ND+ne]	= string(VAR_FLUX) + string(VAR_E_VIB_WO_UNIT);
+		QnameMap.insert(VAR_E_VIB, species_set.NS+grid.ND+ne);
+		VnameMap.insert(VAR_T_VIB, species_set.NS+grid.ND+ne);
+		WnameMap.insert(VAR_T_VIB, species_set.NS+grid.ND+ne);
 
-		FluxInvnameMap.insert("Finv_Evib", species_set.NS+grid.ND+ne);
-		FluxVisnameMap.insert("Fvis_Evib", species_set.NS+grid.ND+ne);
+		FluxInvnameMap.insert(string(VAR_F_INV) + string(VAR_E_VIB_WO_UNIT), species_set.NS+grid.ND+ne);
+		FluxVisnameMap.insert(string(VAR_F_VIS) + string(VAR_E_VIB_WO_UNIT), species_set.NS+grid.ND+ne);
 
 		ne++;
 	}
 
 	if (problem_setup.NEE != 0)
 	{
-		Q[species_set.NS+grid.ND+ne]	= "E_e";
-		V[species_set.NS+grid.ND+ne]	= "T_e";
-		F[species_set.NS+grid.ND+ne]	= "F_Ee";
-		QnameMap.insert("E <sub>e</sub> [J]", species_set.NS+grid.ND+ne);
-		VnameMap.insert("T <sub>e</sub> [K]", species_set.NS+grid.ND+ne);
-		WnameMap.insert("T <sub>e</sub> [K]", species_set.NS+grid.ND+ne);
+		Q[species_set.NS+grid.ND+ne]	= VAR_E_E_WO_UNIT;
+		V[species_set.NS+grid.ND+ne]	= VAR_T_E_WO_UNIT;
+		F[species_set.NS+grid.ND+ne]	= string(VAR_FLUX) + string(VAR_E_E_WO_UNIT);
+		QnameMap.insert(VAR_E_E, species_set.NS+grid.ND+ne);
+		VnameMap.insert(VAR_T_E, species_set.NS+grid.ND+ne);
+		WnameMap.insert(VAR_T_E, species_set.NS+grid.ND+ne);
 
-		FluxInvnameMap.insert("Finv_Ee", species_set.NS+grid.ND+ne);
-		FluxVisnameMap.insert("Fvis_Ee", species_set.NS+grid.ND+ne);
-
+		FluxInvnameMap.insert(string(VAR_F_INV) + string(VAR_E_E_WO_UNIT), species_set.NS+grid.ND+ne);
+		FluxVisnameMap.insert(string(VAR_F_VIS) + string(VAR_E_E_WO_UNIT), species_set.NS+grid.ND+ne);
 		ne++;
 	}
 
 
-	data_CFD_Q.resize(numData, QnameMap);	data_CFD_Q.asgName("Conservative variables");
-	data_CFD_V.resize(numData, VnameMap);	data_CFD_V.asgName("Primitive variables");
-	data_CFD_W.resize(numData, WnameMap);	data_CFD_W.asgName("W");
+	data_CFD_Q.resize(numData, QnameMap);	data_CFD_Q.asgName(VAR_VECTOR_Q);
+	data_CFD_V.resize(numData, VnameMap);	data_CFD_V.asgName(VAR_VECTOR_V);
+	data_CFD_W.resize(numData, WnameMap);	data_CFD_W.asgName(VAR_VECTOR_W);
 
-	data_CFD_Flux_inviscid.resize(numData, FluxInvnameMap);	data_CFD_Flux_inviscid.asgName("Inviscid Flux");
-	data_CFD_Flux_viscous.resize(numData, FluxVisnameMap);	data_CFD_Flux_viscous.asgName("Viscous Flux");
+	data_CFD_Flux_inviscid.resize(numData, FluxInvnameMap);	data_CFD_Flux_inviscid.asgName(VAR_VECTOR_F_INV);
+	data_CFD_Flux_viscous.resize(numData, FluxVisnameMap);	data_CFD_Flux_viscous.asgName(VAR_VECTOR_F_VIS);
 
 
 
@@ -179,49 +182,55 @@ void ApplicationOP2A::create_sampleDataCFD()
 	int nCv	= 1;
 	if (problem_setup.NER != 0)	nCv++;
 
-	Common::Map1D<std::string, int>	MixtureNameMap (4+nCv+1+ne);
+	int nMixture;
+	if (problem_setup.is_viscous == true)	nMixture	= 4+nCv+1+ne;
+	else									nMixture	= 4+nCv;
 
-	MixtureNameMap.insert("rho_mix", 0);
-	MixtureNameMap.insert("R_mix", 1);
-	MixtureNameMap.insert("M_mix", 2);
-	MixtureNameMap.insert("gamma", 3);
+	Common::Map1D<std::string, int>	MixtureNameMap (nMixture);
+
+	MixtureNameMap.insert(string(VAR_RHO) + string(VAR_MIX), 0);
+	MixtureNameMap.insert(string(VAR_R)	+ string(VAR_MIX_SUB), 1);
+	MixtureNameMap.insert(string(VAR_M)	+ string(VAR_MIX_SUB), 2);
+	MixtureNameMap.insert(string(VAR_GAMMA)	+ string(VAR_MIX_SUB), 3);
 
 	if (problem_setup.NER != 0)
 	{
-		MixtureNameMap.insert("Cv_tra_mix", 4);
-		MixtureNameMap.insert("Cv_rot_mix", 5);
+		MixtureNameMap.insert(string(VAR_CV_TRA) + string(VAR_MIX_SUB), 4);
+		MixtureNameMap.insert(string(VAR_CV_ROT) + string(VAR_MIX_SUB), 5);
 	}
 	else
 	{
-		MixtureNameMap.insert("Cv_tr_mix", 4);
+		MixtureNameMap.insert(string(VAR_CV_TR) + string(VAR_MIX_SUB), 4);
 	}
 
-	MixtureNameMap.insert("mu_mix", 4+nCv);
-
-	ne	= 0;
-
-	MixtureNameMap.insert("kappa_tra", 4+nCv+ne);
-	ne++;
-
-	if (problem_setup.NER != 0)
+	if (problem_setup.is_viscous == true)
 	{
-		MixtureNameMap.insert("kappa_rot", 4+nCv+ne);
+		MixtureNameMap.insert(string(VAR_VISCOSITY_COEFF) + string(VAR_MIX_SUB), 4+nCv);
+		ne	= 0;
+
+		MixtureNameMap.insert(string(VAR_THERMAL_COND) + string(VAR_TRA_SUB), 4+nCv+ne);
 		ne++;
+
+		if (problem_setup.NER != 0)
+		{
+			MixtureNameMap.insert(string(VAR_THERMAL_COND) + string(VAR_ROT_SUB), 4+nCv+ne);
+			ne++;
+		}
+
+		if (problem_setup.NEV != 0)
+		{
+			MixtureNameMap.insert(string(VAR_THERMAL_COND) + string(VAR_VIB_SUB), 4+nCv+ne);
+			ne++;
+		}
+
+		if (problem_setup.NEE != 0)
+		{
+			MixtureNameMap.insert(string(VAR_THERMAL_COND) + string(VAR_E_SUB), 4+nCv+ne);
+			ne++;
+		}
 	}
 
-	if (problem_setup.NEV != 0)
-	{
-		MixtureNameMap.insert("kappa_vib", 4+nCv+ne);
-		ne++;
-	}
-
-	if (problem_setup.NEE != 0)
-	{
-		MixtureNameMap.insert("kappa_ele", 4+nCv+ne);
-		ne++;
-	}
-
-	data_CFD_mixture.resize(4+nCv+1+ne, MixtureNameMap); data_CFD_Q.asgName("Mixture variables");
+	data_CFD_mixture.resize(nMixture, MixtureNameMap); data_CFD_Q.asgName(VAR_VECTOR_MIX);
 
 
 
@@ -235,12 +244,12 @@ void ApplicationOP2A::create_sampleDataCFD()
 
 	for (int s = 0; s <= species_set.NS-1; s++)
 	{
-		YsNameMap.insert("Y<sub>" + species_set.species[s].name + "</sub>", s);
-		XsNameMap.insert("X<sub>" + species_set.species[s].name + "</sub>", s);
+		YsNameMap.insert(string(VAR_YS) + species_set.species[s].name, s);
+		XsNameMap.insert(string(VAR_XS) + species_set.species[s].name, s);
 	}
 
-	data_CFD_Xs.resize(species_set.NS, XsNameMap); data_CFD_Xs.asgName("Species mole fraction");
-	data_CFD_Ys.resize(species_set.NS, YsNameMap); data_CFD_Ys.asgName("Species mass fraction");
+	data_CFD_Xs.resize(species_set.NS, XsNameMap); data_CFD_Xs.asgName(VAR_VECTOR_XS);
+	data_CFD_Ys.resize(species_set.NS, YsNameMap); data_CFD_Ys.asgName(VAR_VECTOR_YS);
 
 
 

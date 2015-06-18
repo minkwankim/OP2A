@@ -34,6 +34,8 @@
 #include "Common/include/Vector1D.hpp"
 #include "Common/include/Vector2D.hpp"
 
+#include "CFD/include/VariableConstants.hpp"
+
 #include "DATA/include/DataStorage.hpp"
 #include "DATA/include/DataStorage2D.hpp"
 #include "DATA/include/DataStorageVector.hpp"
@@ -92,6 +94,7 @@ int main(int argc, char *argv[])
 	application.show_starting_task("Read/Generate Grid and allocate solution Data");
 	application.preprocessing_grid();
 
+	//application.InitializeData(0);
 
 
 	/*
@@ -103,21 +106,10 @@ int main(int argc, char *argv[])
 	 *====================================================================
 	 */
 	application.show_starting_task("Print solution Data");
-	application.print_result();
+	application.print_result(string(NAME_V));
 
 	application.show_starting_task("Save restart Data");
-	application.print_restartCFD();
-
-/*
-int	time_strand_ID = 0;
-vector < vector < vector <double> > > V_print(problem.multi_fluid);
-for (int f = 0; f <= problem.multi_fluid-1; f++)	V_print[f]	= Solution_data[f].Vc;
-OP2A_data_print_tecplot_multi_ver1(P, grid, V_print, variable_names, problem.name, problem.output_file_name, problem.multi_fluid);
-OP2A_data_print_restart(P, grid, V_print, "restart.dat", problem.multi_fluid, problem.n_current, 0);
-
-
-
-*/
+	application.print_restartCFD(string(NAME_V));
 
 
 

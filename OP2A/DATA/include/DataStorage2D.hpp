@@ -51,7 +51,6 @@ public:
 	double& operator()(const string col, const string row);
 	void mapInsert(const string col, const string row, const unsigned i, const unsigned j);
 
-
 	~DataStorage2D();
 
 

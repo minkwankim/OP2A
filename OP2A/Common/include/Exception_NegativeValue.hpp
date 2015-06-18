@@ -13,6 +13,7 @@
 #ifndef EXCEPTION_NAGATIVEVALUE_HPP_
 #define EXCEPTION_NAGATIVEVALUE_HPP_
 
+#include "Common/include/Exception.hpp"
 
 namespace OP2A{
 namespace Common{

@@ -20,6 +20,7 @@
 #include "Common/include/StringOps.hpp"
 
 #include "../include/OP2A_Application.hpp"
+#include "CFD/include/VariableSamplesWIG.hpp"
 
 
 void ApplicationOP2A::preprocessing_grid()
@@ -132,8 +133,14 @@ void ApplicationOP2A::preprocessing_grid()
 	 * 	- ghost cell
 	 */
 	// Cell
-	for (int c = 0; c <= grid.NCM; c++)	grid.cells[c].data1D	= cell_data1D_template;
-	for (int c = 0; c <= grid.NCM; c++)	grid.cells[c].data2D	= cell_data2D_template;
+	Data::DataStorageVector<Data::DataStorage>		cell_data1D_template1;
+	Data::DataStorageVector<Data::DataStorage2D>	cell_data2D_template1;
+
+	cell_data1D_template1 = CFD::CFD_DataTemplateWIG::CellData1D(species_set, grid.ND, problem_setup.NER,  problem_setup.NEV,  problem_setup.NEE,  problem_setup.is_viscous,  problem_setup.is_axisymmetric, problem_setup.TIME_INTEGRATION_METHOD);
+	cell_data2D_template1 = CFD::CFD_DataTemplateWIG::CellData2D(species_set, grid.ND, problem_setup.NER,  problem_setup.NEV,  problem_setup.NEE,  problem_setup.is_viscous,  problem_setup.is_axisymmetric, problem_setup.TIME_INTEGRATION_METHOD);
+
+	for (int c = 0; c <= grid.NCM; c++)	grid.cells[c].data1D = cell_data1D_template1;
+	for (int c = 0; c <= grid.NCM; c++)	grid.cells[c].data2D = cell_data2D_template1;
 
 	// Face
 	for (int f = 0; f <= grid.NFM; f++)	grid.faces[f].data1D	= face_data1D_template;

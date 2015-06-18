@@ -21,7 +21,7 @@ namespace OP2A{
 namespace GRID{
 
 
-void RestartDataPrintCFD(int P, unsigned int iter, Grid& grid, const string& file_name, string& data_used_to_restart)
+void RestartDataPrintCFD(int P, unsigned int iter, Grid& grid, const string& file_name, const string& data_used_to_restart)
 {
 	ofstream restart_file(file_name.c_str());
 

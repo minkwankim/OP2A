@@ -81,8 +81,24 @@ void DataStorage::asgName(const string name_data)
 	name	= name_data;
 }
 
+double DataStorage::find(string var_name)
+{
+	int index = dataMap.find(var_name);
+	return data[index];
+}
 
 
+
+double& DataStorage::operator()(const string var_name)
+{
+	int index = dataMap.find(var_name);
+	return data[index];
+}
+
+double& DataStorage::operator()(const unsigned i)
+{
+	return data[i];
+}
 
 
 }

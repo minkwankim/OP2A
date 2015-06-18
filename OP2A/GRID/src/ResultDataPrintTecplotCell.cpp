@@ -17,7 +17,7 @@
 namespace OP2A{
 namespace GRID{
 
-void ResultDataPrintTecplotCell(int P, Grid& grid, const string& title, const string& file_name, string& data_to_print)
+void ResultDataPrintTecplotCell(int P, Grid& grid, const string& title, const string& file_name, const string& data_to_print)
 {
 
 	ofstream tecplot_file(file_name.c_str());

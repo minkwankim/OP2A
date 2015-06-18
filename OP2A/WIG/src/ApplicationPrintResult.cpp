@@ -19,20 +19,18 @@
 #include "../include/OP2A_Application.hpp"
 
 
-void ApplicationOP2A::print_result()
+void ApplicationOP2A::print_result(const string& i_variablename)
 {
-	string print_data_string = "Primitive variables";
-	GRID::ResultDataPrintTecplotCell(P, grid, problem_setup.name, problem_setup.output_file_name, print_data_string);
+	GRID::ResultDataPrintTecplotCell(P, grid, problem_setup.name, problem_setup.output_file_name, i_variablename);
 
 	check_elapsed_time("Print Solution Data");
 }
 
-void ApplicationOP2A::print_restartCFD()
+void ApplicationOP2A::print_restartCFD(const string& i_variablename)
 {
-	string data_used_to_restart = "Primitive variables";
 	string restart_file_name = problem_setup.name + ".rst";
 
-	GRID::RestartDataPrintCFD(P, iter, grid, restart_file_name, data_used_to_restart);
+	GRID::RestartDataPrintCFD(P, iter, grid, restart_file_name, i_variablename);
 
 	check_elapsed_time("Save Restart Data");
 }

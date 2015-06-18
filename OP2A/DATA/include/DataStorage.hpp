@@ -47,6 +47,11 @@ public:
 
 	void asgName(const string name_data);
 
+	double& operator()(const unsigned i);
+	double& operator()(const string var_name);
+
+	double find(string var_name);
+
 	~DataStorage();
 };
 

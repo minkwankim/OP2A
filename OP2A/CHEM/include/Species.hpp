@@ -45,7 +45,7 @@ enum SpeciesThermalConductivityModel
 enum EnergyMode
 {
 	E_TRA			=	0,
-	E_ROT 		=	1,
+	E_ROT 			=	1,
 	E_VIB			=	2,
 	E_ELE			=	3,
 	E_TR			=	4,

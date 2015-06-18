@@ -124,7 +124,48 @@ public:
 	}
 
 
-	std::string convertYesNo (const int i);
+	static std::string convertYesNo (const int i);
+
+
+	static std::string makeVAR_Sub(const std::string& var, const std::string& sub)
+	{
+		std::ostringstream oss;
+		oss << var <<"_" <<sub;
+		return oss.str();
+	}
+
+	static std::string makeVAR_Sub_Num(const std::string& var, const std::string& sub, int num)
+	{
+		std::ostringstream oss;
+		oss << var <<"_" << sub << num;
+		return oss.str();
+	}
+
+	static std::string makeVAR_Sub_Unit(const std::string& var, const std::string& sub, const std::string& unit)
+	{
+		std::ostringstream oss;
+		oss << var <<"_" <<sub <<" [" <<unit<<"]";
+		return oss.str();
+	}
+
+
+	static std::string makeVAR_Sub_Tecplot(const std::string& var, const std::string& sub)
+	{
+		std::ostringstream oss;
+		oss << var <<"<sub>" << sub <<"</sub>";
+		return oss.str();
+	}
+
+	static std::string makeVAR_Sub_Unit_Tecplot(const std::string& var, const std::string& sub, const std::string& unit)
+	{
+		std::ostringstream oss;
+		oss << var <<"<sub>" << sub <<"</sub>" << " [" <<unit<<"]";;
+		return oss.str();
+	}
+
+
+
+
 
 }; // class StringOps
 

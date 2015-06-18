@@ -1,6 +1,6 @@
 TITLE = "TEST_PROBLEM"
 FILETYPE = FULL
-VARIABLES = "x-direction, [m]"  "y-direction, [m]" "rho<sub>N2</sub> [kg/m<sup>3</sup>] "  "rho<sub>O2</sub> [kg/m<sup>3</sup>] "  "rho<sub>NO</sub> [kg/m<sup>3</sup>] "  "rho<sub>N</sub> [kg/m<sup>3</sup>] "  "rho<sub>O</sub> [kg/m<sup>3</sup>] "  "rho<sub>N2p</sub> [kg/m<sup>3</sup>] "  "rho<sub>O2p</sub> [kg/m<sup>3</sup>] "  "rho<sub>NOp</sub> [kg/m<sup>3</sup>] "  "rho<sub>Np</sub> [kg/m<sup>3</sup>] "  "rho<sub>Op</sub> [kg/m<sup>3</sup>] "  "rho<sub>e</sub> [kg/m<sup>3</sup>] "  "u [m/s] "  "v [m/s] "  "T <sub>tra</sub> [K] "  
+VARIABLES = "x-direction, [m]"  "y-direction, [m]" "rho<sub>N2</sub> [kg/m<sup>3</sup>] "  "rho<sub>O2</sub> [kg/m<sup>3</sup>] "  "rho<sub>NO</sub> [kg/m<sup>3</sup>] "  "rho<sub>N</sub> [kg/m<sup>3</sup>] "  "rho<sub>O</sub> [kg/m<sup>3</sup>] "  "rho<sub>N2p</sub> [kg/m<sup>3</sup>] "  "rho<sub>O2p</sub> [kg/m<sup>3</sup>] "  "rho<sub>NOp</sub> [kg/m<sup>3</sup>] "  "rho<sub>Np</sub> [kg/m<sup>3</sup>] "  "rho<sub>Op</sub> [kg/m<sup>3</sup>] "  "rho<sub>e</sub> [kg/m<sup>3</sup>] "  "u[m/s] "  "v[m/s] "  "T<sub>tra</sub> [K] "  
 ZONE
 T = "CPU number: 0"
 NODES = 42411
