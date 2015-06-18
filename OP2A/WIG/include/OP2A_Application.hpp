@@ -132,40 +132,6 @@ private:
 
 
 protected:
-	Data::DataStorage	data_CFD_Q;
-	Data::DataStorage	data_CFD_V;
-	Data::DataStorage	data_CFD_W;
-	Data::DataStorage	data_CFD_mixture;
-	Data::DataStorage	data_CFD_Xs;
-	Data::DataStorage	data_CFD_Ys;
-
-	Data::DataStorage	data_CFD_R;
-	Data::DataStorage	data_CFD_dQ;
-	Data::DataStorage	data_CFD_Source;
-	Data::DataStorage	data_CFD_divVc;
-
-	Data::DataStorage	data_CFD_Flux_inviscid;
-	Data::DataStorage	data_CFD_Flux_viscous;
-
-	Data::DataStorage	data_CFD_dp_dQ;
-
-	Data::DataStorage	data_CFD_diffusion_coeff;
-	Data::DataStorage	data_CFD_viscosity_coeff;
-
-
-
-	Data::DataStorage2D	data_CFD_Jacobian_inviscid_minus;
-	Data::DataStorage2D	data_CFD_Jacobian_inviscid_plus;
-
-	Data::DataStorage2D	data_CFD_Jacobian_viscous_minus;
-	Data::DataStorage2D	data_CFD_Jacobian_viscous_plus;
-
-	Data::DataStorage2D	data_CFD_Jacobian_source;
-
-	Data::DataStorage2D	data_CFD_dT_dQ;
-
-	Data::DataStorage2D	data_CFD_thermal_conductivity_coeff;
-
 	Data::DataStorageVector<Data::DataStorage>		cell_data1D_template;
 	Data::DataStorageVector<Data::DataStorage2D>	cell_data2D_template;
 	Data::DataStorageVector<Data::DataStorage>		face_data1D_template;

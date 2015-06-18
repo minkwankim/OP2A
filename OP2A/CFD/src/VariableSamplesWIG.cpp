@@ -45,11 +45,8 @@ Data::DataStorageVector<Data::DataStorage> CFD_DataTemplateWIG::CellData1D(const
 
 	if (axis == true)
 	{
-		Common::Map1D<std::string, int>	divVcMap (1);
-		divVcMap.insert("divergence V", 0);
-		Data::DataStorage data_CFD_divVc(NAME_DIVV, 1, divVcMap);
-
-		sampleData(numData)	= data_CFD_divVc; numData++;
+		sampleData(numData)	= CFD_VariableSet::DivV(species_set, ND, NER, NEV, NEE, viscous, axis);
+		numData++;
 	}
 
 	if (time_integration != 0)
@@ -70,39 +67,92 @@ Data::DataStorageVector<Data::DataStorage> CFD_DataTemplateWIG::CellData1D(const
 	return(sampleData);
 }
 
-
-
-
-
-
 Data::DataStorageVector<Data::DataStorage2D> CFD_DataTemplateWIG::CellData2D(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis, int time_integration)
 {
 	int numData = 0;
 
-	if (time_integration != 0) numData++;
+	if (time_integration != 0) numData += 2;
 	if (viscous == true) numData ++;
 
+	Data::DataStorageVector<Data::DataStorage2D>	sampleData(numData);
+
+
+	numData = 0;
+	if (time_integration != 0)
+	{
+		sampleData(numData)	= CFD_VariableSet::dTdQ(species_set, ND, NER, NEV, NEE, viscous, axis);
+		numData++;
+
+		sampleData(numData)	= CFD_VariableSet::dSdQ(species_set, ND, NER, NEV, NEE, viscous, axis);
+		numData++;
+	}
+
+
+	if (viscous == true)
+	{
+		sampleData(numData)	= CFD_VariableSet::thermal_conductivity(species_set, ND, NER, NEV, NEE, viscous, axis);
+		numData++;
+	}
+
+
+	sampleData.mapping();
+	return(sampleData);
+}
+
+Data::DataStorageVector<Data::DataStorage> CFD_DataTemplateWIG::FaceData1D(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis, int time_integration)
+{
+	int numData = 1;
+	if (viscous == true) numData += 1;
+
+	Data::DataStorageVector<Data::DataStorage>	sampleData(numData);
+
+
+	numData = 0;
+
+	sampleData(numData)	= CFD_VariableSet::FluxInv(species_set, ND, NER, NEV, NEE, viscous, axis);
+	numData++;
+
+	if (viscous == true)
+	{
+		sampleData(numData)	= CFD_VariableSet::FluxVis(species_set, ND, NER, NEV, NEE, viscous, axis);
+		numData++;
+	}
+
+	sampleData.mapping();
+	return(sampleData);
+}
+
+Data::DataStorageVector<Data::DataStorage2D> CFD_DataTemplateWIG::FaceData2D(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis, int time_integration)
+{
+	int numData = 0;
+
+	if (time_integration != 0) numData += 2;
+	if (time_integration != 0 && viscous == true) numData += 2;
 
 	Data::DataStorageVector<Data::DataStorage2D>	sampleData(numData);
 
 	numData = 0;
 	if (time_integration != 0)
 	{
-		sampleData(numData)	= CFD_VariableSet::dTdQ(species_set, ND, NER, NEV, NEE, viscous, axis);	numData++;
-	}
+		sampleData(numData)	= CFD_VariableSet::dFinvdQ_plus(species_set, ND, NER, NEV, NEE, viscous, axis);
+		numData++;
 
-	if (viscous == true)
-	{
-		sampleData(numData)	= CFD_VariableSet::thermal_conductivity(species_set, ND, NER, NEV, NEE, viscous, axis);	numData++;
+		sampleData(numData)	= CFD_VariableSet::dFinvdQ_minus(species_set, ND, NER, NEV, NEE, viscous, axis);
+		numData++;
+
+		if (viscous == true)
+		{
+			sampleData(numData)	= CFD_VariableSet::dFvisdQ_plus(species_set, ND, NER, NEV, NEE, viscous, axis);
+			numData++;
+
+			sampleData(numData)	= CFD_VariableSet::dFvisdQ_minus(species_set, ND, NER, NEV, NEE, viscous, axis);
+			numData++;
+		}
 	}
 
 	sampleData.mapping();
-
-
 	return(sampleData);
 }
-
-
 
 
 

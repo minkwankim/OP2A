@@ -121,24 +121,41 @@ public:
 	static string dT(const CHEM::EnergyMode mode, const int s, FluxCategory category);
 	static string Jacobian(const int s1, FluxCategory category1, const int s2, FluxCategory category2, FluxType type);
 
-
-
 	static Data::DataStorage Q(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
 	static Data::DataStorage V(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
 	static Data::DataStorage W(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
 	static Data::DataStorage MIX(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
 	static Data::DataStorage Xs(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
 	static Data::DataStorage Ys(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
+
+	/*
+	 * Utilities
+	 */
+	static Data::DataStorage FluxTypeVariables(const string& i_VarName, const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
+	static Data::DataStorage SpeciesTypeVariables(const string& i_VarName, const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
+	static Data::DataStorage2D JacobianTypeVariables(const string& i_VarName, int mode, const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
+	static Data::DataStorage2D EnertySpeciesTypeVariables(const string& i_VarName, const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
+
+
+
 	static Data::DataStorage Residue(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
 	static Data::DataStorage Source(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
 	static Data::DataStorage dQ(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
 	static Data::DataStorage Qnew(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
 	static Data::DataStorage dpdQ(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
-
 	static Data::DataStorage DiffusionCoeff(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
 	static Data::DataStorage ViscosityCoeff(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
+	static Data::DataStorage DivV(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
+	static Data::DataStorage FluxInv(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
+	static Data::DataStorage FluxVis(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
+
 
 	static Data::DataStorage2D dTdQ(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
+	static Data::DataStorage2D dSdQ(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
+	static Data::DataStorage2D dFinvdQ_plus(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
+	static Data::DataStorage2D dFvisdQ_plus(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
+	static Data::DataStorage2D dFinvdQ_minus(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
+	static Data::DataStorage2D dFvisdQ_minus(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
 	static Data::DataStorage2D thermal_conductivity(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
 
 
@@ -149,7 +166,6 @@ public:
 	static vector<string> MIXstr(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
 	static vector<string> Xsstr(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
 	static vector<string> Ysstr(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis);
-
 };
 
 

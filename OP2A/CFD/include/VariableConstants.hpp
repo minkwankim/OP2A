@@ -36,7 +36,12 @@
 #define NAME_DS						"Species Diffusion Coefficient"
 #define NAME_MUS					"Species Viscosity Coefficient"
 #define NAME_dTdQ					"dT/dQ"
+#define NAME_dSdQ					"dS/dQ"
+#define NAME_dFINVdQ				"Inviscid Jacobian"
+#define NAME_dFVISdQ				"Viscous Jacobian"
 #define NAME_KAPPAS					"Species Thermal Conductivity"
+#define NAME_FINV					"Inviscid Flux"
+#define NAME_FVIS					"Viscous Flux"
 
 
 

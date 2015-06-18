@@ -20,6 +20,9 @@ namespace OP2A{
 namespace CFD{
 
 
+/*
+ * Basic CFD variables
+ */
 Data::DataStorage CFD_VariableSet::Q(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
 {
 	int numData;
@@ -87,11 +90,6 @@ Data::DataStorage CFD_VariableSet::Q(const CHEM::SpeciesSet& species_set, int ND
 	Data::DataStorage	Qsample	(string(NAME_Q), numData, QnameMap);
 	return (Qsample);
 }
-
-
-
-
-
 
 Data::DataStorage CFD_VariableSet::V(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
 {
@@ -161,9 +159,6 @@ Data::DataStorage CFD_VariableSet::V(const CHEM::SpeciesSet& species_set, int ND
 	return (Vsample);
 }
 
-
-
-
 Data::DataStorage CFD_VariableSet::W(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
 {
 	int numData;
@@ -231,9 +226,6 @@ Data::DataStorage CFD_VariableSet::W(const CHEM::SpeciesSet& species_set, int ND
 	Data::DataStorage	Wsample	(string(NAME_W), numData, WnameMap);
 	return (Wsample);
 }
-
-
-
 
 Data::DataStorage CFD_VariableSet::MIX(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
 {
@@ -327,7 +319,6 @@ Data::DataStorage CFD_VariableSet::MIX(const CHEM::SpeciesSet& species_set, int 
 	return (MIXsample);
 }
 
-
 Data::DataStorage CFD_VariableSet::Xs(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
 {
 	string variable_name;
@@ -342,7 +333,6 @@ Data::DataStorage CFD_VariableSet::Xs(const CHEM::SpeciesSet& species_set, int N
 	Data::DataStorage	Xssample	(string(NAME_XS), species_set.NS, XsnameMap);
 	return (Xssample);
 }
-
 
 Data::DataStorage CFD_VariableSet::Ys(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
 {
@@ -359,145 +349,23 @@ Data::DataStorage CFD_VariableSet::Ys(const CHEM::SpeciesSet& species_set, int N
 	return (Yssample);
 }
 
-
 Data::DataStorage CFD_VariableSet::Residue(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
 {
-	int numData;
+	string name_front = "Residue_";
 
-
-	numData	= species_set.NS;
-	numData	+= ND;
-	numData	+= 1;
-
-	if (NER != 0) numData	+= 1;
-	if (NEV != 0) numData	+= 1;
-	if (NEE != 0) numData	+= 1;
-
-	string name_front = "R_";
-	string variable_name;
-	Common::Map1D<std::string, int>	QnameMap (numData);
-
-
-	/*
-	 * Assign Sample data format for
-	 * 	 - Q
-	 */
-		// Species
-	for (int s = 0; s <= species_set.NS-1; s++)
-	{
-		variable_name	= name_front + var_stringQ(species_set.species[s].name, FluxCategory::Mass);
-		QnameMap.insert(variable_name, s);
-	}
-
-	for (int k = 0; k <= ND-1; k++)
-	{
-		variable_name = name_front + var_stringQ(k, FluxCategory::Momentum);
-		QnameMap.insert(variable_name, species_set.NS+k);
-	}
-
-	int index_ne = species_set.NS+ND;
-	variable_name = name_front + var_stringQ(CHEM::EnergyMode::E_TRA, FluxCategory::Energy);
-	QnameMap.insert(variable_name, index_ne);
-	index_ne++;
-
-
-	// Rotational energy
-	if (NER != 0)
-	{
-		variable_name = name_front + var_stringQ(CHEM::EnergyMode::E_ROT, FluxCategory::Energy);
-		QnameMap.insert(variable_name, index_ne);
-		index_ne++;
-	}
-
-	// Vibtional energy
-	if (NEV != 0)
-	{
-		variable_name = name_front + var_stringQ(CHEM::EnergyMode::E_VE, FluxCategory::Energy);
-		QnameMap.insert(variable_name, index_ne);
-		index_ne++;
-	}
-
-	// ELECTRON energy
-	if (NEE != 0)
-	{
-		variable_name = name_front + var_stringQ(CHEM::EnergyMode::E_ELE, FluxCategory::Energy);
-		QnameMap.insert(variable_name, index_ne);
-		index_ne++;
-	}
-
-	Data::DataStorage	Qsample	(string(NAME_R), numData, QnameMap);
-	return (Qsample);
+	Data::DataStorage o_SampleData = FluxTypeVariables(name_front, species_set, ND, NER, NEV, NEE, viscous, axis);
+	o_SampleData.asgName(string(NAME_R));
+	return (o_SampleData);
 }
-
 
 Data::DataStorage CFD_VariableSet::Source(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
 {
-	int numData;
+	string name_front = "Source_";
 
-	numData	= species_set.NS;
-	numData	+= ND;
-	numData	+= 1;
-
-	if (NER != 0) numData	+= 1;
-	if (NEV != 0) numData	+= 1;
-	if (NEE != 0) numData	+= 1;
-
-	string name_front = "S_";
-	string variable_name;
-	Common::Map1D<std::string, int>	QnameMap (numData);
-
-
-	/*
-	 * Assign Sample data format for
-	 * 	 - Q
-	 */
-		// Species
-	for (int s = 0; s <= species_set.NS-1; s++)
-	{
-		variable_name	= name_front + var_stringQ(species_set.species[s].name, FluxCategory::Mass);
-		QnameMap.insert(variable_name, s);
-	}
-
-	for (int k = 0; k <= ND-1; k++)
-	{
-		variable_name = name_front + var_stringQ(k, FluxCategory::Momentum);
-		QnameMap.insert(variable_name, species_set.NS+k);
-	}
-
-	int index_ne = species_set.NS+ND;
-	variable_name = name_front + var_stringQ(CHEM::EnergyMode::E_TRA, FluxCategory::Energy);
-	QnameMap.insert(variable_name, index_ne);
-	index_ne++;
-
-
-	// Rotational energy
-	if (NER != 0)
-	{
-		variable_name = name_front + var_stringQ(CHEM::EnergyMode::E_ROT, FluxCategory::Energy);
-		QnameMap.insert(variable_name, index_ne);
-		index_ne++;
-	}
-
-	// Vibtional energy
-	if (NEV != 0)
-	{
-		variable_name = name_front + var_stringQ(CHEM::EnergyMode::E_VE, FluxCategory::Energy);
-		QnameMap.insert(variable_name, index_ne);
-		index_ne++;
-	}
-
-	// ELECTRON energy
-	if (NEE != 0)
-	{
-		variable_name = name_front + var_stringQ(CHEM::EnergyMode::E_ELE, FluxCategory::Energy);
-		QnameMap.insert(variable_name, index_ne);
-		index_ne++;
-	}
-
-	Data::DataStorage	Qsample	(string(NAME_S), numData, QnameMap);
-	return (Qsample);
+	Data::DataStorage o_SampleData = FluxTypeVariables(name_front, species_set, ND, NER, NEV, NEE, viscous, axis);
+	o_SampleData.asgName(string(NAME_S));
+	return (o_SampleData);
 }
-
 
 Data::DataStorage CFD_VariableSet::dQ(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
 {
@@ -507,7 +375,6 @@ Data::DataStorage CFD_VariableSet::dQ(const CHEM::SpeciesSet& species_set, int N
 	return (Qsample);
 }
 
-
 Data::DataStorage CFD_VariableSet::Qnew(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
 {
 	Data::DataStorage	Qsample	= Q(species_set, ND, NER, NEV, NEE, viscous, axis);
@@ -516,10 +383,124 @@ Data::DataStorage CFD_VariableSet::Qnew(const CHEM::SpeciesSet& species_set, int
 	return (Qsample);
 }
 
+Data::DataStorage CFD_VariableSet::FluxInv(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
+{
+	string name_front = "Finv_";
 
+	Data::DataStorage o_SampleData = FluxTypeVariables(name_front, species_set, ND, NER, NEV, NEE, viscous, axis);
+	o_SampleData.asgName(string(NAME_FINV));
+	return (o_SampleData);
+}
 
+Data::DataStorage CFD_VariableSet::FluxVis(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
+{
+	string name_front = "Fvis_";
+
+	Data::DataStorage o_SampleData = FluxTypeVariables(name_front, species_set, ND, NER, NEV, NEE, viscous, axis);
+	o_SampleData.asgName(string(NAME_FVIS));
+	return (o_SampleData);
+}
 
 Data::DataStorage CFD_VariableSet::dpdQ(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
+{
+	string name_front = "dp/d";
+
+	Data::DataStorage o_SampleData = FluxTypeVariables(name_front, species_set, ND, NER, NEV, NEE, viscous, axis);
+	o_SampleData.asgName(string(NAME_dpdQ));
+	return (o_SampleData);
+}
+
+Data::DataStorage CFD_VariableSet::DiffusionCoeff(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
+{
+	string name_front = "D";
+	Data::DataStorage	o_SampleData = SpeciesTypeVariables(name_front, species_set, ND, NER, NEV, NEE, viscous, axis);
+
+	o_SampleData.asgName(string(NAME_DS));
+	return (o_SampleData);
+}
+
+Data::DataStorage CFD_VariableSet::ViscosityCoeff(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
+{
+	string name_front = "mu";
+	Data::DataStorage	o_SampleData = SpeciesTypeVariables(name_front, species_set, ND, NER, NEV, NEE, viscous, axis);
+
+	o_SampleData.asgName(string(NAME_MUS));
+	return (o_SampleData);
+}
+
+Data::DataStorage CFD_VariableSet::DivV(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
+{
+	Common::Map1D<std::string, int>	DivVMap (1);
+
+	DivVMap.insert("Divergence V", 0);
+
+	Data::DataStorage sampleData(NAME_DIVV, 1, DivVMap);
+	return (sampleData);
+}
+
+Data::DataStorage2D CFD_VariableSet::dTdQ(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
+{
+	Data::DataStorage2D	o_SampleData = JacobianTypeVariables("T", 0, species_set, ND, NER, NEV, NEE, viscous, axis);
+	o_SampleData.asgName(NAME_dTdQ);
+
+	return o_SampleData;
+}
+
+Data::DataStorage2D CFD_VariableSet::dSdQ(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
+{
+	Data::DataStorage2D	o_SampleData = JacobianTypeVariables("S", 1, species_set, ND, NER, NEV, NEE, viscous, axis);
+	o_SampleData.asgName(NAME_dSdQ);
+
+	return o_SampleData;
+}
+
+Data::DataStorage2D CFD_VariableSet::dFinvdQ_plus(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
+{
+	Data::DataStorage2D	o_SampleData = JacobianTypeVariables("Finv", 1, species_set, ND, NER, NEV, NEE, viscous, axis);
+	o_SampleData.asgName(string(NAME_dFINVdQ) + " Plus");
+
+	return o_SampleData;
+}
+
+Data::DataStorage2D CFD_VariableSet::dFinvdQ_minus(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
+{
+	Data::DataStorage2D	o_SampleData = JacobianTypeVariables("Finv", 1, species_set, ND, NER, NEV, NEE, viscous, axis);
+	o_SampleData.asgName(string(NAME_dFINVdQ) + " Minus");
+
+	return o_SampleData;
+}
+
+Data::DataStorage2D CFD_VariableSet::dFvisdQ_plus(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
+{
+	Data::DataStorage2D	o_SampleData = JacobianTypeVariables("Fvis", 1, species_set, ND, NER, NEV, NEE, viscous, axis);
+	o_SampleData.asgName(string(NAME_dFVISdQ) + " Plus");
+
+	return o_SampleData;
+}
+
+Data::DataStorage2D CFD_VariableSet::dFvisdQ_minus(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
+{
+	Data::DataStorage2D	o_SampleData = JacobianTypeVariables("Fvis", 1, species_set, ND, NER, NEV, NEE, viscous, axis);
+	o_SampleData.asgName(string(NAME_dFVISdQ) + " Minus");
+
+	return o_SampleData;
+}
+
+Data::DataStorage2D CFD_VariableSet::thermal_conductivity(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
+{
+	Data::DataStorage2D	o_SampleData = EnertySpeciesTypeVariables("kappa", species_set, ND, NER, NEV, NEE, viscous, axis);
+
+	o_SampleData.asgName(NAME_KAPPAS);
+	return o_SampleData;
+}
+
+
+
+
+/*
+ * Utility functions
+ */
+Data::DataStorage CFD_VariableSet::FluxTypeVariables(const string& i_VarName, const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
 {
 	int numData;
 
@@ -531,237 +512,258 @@ Data::DataStorage CFD_VariableSet::dpdQ(const CHEM::SpeciesSet& species_set, int
 	if (NEV != 0) numData	+= 1;
 	if (NEE != 0) numData	+= 1;
 
-	Common::Map1D<std::string, int>	dpnameMap (numData);
+
+	string variable_name;
+	Common::Map1D<std::string, int>	QnameMap (numData);
 
 
 	/*
 	 * Assign Sample data format for
+	 * 	 - Q
 	 */
-	for (int s = 0; s <= species_set.NS-1; s++)	dpnameMap.insert(dp(s, FluxCategory::Mass), s);
-	for (int k = 0; k <= ND-1; k++)				dpnameMap.insert(dp(k, FluxCategory::Momentum), species_set.NS+k);
+		// Species
+	for (int s = 0; s <= species_set.NS-1; s++)
+	{
+		variable_name	= i_VarName + var_stringQ(species_set.species[s].name, FluxCategory::Mass);
+		QnameMap.insert(variable_name, s);
+	}
 
-	string variable_name;
+	for (int k = 0; k <= ND-1; k++)
+	{
+		variable_name = i_VarName + var_stringQ(k, FluxCategory::Momentum);
+		QnameMap.insert(variable_name, species_set.NS+k);
+	}
+
 	int index_ne = species_set.NS+ND;
-
-	variable_name = dp(CHEM::EnergyMode::E_TRA, FluxCategory::Energy);
-	dpnameMap.insert(variable_name, index_ne);
+	variable_name = i_VarName + var_stringQ(CHEM::EnergyMode::E_TRA, FluxCategory::Energy);
+	QnameMap.insert(variable_name, index_ne);
 	index_ne++;
 
 
 	// Rotational energy
 	if (NER != 0)
 	{
-		variable_name = dp(CHEM::EnergyMode::E_ROT, FluxCategory::Energy);
-		dpnameMap.insert(variable_name, index_ne);
+		variable_name = i_VarName + var_stringQ(CHEM::EnergyMode::E_ROT, FluxCategory::Energy);
+		QnameMap.insert(variable_name, index_ne);
 		index_ne++;
 	}
 
 	// Vibtional energy
 	if (NEV != 0)
 	{
-		variable_name = dp(CHEM::EnergyMode::E_VE, FluxCategory::Energy);
-		dpnameMap.insert(variable_name, index_ne);
+		variable_name = i_VarName + var_stringQ(CHEM::EnergyMode::E_VE, FluxCategory::Energy);
+		QnameMap.insert(variable_name, index_ne);
 		index_ne++;
 	}
 
 	// ELECTRON energy
 	if (NEE != 0)
 	{
-		variable_name = dp(CHEM::EnergyMode::E_ELE, FluxCategory::Energy);
-		dpnameMap.insert(variable_name, index_ne);
+		variable_name = i_VarName + var_stringQ(CHEM::EnergyMode::E_ELE, FluxCategory::Energy);
+		QnameMap.insert(variable_name, index_ne);
 		index_ne++;
 	}
 
-	Data::DataStorage	dpsample	(string(NAME_dpdQ), numData, dpnameMap);
-	return (dpsample);
+	Data::DataStorage	Qsample	("FluxType", numData, QnameMap);
+	return (Qsample);
 }
 
-
-Data::DataStorage CFD_VariableSet::DiffusionCoeff(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
-{
-	int numData	= species_set.NS;
-	Common::Map1D<std::string, int>	DsnameMap (numData);
-
-	for (int s = 0; s <= species_set.NS-1; s++)	DsnameMap.insert(D_s(s), s);
-
-	Data::DataStorage	Dssample	(string(NAME_DS), numData, DsnameMap);
-	return (Dssample);
-}
-
-
-Data::DataStorage CFD_VariableSet::ViscosityCoeff(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
+Data::DataStorage CFD_VariableSet::SpeciesTypeVariables(const string& i_VarName, const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
 {
 	int numData	= species_set.NS;
 	Common::Map1D<std::string, int>	musnameMap (numData);
 
-	for (int s = 0; s <= species_set.NS-1; s++) musnameMap.insert(mu_s(s), s);
+	for (int s = 0; s <= species_set.NS-1; s++)
+	{
+		string VarNameTemp;
+		VarNameTemp	= var_speciesname(i_VarName, species_set.species[s].name);
+		musnameMap.insert(VarNameTemp, s);
+	}
 
-	Data::DataStorage	mussample	(string(NAME_MUS), numData, musnameMap);
-	return (mussample);
+	Data::DataStorage	o_SampleData	("SpeciesTypeSample", numData, musnameMap);
+	return (o_SampleData);
 }
 
-
-
-
-Data::DataStorage2D CFD_VariableSet::dTdQ(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
+Data::DataStorage2D CFD_VariableSet::JacobianTypeVariables(const string& i_VarName, int mode, const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
 {
-	int numData = species_set.NS + ND;
-
 	int ne	= 1;
 	if (NER != 0) ne	+= 1;
 	if (NEV != 0) ne	+= 1;
 	if (NEE != 0) ne	+= 1;
 
-	numData += ne;
 
-	Common::Map2D<std::string, std::string, int>	dTdQnameMap (numData*ne);
+	int numJ = species_set.NS + ND + ne;
+	vector<string>	dQname(numJ);
 
-	vector<string> 	dTname(ne);
-	vector<string>	dQname(numData);
+	for (int s = 0; s <= species_set.NS-1; s++)	dQname[s] 					= "d" + var_stringQ(s, FluxCategory::Mass);
+	for (int k = 0; k <= ND-1; k++)				dQname[species_set.NS+k]	= "d" + var_stringQ(k, FluxCategory::Momentum);
 
-	ne = 0;
-	dTname[ne]	= var_enerymode("dT", CHEM::EnergyMode::E_TRA);	ne++;
-	if (NER != 0)
-	{
-		dTname[ne]	= var_enerymode("dT", CHEM::EnergyMode::E_ROT);
-		ne++;
-	}
-
-	if (NEV!= 0)
-	{
-		dTname[ne]	= var_enerymode("dT", CHEM::EnergyMode::E_VIB);
-		ne++;
-	}
-
-	if (NEE!= 0)
-	{
-		dTname[ne]	= var_enerymode("dT", CHEM::EnergyMode::E_ELE);
-		ne++;
-	}
-
-
-	numData = 0;
-	for (int s = 0; s <= species_set.NS-1; s++)
-	{
-		dQname[numData] = var_stringQ(s, FluxCategory::Mass);
-		numData++;
-	}
-
-	for (int k = 0; k <= ND-1; k++)
-	{
-		dQname[numData] = "d" + var_stringQ(k, FluxCategory::Momentum);
-		numData++;
-	}
-
-	dQname[numData] = "d" + var_stringQ(0, FluxCategory::Energy);
-	numData++;
+	ne = 1;
+	dQname[species_set.NS+ND] = "d" + var_stringQ(0, FluxCategory::Energy);
 
 	if (NER != 0)
 	{
-		dQname[numData] = "d" + var_stringQ(CHEM::EnergyMode::E_ROT, FluxCategory::Energy);
-		numData++;
+		dQname[species_set.NS+ND+ne] = "d" + var_stringQ(CHEM::EnergyMode::E_ROT, FluxCategory::Energy);
+		ne++;
 	}
 
 	if (NEV != 0)
 	{
-		dQname[numData] = "d" + var_stringQ(CHEM::EnergyMode::E_VIB, FluxCategory::Energy);
-		numData++;
+		dQname[species_set.NS+ND+ne] = "d" + var_stringQ(CHEM::EnergyMode::E_VIB, FluxCategory::Energy);
+		ne++;
 	}
 
 	if (NEE != 0)
 	{
-		dQname[numData] = "d" + var_stringQ(CHEM::EnergyMode::E_ELE, FluxCategory::Energy);
-		numData++;
+		dQname[species_set.NS+ND+ne] = "d" + var_stringQ(CHEM::EnergyMode::E_ELE, FluxCategory::Energy);
+		ne++;
 	}
 
 
-	int index = 0;
-	for (int j = 0; j <= numData-1; j++)
+	int numI;
+	switch (mode)
 	{
-		for (int i = 0; i <= ne-1; i++)
+	case 0:
+		numI= ne;
+		break;
+	case 1:
+		numI= species_set.NS + ND + ne;
+		break;
+	}
+	vector<string> 	dFname(numI);
+
+	switch (mode)
+	{
+	case 0:
+		ne = 0;
+		dFname[ne]	= var_enerymode("d"+i_VarName, CHEM::EnergyMode::E_TRA);	ne++;
+
+		if (NER != 0)
 		{
-			dTdQnameMap.insert(dTname[i], dQname[j], index);
+			dFname[ne]	= var_enerymode("d"+i_VarName, CHEM::EnergyMode::E_ROT);
+			ne++;
+		}
+
+		if (NEV!= 0)
+		{
+			dFname[ne]	= var_enerymode("d"+i_VarName, CHEM::EnergyMode::E_VIB);
+			ne++;
+		}
+
+		if (NEE!= 0)
+		{
+			dFname[ne]	= var_enerymode("d"+i_VarName, CHEM::EnergyMode::E_ELE);
+			ne++;
+		}
+		break;
+
+	case 1:
+		for (int s = 0; s <= species_set.NS-1; s++)	dQname[s] 					= "d" + i_VarName + var_stringQ(s, FluxCategory::Mass);
+		for (int k = 0; k <= ND-1; k++)				dQname[species_set.NS+k]	= "d" + i_VarName + var_stringQ(k, FluxCategory::Momentum);
+
+		ne = 1;
+		dQname[species_set.NS+ND] = "d"+i_VarName + var_stringQ(0, FluxCategory::Energy);
+
+		if (NER != 0)
+		{
+			dQname[species_set.NS+ND+ne] = "d"+i_VarName + var_stringQ(CHEM::EnergyMode::E_ROT, FluxCategory::Energy);
+			ne++;
+		}
+
+		if (NEV != 0)
+		{
+			dQname[species_set.NS+ND+ne] = "d"+i_VarName + var_stringQ(CHEM::EnergyMode::E_VIB, FluxCategory::Energy);
+			ne++;
+		}
+
+		if (NEE != 0)
+		{
+			dQname[species_set.NS+ND+ne] = "d"+i_VarName + var_stringQ(CHEM::EnergyMode::E_ELE, FluxCategory::Energy);
+			ne++;
+		}
+		break;
+	}
+
+
+	Common::Map2D<std::string, std::string, int>	o_SampleDataMap (numI*numJ);
+
+	int index = 0;
+	for (int j = 0; j <= numJ-1; j++)
+	{
+		for (int i = 0; i <= numI-1; i++)
+		{
+			o_SampleDataMap.insert(dFname[i], dQname[j], index);
 			index++;
 		}
 	}
 
 
-	Data::DataStorage2D	dTdQ_sample(NAME_dTdQ, ne, numData, dTdQnameMap);
-	return dTdQ_sample;
+	Data::DataStorage2D	o_SampleData(NAME_dTdQ, numI, numJ, o_SampleDataMap);
+	return o_SampleData;
 }
 
-
-
-Data::DataStorage2D CFD_VariableSet::thermal_conductivity(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
+Data::DataStorage2D CFD_VariableSet::EnertySpeciesTypeVariables(const string& i_VarName, const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
 {
-	int numData = species_set.NS;
-
 	int ne	= 1;
 	if (NER != 0) ne	+= 1;
 	if (NEV != 0) ne	+= 1;
 	if (NEE != 0) ne	+= 1;
 
 
-	Common::Map2D<std::string, std::string, int>	kappanameMap (numData*ne);
+	int numJ = species_set.NS;
+	vector<string>	dQname(numJ);
+	for (int s = 0; s <= species_set.NS-1; s++)	dQname[s] 					= var_stringQ(s, FluxCategory::Mass);
 
-	vector<string> 	kappa(ne);
-	vector<string>	speciesName(numData);
+
+	int numI = ne;
+	vector<string> 	dFname(numI);
 
 	ne = 0;
-	kappa[ne]	= var_enerymode("kappa", CHEM::EnergyMode::E_TRA);	ne++;
+	dFname[ne]	= var_enerymode(i_VarName, CHEM::EnergyMode::E_TRA);	ne++;
+
 	if (NER != 0)
 	{
-		kappa[ne]	= var_enerymode("kappa", CHEM::EnergyMode::E_ROT);
+		dFname[ne]	= var_enerymode(i_VarName, CHEM::EnergyMode::E_ROT);
 		ne++;
 	}
 
 	if (NEV!= 0)
 	{
-		kappa[ne]	= var_enerymode("kappa", CHEM::EnergyMode::E_VIB);
+		dFname[ne]	= var_enerymode(i_VarName, CHEM::EnergyMode::E_VIB);
 		ne++;
 	}
 
 	if (NEE!= 0)
 	{
-		kappa[ne]	= var_enerymode("kappa", CHEM::EnergyMode::E_ELE);
+		dFname[ne]	= var_enerymode(i_VarName, CHEM::EnergyMode::E_ELE);
 		ne++;
 	}
 
 
-	numData = 0;
-	for (int s = 0; s <= species_set.NS-1; s++)
-	{
-		speciesName[numData] = species_set.species[s].name;
-		numData++;
-	}
+	Common::Map2D<std::string, std::string, int>	o_SampleDataMap (numI*numJ);
 
 	int index = 0;
-	for (int j = 0; j <= numData-1; j++)
+	for (int j = 0; j <= numJ-1; j++)
 	{
-		for (int i = 0; i <= ne-1; i++)
+		for (int i = 0; i <= numI-1; i++)
 		{
-			kappanameMap.insert(kappa[ne], speciesName[numData], index);
+			o_SampleDataMap.insert(dFname[i], dQname[j], index);
 			index++;
 		}
 	}
 
-
-	Data::DataStorage2D	kappa_sample(NAME_KAPPAS, ne, numData, kappanameMap);
-	return kappa_sample;
+	Data::DataStorage2D	o_SampleData(NAME_dTdQ, numI, numJ, o_SampleDataMap);
+	return o_SampleData;
 }
 
 
 
 
-
-
-
-
-
-
-
-
-
+/*
+ * =============================================
+ * Functions for Variable names
+ * =============================================
+ */
 
 vector<string> CFD_VariableSet::Qstr(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
 {
@@ -822,7 +824,6 @@ vector<string> CFD_VariableSet::Qstr(const CHEM::SpeciesSet& species_set, int ND
 	return (Qname);
 }
 
-
 vector<string> CFD_VariableSet::Vstr(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
 {
 	int numData;
@@ -882,8 +883,6 @@ vector<string> CFD_VariableSet::Vstr(const CHEM::SpeciesSet& species_set, int ND
 	return (Vname);
 }
 
-
-
 vector<string> CFD_VariableSet::Wstr(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
 {
 	int numData;
@@ -942,7 +941,6 @@ vector<string> CFD_VariableSet::Wstr(const CHEM::SpeciesSet& species_set, int ND
 
 	return (Wname);
 }
-
 
 vector<string> CFD_VariableSet::MIXstr(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
 {
@@ -1022,7 +1020,6 @@ vector<string> CFD_VariableSet::MIXstr(const CHEM::SpeciesSet& species_set, int 
 	return (MIXname);
 }
 
-
 vector<string> CFD_VariableSet::Xsstr(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
 {
 	vector<string> 	Xsname(species_set.NS);
@@ -1034,7 +1031,6 @@ vector<string> CFD_VariableSet::Xsstr(const CHEM::SpeciesSet& species_set, int N
 
 	return (Xsname);
 }
-
 
 vector<string> CFD_VariableSet::Ysstr(const CHEM::SpeciesSet& species_set, int ND, int NER, int NEV, int NEE, bool viscous, bool axis)
 {
