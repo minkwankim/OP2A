@@ -26,7 +26,8 @@ void VariableChange::V_to_Q(Data::DataStorage& data_V, CHEM::SpeciesSet& species
 {
 	VariableChangeCommon::V_to_Q(data_V, species_set, ND, data_Q);
 
-	switch (variableType)
+	int type	= variableType;
+	switch (type)
 	{
 	case 1:
 		VariableChangeType1::V_to_Q(data_V, species_set, ND, data_Q);
@@ -53,7 +54,8 @@ void VariableChange::Q_to_V(Data::DataStorage& data_Q, CHEM::SpeciesSet& species
 {
 	VariableChangeCommon::Q_to_V(data_Q, species_set, ND, data_V);
 
-	switch (variableType)
+	int type	= variableType;
+	switch (type)
 	{
 	case 1:
 		VariableChangeType1::Q_to_V(data_Q, species_set, ND, data_V);

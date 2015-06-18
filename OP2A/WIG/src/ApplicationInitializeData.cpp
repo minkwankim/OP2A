@@ -16,7 +16,9 @@
 #include "Common/include/Exception_NPExceed.hpp"
 #include "Common/include/StringOps.hpp"
 #include "CFD/include/VariableSamplesWIG.hpp"
+
 #include "CFD/include/VariableConstants.hpp"
+#include "CFD/include/VariableChange.hpp"
 
 
 
@@ -99,5 +101,21 @@ void ApplicationOP2A::InitializeData(unsigned int num_ic)
 			grid.cells[c].data1D(NAME_V, var_name_temp)	= problem_setup.IC.Te[num_ic];
 		}
 	}
+
+
+
+	CFD::assignVariableType(problem_setup.NER, problem_setup.NEV, problem_setup.NEE);
+	int indexQ = grid.cells[1].data1D.dataMap.find(NAME_Q);
+	int indexV = grid.cells[1].data1D.dataMap.find(NAME_V);
+
+#	pragma omp parallel for num_threads(NT)
+	for (int c = 0; c <= grid.NCM; c++)
+	{
+		CFD::VariableChange::V_to_Q(grid.cells[c].data1D(indexV), species_set, grid.ND, grid.cells[c].data1D(indexQ));
+		CFD::VariableChange::Q_to_V(grid.cells[c].data1D(indexQ), species_set, grid.ND, grid.cells[c].data1D(indexV));
+		int ca;
+		ca = 0;
+	}
+
 }
 

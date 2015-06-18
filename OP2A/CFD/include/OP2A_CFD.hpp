@@ -13,25 +13,15 @@
 #ifndef OPPA_CFD_HPP_
 #define OPPA_CFD_HPP_
 
-#include <limits>
 
-#include "Common/include/ErrorCheckNonNegative.hpp"
-
-#include "DATA/include/DataStorage.hpp"
-#include "DATA/include/DataStorage2D.hpp"
-#include "DATA/include/DataStorageVector.hpp"
-
-#include "CHEM/include/SpeciesSet.hpp"
-
-#include "CFD/include/CFD_API.hpp"
+#include "CFD/include/VariableSet.hpp"
 
 
 namespace OP2A{
 namespace CFD{
 
-static unsigned int CFD_type;
-static unsigned int CFD_NT;
-static unsigned variableType;
+static unsigned int CFD_NT   = 1;
+static unsigned variableType = 0;
 
 void assignVariableType(int NER, int NEV, int NEE);
 

@@ -16,7 +16,7 @@
 #define VARIABLECHANGEMIXTURE_HPP_
 
 #include <limits>
-#include "CFD/include/OP2A_CFD.hpp"
+#include "CFD/include/CFDCommon.hpp"
 
 
 namespace OP2A{

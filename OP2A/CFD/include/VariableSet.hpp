@@ -13,7 +13,7 @@
 #ifndef VARIABLESETQ_HPP_
 #define VARIABLESETQ_HPP_
 
-#include "CFD/include/OP2A_CFD.hpp"
+#include "CFD/include/CFDCommon.hpp"
 
 
 namespace OP2A{
