@@ -35,13 +35,19 @@ void VariableChange::V_to_Q(unsigned int type, unsigned int CFD_NT, Data::DataSt
 	case 2:
 		VariableChangeType2::V_to_Q(data_V, species_set, ND, data_Q, CFD_NT);
 		break;
+
 	case 3:
 		VariableChangeType3::V_to_Q(data_V, species_set, ND, data_Q, CFD_NT);
 		break;
+
 	case 4:
+		VariableChangeType4::V_to_Q(data_V, species_set, ND, data_Q, CFD_NT);
 		break;
+
 	case 5:
+		VariableChangeType5::V_to_Q(data_V, species_set, ND, data_Q, CFD_NT);
 		break;
+
 	case 6:
 		break;
 	case 7:
@@ -69,13 +75,19 @@ void VariableChange::Q_to_V(unsigned int variabletype, unsigned int CFD_NT, Data
 	case 2:
 		VariableChangeType2::Q_to_V(data_Q, species_set, ND, data_V, CFD_NT);
 		break;
+
 	case 3:
 		VariableChangeType3::Q_to_V(data_Q, species_set, ND, data_V, CFD_NT);
 		break;
+
 	case 4:
+		VariableChangeType4::Q_to_V(data_Q, species_set, ND, data_V, CFD_NT);
 		break;
+
 	case 5:
+		VariableChangeType5::Q_to_V(data_Q, species_set, ND, data_V, CFD_NT);
 		break;
+
 	case 6:
 		break;
 	case 7:
@@ -101,10 +113,15 @@ void VariableChange::V_to_W(unsigned int variabletype, unsigned int CFD_NT, Data
 		VariableChangeType2::V_to_W(data_V, species_set, ND, data_W, CFD_NT);
 		break;
 	case 3:
+		VariableChangeType3::V_to_W(data_V, species_set, ND, data_W, CFD_NT);
 		break;
+
 	case 4:
+		VariableChangeType4::V_to_W(data_V, species_set, ND, data_W, CFD_NT);
 		break;
+
 	case 5:
+		VariableChangeType5::V_to_W(data_V, species_set, ND, data_W, CFD_NT);
 		break;
 	case 6:
 		break;
@@ -129,12 +146,19 @@ void VariableChange::W_to_V(unsigned int variabletype, unsigned int CFD_NT, Data
 	case 2:
 		VariableChangeType2::W_to_V(data_W, species_set, ND, data_V, CFD_NT);
 		break;
+
 	case 3:
+		VariableChangeType3::W_to_V(data_W, species_set, ND, data_V, CFD_NT);
 		break;
+
 	case 4:
+		VariableChangeType4::W_to_V(data_W, species_set, ND, data_V, CFD_NT);
 		break;
+
 	case 5:
+		VariableChangeType5::W_to_V(data_W, species_set, ND, data_V, CFD_NT);
 		break;
+
 	case 6:
 		break;
 	case 7:
@@ -158,12 +182,19 @@ void VariableChange::W_to_Q(unsigned int variabletype, unsigned int CFD_NT, Data
 	case 2:
 		VariableChangeType2::W_to_Q(data_W, species_set, ND, data_Q, CFD_NT);
 		break;
+
 	case 3:
+		VariableChangeType3::W_to_Q(data_W, species_set, ND, data_Q, CFD_NT);
 		break;
+
 	case 4:
+		VariableChangeType4::W_to_Q(data_W, species_set, ND, data_Q, CFD_NT);
 		break;
+
 	case 5:
+		VariableChangeType5::W_to_Q(data_W, species_set, ND, data_Q, CFD_NT);
 		break;
+
 	case 6:
 		break;
 	case 7:
@@ -186,12 +217,19 @@ void VariableChange::Q_to_W(unsigned int variabletype, unsigned int CFD_NT, Data
 	case 2:
 		VariableChangeType2::Q_to_W(data_Q, species_set, ND, data_W, CFD_NT);
 		break;
+
 	case 3:
+		VariableChangeType3::Q_to_W(data_Q, species_set, ND, data_W, CFD_NT);
 		break;
+
 	case 4:
+		VariableChangeType4::Q_to_W(data_Q, species_set, ND, data_W, CFD_NT);
 		break;
+
 	case 5:
+		VariableChangeType5::Q_to_W(data_Q, species_set, ND, data_W, CFD_NT);
 		break;
+
 	case 6:
 		break;
 	case 7:

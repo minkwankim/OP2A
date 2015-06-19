@@ -116,11 +116,11 @@ void ApplicationOP2A::InitializeData(unsigned int num_ic)
 		CFD::VariableChange::V_to_Q(variabletype, NT, grid.cells[c].data1D(indexV), species_set, grid.ND, grid.cells[c].data1D(indexQ));
 		CFD::VariableChange::Q_to_V(variabletype, NT, grid.cells[c].data1D(indexQ), species_set, grid.ND, grid.cells[c].data1D(indexV));
 
-		//CFD::VariableChange::V_to_W(variabletype, NT, grid.cells[c].data1D(indexV), species_set, grid.ND, grid.cells[c].data1D(indexW));
-		//CFD::VariableChange::W_to_V(variabletype, NT, grid.cells[c].data1D(indexW), species_set, grid.ND, grid.cells[c].data1D(indexV));
+		CFD::VariableChange::V_to_W(variabletype, NT, grid.cells[c].data1D(indexV), species_set, grid.ND, grid.cells[c].data1D(indexW));
+		CFD::VariableChange::W_to_V(variabletype, NT, grid.cells[c].data1D(indexW), species_set, grid.ND, grid.cells[c].data1D(indexV));
 
-		//CFD::VariableChange::Q_to_W(variabletype, NT, grid.cells[c].data1D(indexQ), species_set, grid.ND, grid.cells[c].data1D(indexW));
-		//CFD::VariableChange::W_to_Q(variabletype, NT, grid.cells[c].data1D(indexW), species_set, grid.ND, grid.cells[c].data1D(indexQ));
+		CFD::VariableChange::Q_to_W(variabletype, NT, grid.cells[c].data1D(indexQ), species_set, grid.ND, grid.cells[c].data1D(indexW));
+		CFD::VariableChange::W_to_Q(variabletype, NT, grid.cells[c].data1D(indexW), species_set, grid.ND, grid.cells[c].data1D(indexQ));
 
 		int ca;
 		ca = 0;

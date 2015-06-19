@@ -110,7 +110,7 @@ void VariableChangeType1::W_to_V(Data::DataStorage& data_W, CHEM::SpeciesSet& sp
 {
 	double rhoRmix	= 0.0;
 #pragma omp parallel for reduction(+:rhoRmix)
-	for (int s = 0; s <= species_set.NS-1; s++)	rhoRmix	+= data_V(s)*species_set.species[s].R;
+	for (int s = 0; s <= species_set.NS-1; s++)	rhoRmix	+= data_W(s)*species_set.species[s].R;
 
 
 	// Temperature
