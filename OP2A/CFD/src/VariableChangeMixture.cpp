@@ -22,7 +22,7 @@ namespace OP2A{
 namespace CFD{
 
 // Mole fraction
-void VariableChangeMixture::Xs(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Xs)
+void VariableChangeMixture::Xs(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Xs, unsigned int CFD_NT)
 {
 #pragma omp parallel for num_threads(CFD_NT)
 	for (int s = 0; s <= species_set.NS; s++)	data_Xs(s)	= data_Q(s) / species_set.species[s].m;
@@ -39,7 +39,7 @@ void VariableChangeMixture::Xs(Data::DataStorage& data_Q, CHEM::SpeciesSet& spec
 
 
 // Mass fraction
-void VariableChangeMixture::Ys(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Ys)
+void VariableChangeMixture::Ys(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Ys, unsigned int CFD_NT)
 {
 	// Total number of Moles
 	double rho_mix	= 0.0;

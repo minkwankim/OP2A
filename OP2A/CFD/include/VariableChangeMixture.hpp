@@ -26,8 +26,8 @@ namespace CFD{
 class CFD_API VariableChangeMixture : public Common::NonInstantiable<VariableChangeMixture>
 {
 public:
-	void Xs(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Xs);
-	void Ys(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Xs);
+	void Xs(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Xs, unsigned int CFD_NT);
+	void Ys(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Xs, unsigned int CFD_NT);
 };
 
 

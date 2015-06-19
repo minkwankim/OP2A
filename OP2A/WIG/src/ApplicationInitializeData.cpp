@@ -81,9 +81,9 @@ void ApplicationOP2A::InitializeData(unsigned int num_ic)
 
 	if (problem_setup.NEV != 0)
 	{
-		var_name_temp	=  CFD::CFD_VariableSet::var_stringV(CHEM::EnergyMode::E_VIB, CFD::FluxCategory::Energy);
+		var_name_temp	=  CFD::CFD_VariableSet::var_stringV(CHEM::EnergyMode::E_VE, CFD::FluxCategory::Energy);
 
-#		pragma omp parallel for num_threads(NT)
+#pragma omp parallel for num_threads(NT)
 		for (int c = 0; c <= grid.NCM; c++)
 		{
 			grid.cells[c].data1D(NAME_V, var_name_temp)	= problem_setup.IC.Tv[num_ic];
@@ -104,15 +104,24 @@ void ApplicationOP2A::InitializeData(unsigned int num_ic)
 
 
 
-	CFD::assignVariableType(problem_setup.NER, problem_setup.NEV, problem_setup.NEE);
+	unsigned int variabletype	= CFD::VariableChange::VariableType(problem_setup.NER, problem_setup.NEV, problem_setup.NEE);
 	int indexQ = grid.cells[1].data1D.dataMap.find(NAME_Q);
 	int indexV = grid.cells[1].data1D.dataMap.find(NAME_V);
+	int indexW = grid.cells[1].data1D.dataMap.find(NAME_W);
+
 
 #	pragma omp parallel for num_threads(NT)
 	for (int c = 0; c <= grid.NCM; c++)
 	{
-		CFD::VariableChange::V_to_Q(grid.cells[c].data1D(indexV), species_set, grid.ND, grid.cells[c].data1D(indexQ));
-		CFD::VariableChange::Q_to_V(grid.cells[c].data1D(indexQ), species_set, grid.ND, grid.cells[c].data1D(indexV));
+		CFD::VariableChange::V_to_Q(variabletype, NT, grid.cells[c].data1D(indexV), species_set, grid.ND, grid.cells[c].data1D(indexQ));
+		CFD::VariableChange::Q_to_V(variabletype, NT, grid.cells[c].data1D(indexQ), species_set, grid.ND, grid.cells[c].data1D(indexV));
+
+		//CFD::VariableChange::V_to_W(variabletype, NT, grid.cells[c].data1D(indexV), species_set, grid.ND, grid.cells[c].data1D(indexW));
+		//CFD::VariableChange::W_to_V(variabletype, NT, grid.cells[c].data1D(indexW), species_set, grid.ND, grid.cells[c].data1D(indexV));
+
+		//CFD::VariableChange::Q_to_W(variabletype, NT, grid.cells[c].data1D(indexQ), species_set, grid.ND, grid.cells[c].data1D(indexW));
+		//CFD::VariableChange::W_to_Q(variabletype, NT, grid.cells[c].data1D(indexW), species_set, grid.ND, grid.cells[c].data1D(indexQ));
+
 		int ca;
 		ca = 0;
 	}

@@ -96,15 +96,37 @@ double Species::Cv_VIB(const double& T)
 	double Cv;
 	double aux2, aux3;
 
-	Cv	= 0.0;
-	if (type == SpeciesType::Molecule)
+	if (T >= 10.0)
 	{
-		for (n = 0;  n <= n_vib_lvl-1; n++)
+		Cv	= 0.0;
+		if (type == SpeciesType::Molecule)
 		{
-			aux2	= theta_vib[n]/T;
-			aux3	= exp(aux2);
-			Cv		+= R * aux2*aux2*aux3 / pow((aux3-1.0), 2.0);
+			for (n = 0;  n <= n_vib_lvl-1; n++)
+			{
+				aux2	= theta_vib[n]/T;
+				aux3	= exp(aux2);
+				Cv		+= R * aux2*aux2*aux3 / pow((aux3-1.0), 2.0);
+			}
 		}
+
+		if (Cv < 0.0)
+		{
+			throw Common::ExceptionNegativeValue (FromHere(), "Negative Value for Cv_VIB");
+		}
+
+		if (Cv == numeric_limits<double>::infinity())
+		{
+			throw Common::ExceptionInfiniteValue (FromHere(), "Inifnite Value for Cv_VIB");
+		}
+
+		if (Cv != Cv)
+		{
+			throw Common::ExceptionNaNValue (FromHere(), "Inifnite Value for Cv_VIB");
+		}
+	}
+	else
+	{
+		Cv = 0.0;
 	}
 
 	return (Cv);
@@ -146,6 +168,21 @@ double Species::Cv_ELE(const double& T)
 		Cv	= R * ((component3/component1) - (component4*component2)/(component1*component1));
 	}
 
+	if (Cv < 0.0)
+	{
+		throw Common::ExceptionNegativeValue (FromHere(), "Negative Value for Cv_ELE");
+	}
+
+	if (Cv == numeric_limits<double>::infinity())
+	{
+		throw Common::ExceptionInfiniteValue (FromHere(), "Inifnite Value for Cv_ELE");
+	}
+
+	if (Cv != Cv)
+	{
+		throw Common::ExceptionNaNValue (FromHere(), "Inifnite Value for Cv_ELE");
+	}
+
 	return (Cv);
 }
 
@@ -176,11 +213,30 @@ double Species::e_VIB(const double& T)
 	double evib = 0.0;
 	if (type == SpeciesType::Molecule)
 	{
-		for (n = 0;  n <= n_vib_lvl-1; n++)
+		if (T >= 10.0)
 		{
-			evib	+= R * theta_vib[n] / (exp(theta_vib[n]/T) - 1.0);
+			for (n = 0;  n <= n_vib_lvl-1; n++)
+			{
+				evib	+= R * theta_vib[n] / (exp(theta_vib[n]/T) - 1.0);
+			}
 		}
 	}
+
+	if (evib < 0.0)
+	{
+		throw Common::ExceptionNegativeValue (FromHere(), "Negative Value for e_vib");
+	}
+
+	if (evib == numeric_limits<double>::infinity())
+	{
+		throw Common::ExceptionInfiniteValue (FromHere(), "Inifnite Value for e_vib");
+	}
+
+	if (evib != evib)
+	{
+		throw Common::ExceptionNaNValue (FromHere(), "NaN Value for e_vib");
+	}
+
 
 	return(evib);
 }
@@ -208,6 +264,22 @@ double Species::e_ELE(const double& T)
 
 			e_el	= R * aux2/aux3;
 		}
+	}
+
+
+	if (e_el < 0.0)
+	{
+		throw Common::ExceptionNegativeValue (FromHere(), "Negative Value for e_ELE");
+	}
+
+	if (e_el == numeric_limits<double>::infinity())
+	{
+		throw Common::ExceptionInfiniteValue (FromHere(), "Inifnite Value for e_ELE");
+	}
+
+	if (e_el != e_el)
+	{
+		throw Common::ExceptionNaNValue (FromHere(), "NaN Value for e_ELE");
 	}
 
 	return (e_el);

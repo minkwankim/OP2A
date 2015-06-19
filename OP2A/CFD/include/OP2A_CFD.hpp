@@ -17,19 +17,6 @@
 #include "CFD/include/VariableSet.hpp"
 
 
-namespace OP2A{
-namespace CFD{
-
-static unsigned int CFD_NT   = 1;
-static unsigned variableType = 0;
-
-void assignVariableType(int NER, int NEV, int NEE);
-
-
-
-}
-}
-
 
 
 

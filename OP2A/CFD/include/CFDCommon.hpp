@@ -27,6 +27,13 @@
 #include "CFD/include/CFD_API.hpp"
 #include "CFD/include/VariableConstants.hpp"
 
+namespace OP2A{
+namespace CFD{
 
+double CFD_calculate_Tve(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, double Eve, unsigned int iterMax, double eps0, unsigned int CFD_NT);
+
+
+}
+}
 
 #endif /* CFDCOMMON_HPP_ */

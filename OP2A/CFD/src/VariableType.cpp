@@ -11,35 +11,37 @@
  *  
  */
 
-#include "CFD/include/OP2A_CFD.hpp"
+#include "CFD/include/VariableChange.hpp"
 
 namespace OP2A{
 namespace CFD{
 
-void assignVariableType(int NER, int NEV, int NEE)
+unsigned int VariableChange::VariableType(int NER, int NEV, int NEE)
 {
+	unsigned int variabletype = 0;
+
 	if (NER == 0)
 	{
 		if (NEV == 0)
 		{
 			if (NEE == 0)
 			{
-				variableType = 1;
+				variabletype = 1;
 			}
 			else
 			{
-				variableType = 2;
+				variabletype = 2;
 			}
 		}
 		else
 		{
 			if (NEE == 0)
 			{
-				variableType = 3;
+				variabletype = 3;
 			}
 			else
 			{
-				variableType = 4;
+				variabletype = 4;
 			}
 		}
 	}
@@ -49,25 +51,27 @@ void assignVariableType(int NER, int NEV, int NEE)
 		{
 			if (NEE == 0)
 			{
-				variableType = 5;
+				variabletype = 5;
 			}
 			else
 			{
-				variableType = 6;
+				variabletype = 6;
 			}
 		}
 		else
 		{
 			if (NEE == 0)
 			{
-				variableType = 7;
+				variabletype = 7;
 			}
 			else
 			{
-				variableType = 8;
+				variabletype = 8;
 			}
 		}
 	}
+
+	return (variabletype);
 };
 
 }

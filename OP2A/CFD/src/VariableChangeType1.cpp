@@ -14,7 +14,7 @@
 
 #include <omp.h>
 
-#include "CFD/include/VariableChangeType1.hpp"
+#include "CFD/include/VariableChangeTypes.hpp"
 
 
 namespace OP2A{
@@ -22,17 +22,17 @@ namespace CFD{
 
 
 
-void VariableChangeType1::V_to_Q(Data::DataStorage& data_V, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Q)
+void VariableChangeType1::V_to_Q(Data::DataStorage& data_V, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Q, unsigned int CFD_NT)
 {
 	double rho_mix	= 0.0;
 #pragma omp parallel for reduction(+:rho_mix)
-	for (int s = 0; s <= species_set.NS; s++)	rho_mix	+= data_V(s);
+	for (int s = 0; s <= species_set.NS-1; s++)	rho_mix	+= data_V(s);
 
 
 	// Total Energy
 	double E_h0 = 0.0;
 #pragma omp parallel for reduction(+:E_h0)
-	for (int s = 0; s <= species_set.NS; s++)	E_h0	+= data_V(s)*species_set.species[s].h0;
+	for (int s = 0; s <= species_set.NS-1; s++)	E_h0	+= data_V(s)*species_set.species[s].h0;
 
 	double E_k = 0.0;
 #pragma omp parallel for reduction(+:E_k)
@@ -43,7 +43,7 @@ void VariableChangeType1::V_to_Q(Data::DataStorage& data_V, CHEM::SpeciesSet& sp
 	int indexT	= species_set.NS + ND;
 	double E_int = 0.0;
 #pragma omp parallel for reduction(+:E_int)
-	for (int s = 0; s <= species_set.NS; s++)
+	for (int s = 0; s <= species_set.NS-1; s++)
 	{
 		E_int	+= data_V(s) * (species_set.species[s].Cv_tr*data_V(indexT));
 		//E_int	+= data_V(s) * (species_set.species[s].Cv_tr*data_V(indexT) + species_set.species[s].e_VIB(data_V(indexT)) + species_set.species[s].e_ELE(data_V(indexT)));
@@ -54,17 +54,17 @@ void VariableChangeType1::V_to_Q(Data::DataStorage& data_V, CHEM::SpeciesSet& sp
 
 
 
-void VariableChangeType1::Q_to_V(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_V)
+void VariableChangeType1::Q_to_V(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_V, unsigned int CFD_NT)
 {
 	double rho_mix	= 0.0;
 #pragma omp parallel for reduction(+:rho_mix)
-	for (int s = 0; s <= species_set.NS; s++)	rho_mix	+= data_Q(s);
+	for (int s = 0; s <= species_set.NS-1; s++)	rho_mix	+= data_Q(s);
 
 
 	// Translational Temperature
 	double E_h0 = 0.0;
 #pragma omp parallel for reduction(+:E_h0)
-	for (int s = 0; s <= species_set.NS; s++)	E_h0	+= data_Q(s)*species_set.species[s].h0;
+	for (int s = 0; s <= species_set.NS-1; s++)	E_h0	+= data_Q(s)*species_set.species[s].h0;
 
 	double E_k = 0.0;
 #pragma omp parallel for reduction(+:E_k)
@@ -73,28 +73,31 @@ void VariableChangeType1::Q_to_V(Data::DataStorage& data_Q, CHEM::SpeciesSet& sp
 
 
 	int indexT	= species_set.NS + ND;
+
 	double Cv_mix = 0.0;
 #pragma omp parallel for reduction(+:Cv_mix)
-	for (int s = 0; s <= species_set.NS; s++)
+	for (int s = 0; s <= species_set.NS-1; s++)
 	{
 		Cv_mix	+= data_Q(s) * species_set.species[s].Cv_tr;
 	}
 
 	double T	= (data_Q(indexT) - E_k - E_h0) / Cv_mix;
-
 	Common::ErrorCheckNonNegative<double>(T, "Temperature(Type1)");
 	data_V(indexT)	= T;
 }
 
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+ * V ><=> W
+ */
 
-
-void VariableChangeType1::V_to_W(Data::DataStorage& data_V, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_W)
+void VariableChangeType1::V_to_W(Data::DataStorage& data_V, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_W, unsigned int CFD_NT)
 {
 	double rhoRmix	= 0.0;
 #pragma omp parallel for reduction(+:rhoRmix)
-	for (int s = 0; s <= species_set.NS; s++)	rhoRmix	+= data_V(s)*species_set.species[s].R;
+	for (int s = 0; s <= species_set.NS-1; s++)	rhoRmix	+= data_V(s)*species_set.species[s].R;
 
 
 	// Pressure
@@ -103,11 +106,11 @@ void VariableChangeType1::V_to_W(Data::DataStorage& data_V, CHEM::SpeciesSet& sp
 }
 
 
-void VariableChangeType1::W_to_V(Data::DataStorage& data_W, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_V)
+void VariableChangeType1::W_to_V(Data::DataStorage& data_W, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_V, unsigned int CFD_NT)
 {
 	double rhoRmix	= 0.0;
 #pragma omp parallel for reduction(+:rhoRmix)
-	for (int s = 0; s <= species_set.NS; s++)	rhoRmix	+= data_V(s)*species_set.species[s].R;
+	for (int s = 0; s <= species_set.NS-1; s++)	rhoRmix	+= data_V(s)*species_set.species[s].R;
 
 
 	// Temperature
@@ -116,18 +119,22 @@ void VariableChangeType1::W_to_V(Data::DataStorage& data_W, CHEM::SpeciesSet& sp
 }
 
 
-void VariableChangeType1::Q_to_W(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_W)
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+ * Q <=> W
+ */
+void VariableChangeType1::Q_to_W(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_W, unsigned int CFD_NT)
 {
 	double rho_mix	= 0.0;
-
 #pragma omp parallel for reduction(+:rho_mix)
-	for (int s = 0; s <= species_set.NS; s++)	rho_mix	+= data_Q(s);
+	for (int s = 0; s <= species_set.NS-1; s++)	rho_mix	+= data_Q(s);
 
 
 	// Translational Temperature
 	double E_h0 = 0.0;
 #pragma omp parallel for reduction(+:E_h0)
-	for (int s = 0; s <= species_set.NS; s++)	E_h0	+= data_Q(s)*species_set.species[s].h0;
+	for (int s = 0; s <= species_set.NS-1; s++)	E_h0	+= data_Q(s)*species_set.species[s].h0;
 
 	double E_k = 0.0;
 #pragma omp parallel for reduction(+:E_k)
@@ -138,7 +145,7 @@ void VariableChangeType1::Q_to_W(Data::DataStorage& data_Q, CHEM::SpeciesSet& sp
 	int indexT	= species_set.NS + ND;
 	double Cv_mix = 0.0;
 #pragma omp parallel for reduction(+:Cv_mix)
-	for (int s = 0; s <= species_set.NS; s++)
+	for (int s = 0; s <= species_set.NS-1; s++)
 	{
 		Cv_mix	+= data_Q(s) * species_set.species[s].Cv_tr;
 	}
@@ -148,7 +155,7 @@ void VariableChangeType1::Q_to_W(Data::DataStorage& data_Q, CHEM::SpeciesSet& sp
 
 	double rhoRmix	= 0.0;
 #pragma omp parallel for reduction(+:rhoRmix)
-	for (int s = 0; s <= species_set.NS; s++)	rhoRmix	+= data_Q(s)*species_set.species[s].R;
+	for (int s = 0; s <= species_set.NS-1; s++)	rhoRmix	+= data_Q(s)*species_set.species[s].R;
 
 
 	// Pressure
@@ -156,11 +163,11 @@ void VariableChangeType1::Q_to_W(Data::DataStorage& data_Q, CHEM::SpeciesSet& sp
 }
 
 
-void VariableChangeType1::W_to_Q(Data::DataStorage& data_W, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Q)
+void VariableChangeType1::W_to_Q(Data::DataStorage& data_W, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Q, unsigned int CFD_NT)
 {
 	double rhoRmix	= 0.0;
 #pragma omp parallel for reduction(+:rhoRmix)
-	for (int s = 0; s <= species_set.NS; s++)	rhoRmix	+= data_W(s)*species_set.species[s].R;
+	for (int s = 0; s <= species_set.NS-1; s++)	rhoRmix	+= data_W(s)*species_set.species[s].R;
 
 	// Temperature
 	int indexT	= species_set.NS + ND;
@@ -168,13 +175,13 @@ void VariableChangeType1::W_to_Q(Data::DataStorage& data_W, CHEM::SpeciesSet& sp
 
 	double rho_mix	= 0.0;
 #pragma omp parallel for reduction(+:rho_mix)
-	for (int s = 0; s <= species_set.NS; s++)	rho_mix	+= data_W(s);
+	for (int s = 0; s <= species_set.NS-1; s++)	rho_mix	+= data_W(s);
 
 
 	// Total Energy
 	double E_h0 = 0.0;
 #pragma omp parallel for reduction(+:E_h0)
-	for (int s = 0; s <= species_set.NS; s++)	E_h0	+= data_W(s)*species_set.species[s].h0;
+	for (int s = 0; s <= species_set.NS-1; s++)	E_h0	+= data_W(s)*species_set.species[s].h0;
 
 	double E_k = 0.0;
 #pragma omp parallel for reduction(+:E_k)
@@ -183,7 +190,7 @@ void VariableChangeType1::W_to_Q(Data::DataStorage& data_W, CHEM::SpeciesSet& sp
 
 	double E_int = 0.0;
 #pragma omp parallel for reduction(+:E_int)
-	for (int s = 0; s <= species_set.NS; s++)
+	for (int s = 0; s <= species_set.NS-1; s++)
 	{
 		E_int	+= data_W(s) * (species_set.species[s].Cv_tr*T);
 	}
