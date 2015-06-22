@@ -93,7 +93,17 @@ int main(int argc, char *argv[])
 	 */
 	application.show_starting_task("Read/Generate Grid and allocate solution Data");
 	application.preprocessing_grid();
-	application.InitializeData(0);
+
+
+	/*
+	 * =======================================================================
+	 * STEP 4: INITIALIZE FLOW CONDITION/DATA
+	 * 		- Development Status: Version 1.0
+	 * 		- Last modified on: June 22, 2015
+	 * 						by: Minkwan Kim
+	 * ======================================================================
+	 */
+	application.InitializeData(application.problem_setup.IC.INITIALIZE_METHOD, true);
 
 
 	/*
@@ -154,32 +164,6 @@ int main(int argc, char *argv[])
 
 
 
-
-
-
-	 * =========================================================
-	 * STEP 7: ICs
-	 * 		- Development Status: Version 1.1a (Need to improve)
-	 * 		- Last modified on: July 23, 2014
-	 * 						by: Minkwan Kim
-	 * =========================================================
-
-	 vector< vector < vector < double > > > 	rho_IC(problem.multi_fluid);
-	 vector< vector < vector < double > > > 	u_IC(problem.multi_fluid);
-	 vector < vector < double > > 			T_IC(problem.multi_fluid);
-	 vector < vector < double > > 			Tr_IC(problem.multi_fluid);
-	 vector < vector < double > > 			Tv_IC(problem.multi_fluid);
-	 vector < vector < double > > 			Te_IC(problem.multi_fluid);
-	 for (int f = 0; f <= problem.multi_fluid-1; f++)
-	 {
-	 rho_IC[f]	= problem_fluid[f].IC.rho_s;
-	 u_IC[f]		= problem_fluid[f].IC.v;
-
-	 T_IC[f]		= problem_fluid[f].IC.T;
-	 Tr_IC[f]	= problem_fluid[f].IC.Tr;
-	 Tv_IC[f]	= problem_fluid[f].IC.Tv;
-	 Tr_IC[f]	= problem_fluid[f].IC.Tr;
-	 }
 
 
 

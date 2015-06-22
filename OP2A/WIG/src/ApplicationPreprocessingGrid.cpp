@@ -19,6 +19,7 @@
 #include "Common/include/Exception_NPExceed.hpp"
 #include "Common/include/StringOps.hpp"
 
+
 #include "../include/OP2A_Application.hpp"
 
 
@@ -38,7 +39,6 @@ void ApplicationOP2A::preprocessing_grid()
 	// Face
 	for (int f = 0; f <= grid.NFM; f++)	grid.faces[f].data1D	= face_data1D_template;
 	for (int f = 0; f <= grid.NFM; f++)	grid.faces[f].data2D	= face_data2D_template;
-
 
 	//line_finder(&grid, grid.grid_line.lines, grid.grid_line.lines_bd, grid.grid_line.cell_line_info, grid.grid_line.num_lines);
 	check_elapsed_time("Reading/Processing Grid data");

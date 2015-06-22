@@ -19,6 +19,7 @@
 #include "Common/include/StringOps.hpp"
 
 #include "../include/OP2A_Application.hpp"
+#include "CFD/include/VariableChange.hpp"
 
 
 
@@ -27,5 +28,7 @@ void ApplicationOP2A::preprocessing_species()
 	 species_set.read_SpeciesSet(problem_setup.species_file, problem_setup.NS);
 	 species_set.showInfo();
 	 check_elapsed_time("Reading Species data set");
+
 	 create_sampleDataCFD();
+	 CFD_variabletype = CFD::VariableChange::VariableType(problem_setup.NER, problem_setup.NEV, problem_setup.NEE);
 }

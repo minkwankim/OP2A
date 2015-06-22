@@ -81,10 +81,13 @@ public:
 	double 		t_simulation;
 	double 		dt;
 
-
 	const string		setup_filename;
 
 	CPUTime time_running;						// Simulation time
+
+
+	unsigned int CFD_NT;
+	unsigned int CFD_variabletype;
 
 	bool				use_extended_Stencil;
 	OP2A_PROBLEM 		problem_setup;
@@ -104,6 +107,8 @@ public:
 		iter	= 0;
 		P	= 0;
 		NP	= 1;
+		CFD_NT	= NT;
+		CFD_variabletype = 0;
 		FLAG_TERMINATION = false;
 
 		t0	= 0.0;
@@ -137,6 +142,8 @@ protected:
 	Data::DataStorageVector<Data::DataStorage>		face_data1D_template;
 	Data::DataStorageVector<Data::DataStorage2D>	face_data2D_template;
 
+	Data::DataStorageVector<Data::DataStorage>		IC_Q;
+	Data::DataStorageVector<Data::DataStorage>		IC_V;
 
 public:
 	void preparation(int argc, char *argv[], string modulename);
@@ -151,8 +158,10 @@ public:
 	void print_result(const string& i_variablename);
 	void print_restartCFD(const string& i_variablename);
 
-	void InitializeData(unsigned int num_ic);
+	void InitializeData(unsigned int num_ic, bool use_restart_file);
 
+protected:
+	void CalculateIC();
 
 
 

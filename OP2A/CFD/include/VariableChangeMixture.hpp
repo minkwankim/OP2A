@@ -26,8 +26,17 @@ namespace CFD{
 class CFD_API VariableChangeMixture : public Common::NonInstantiable<VariableChangeMixture>
 {
 public:
-	void Xs(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Xs, unsigned int CFD_NT);
-	void Ys(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Xs, unsigned int CFD_NT);
+	static void Xs(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Xs, unsigned int CFD_NT);
+	static void Ys(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Ys, unsigned int CFD_NT);
+
+	static double rho_mix(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Xs, Data::DataStorage& data_Ys, unsigned int CFD_NT);
+	static double R_mix(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Xs, Data::DataStorage& data_Ys, unsigned int CFD_NT);
+	static double M_mix(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Xs, Data::DataStorage& data_Ys, unsigned int CFD_NT);
+	static double Cv_tra_mix(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Xs, Data::DataStorage& data_Ys, unsigned int CFD_NT);
+	static double Cv_rot_mix(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Xs, Data::DataStorage& data_Ys, unsigned int CFD_NT);
+	static double Cv_tr_mix(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Xs, Data::DataStorage& data_Ys, unsigned int CFD_NT);
+
+	static void MIX(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Ys,  Data::DataStorage& data_Xs, unsigned int type, unsigned int CFD_NT, Data::DataStorage& data_MIX);
 };
 
 

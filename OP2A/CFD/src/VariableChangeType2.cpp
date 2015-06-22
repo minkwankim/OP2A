@@ -70,7 +70,7 @@ void VariableChangeType2::V_to_Q(Data::DataStorage& data_V, CHEM::SpeciesSet& sp
 
 	// 4. E_e (Electron energy)
 	double E_e = 0.0;
-#pragma omp parallel for reduction(+:E_int)
+#pragma omp parallel for reduction(+:E_e)
 	for (int s = 0; s <= species_set.NS-1; s++)
 	{
 		if(species_set.species[s].type == CHEM::SpeciesType::Electron)
