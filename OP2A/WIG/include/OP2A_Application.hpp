@@ -65,6 +65,15 @@ enum	OP2A_ParallelProcessor
 };
 
 
+enum	OP2A_DataCatogories
+{
+	OP2A_CELL1D			= 0,
+	OP2A_CELL2D			= 1,
+	OP2A_FACE1D			= 2,
+	OP2A_FACE2D			= 3
+};
+
+
 class ApplicationOP2A
 {
 public:
@@ -159,9 +168,16 @@ public:
 	void print_restartCFD(const string& i_variablename);
 
 	void InitializeData(unsigned int num_ic, bool use_restart_file);
+	void DataTreatement(int typeCase, bool is_initialize, int type);
+
+
 
 protected:
 	void CalculateIC();
+	void Cell1DDataTreatement(int typeCase, bool is_initialize);
+	void Cell2DDataTreatement(int typeCase, bool is_initialize);
+	void Face1DDataTreatement(int typeCase, bool is_initialize);
+	void Face2DDataTreatement(int typeCase, bool is_initialize);
 
 
 

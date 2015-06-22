@@ -36,7 +36,7 @@ public:
 	static double Cv_rot_mix(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Xs, Data::DataStorage& data_Ys, unsigned int CFD_NT);
 	static double Cv_tr_mix(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Xs, Data::DataStorage& data_Ys, unsigned int CFD_NT);
 
-	static void MIX(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Ys,  Data::DataStorage& data_Xs, unsigned int type, unsigned int CFD_NT, Data::DataStorage& data_MIX);
+	static void MIX(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, unsigned int type, unsigned int CFD_NT, Data::DataStorage& data_Ys,  Data::DataStorage& data_Xs, Data::DataStorage& data_MIX);
 };
 
 

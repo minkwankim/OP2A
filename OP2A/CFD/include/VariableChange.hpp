@@ -13,18 +13,20 @@
 #ifndef VARIABLECHANGE_HPP_
 #define VARIABLECHANGE_HPP_
 
-#include "VariableSet.hpp"
-#include "VariableConstants.hpp"
+#include "CFD/include/VariableSet.hpp"
+#include "CFD/include/VariableConstants.hpp"
 
 #include "CFD/include/VariableChangeCommon.hpp"
+#include "CFD/include/VariableChangeMixture.hpp"
 #include "CFD/include/VariableChangeTypes.hpp"
+
 
 
 namespace OP2A{
 namespace CFD{
 
 
-class CFD_API VariableChange
+class CFD_API VariableChange: public Common::NonInstantiable<VariableChange>
 {
 public:
 	static unsigned int VariableType(int NER, int NEV, int NEE);

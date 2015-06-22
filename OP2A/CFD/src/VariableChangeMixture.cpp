@@ -27,16 +27,16 @@ namespace CFD{
 void VariableChangeMixture::Xs(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Xs, unsigned int CFD_NT)
 {
 #pragma omp parallel for num_threads(CFD_NT)
-	for (int s = 0; s <= species_set.NS; s++)	data_Xs(s)	= data_Q(s) / species_set.species[s].m;
+	for (int s = 0; s <= species_set.NS-1; s++)	data_Xs(s)	= data_Q(s) / species_set.species[s].m;
 
 
 	// Total number of Moles
 	double n_mix	= 0.0;
 #pragma omp parallel for reduction(+:n_mix)
-	for (int s = 0; s <= species_set.NS; s++)	n_mix	+= data_Xs(s);
+	for (int s = 0; s <= species_set.NS-1; s++)	n_mix	+= data_Xs(s);
 
 #pragma omp parallel for num_threads(CFD_NT)
-	for (int s = 0; s <= species_set.NS; s++)	data_Xs(s)	/= n_mix;
+	for (int s = 0; s <= species_set.NS-1; s++)	data_Xs(s)	/= n_mix;
 }
 
 
@@ -46,10 +46,10 @@ void VariableChangeMixture::Ys(Data::DataStorage& data_Q, CHEM::SpeciesSet& spec
 	// Total number of Moles
 	double rho_mix	= 0.0;
 #pragma omp parallel for reduction(+:rho_mix)
-	for (int s = 0; s <= species_set.NS; s++)	rho_mix	+= data_Q(s);
+	for (int s = 0; s <= species_set.NS-1; s++)	rho_mix	+= data_Q(s);
 
 #pragma omp parallel for num_threads(CFD_NT)
-	for (int s = 0; s <= species_set.NS; s++)	data_Ys(s) = data_Q(s)/rho_mix;
+	for (int s = 0; s <= species_set.NS-1; s++)	data_Ys(s) = data_Q(s)/rho_mix;
 }
 
 /*
@@ -61,7 +61,7 @@ double VariableChangeMixture::rho_mix(Data::DataStorage& data_Q, CHEM::SpeciesSe
 {
 	double o_rhomix = 0.0;
 #pragma omp parallel for reduction(+:o_rhomix)
-	for (int s = 0; s <= species_set.NS; s++)	o_rhomix	+= data_Q(s);
+	for (int s = 0; s <= species_set.NS-1; s++)	o_rhomix	+= data_Q(s);
 
 	return o_rhomix;
 }
@@ -71,7 +71,7 @@ double VariableChangeMixture::R_mix(Data::DataStorage& data_Q, CHEM::SpeciesSet&
 {
 	double o_Rmix = 0.0;
 #pragma omp parallel for reduction(+:o_Rmix)
-	for (int s = 0; s <= species_set.NS; s++)	o_Rmix	+= data_Ys(s) * species_set.species[s].R;
+	for (int s = 0; s <= species_set.NS-1; s++)	o_Rmix	+= data_Ys(s) * species_set.species[s].R;
 
 	return o_Rmix;
 }
@@ -80,7 +80,7 @@ double VariableChangeMixture::M_mix(Data::DataStorage& data_Q, CHEM::SpeciesSet&
 {
 	double o_Mmix = 0.0;
 #pragma omp parallel for reduction(+:o_Mmix)
-	for (int s = 0; s <= species_set.NS; s++)	o_Mmix	+= data_Xs(s) * species_set.species[s].M;
+	for (int s = 0; s <= species_set.NS-1; s++)	o_Mmix	+= data_Xs(s) * species_set.species[s].M;
 
 	return o_Mmix;
 }
@@ -91,7 +91,7 @@ double VariableChangeMixture::Cv_tra_mix(Data::DataStorage& data_Q, CHEM::Specie
 {
 	double o_Cv_tra_mix = 0.0;
 #pragma omp parallel for reduction(+:o_Cv_tra_mix)
-	for (int s = 0; s <= species_set.NS; s++)	o_Cv_tra_mix	+= data_Ys(s) * species_set.species[s].Cv_tra;
+	for (int s = 0; s <= species_set.NS-1; s++)	o_Cv_tra_mix	+= data_Ys(s) * species_set.species[s].Cv_tra;
 
 	return o_Cv_tra_mix;
 }
@@ -100,7 +100,7 @@ double VariableChangeMixture::Cv_rot_mix(Data::DataStorage& data_Q, CHEM::Specie
 {
 	double o_Cv_tra_mix = 0.0;
 #pragma omp parallel for reduction(+:o_Cv_tra_mix)
-	for (int s = 0; s <= species_set.NS; s++)	o_Cv_tra_mix	+= data_Ys(s) * species_set.species[s].Cv_rot;
+	for (int s = 0; s <= species_set.NS-1; s++)	o_Cv_tra_mix	+= data_Ys(s) * species_set.species[s].Cv_rot;
 
 	return o_Cv_tra_mix;
 }
@@ -109,7 +109,7 @@ double VariableChangeMixture::Cv_tr_mix(Data::DataStorage& data_Q, CHEM::Species
 {
 	double o_Cv_tra_mix = 0.0;
 #pragma omp parallel for reduction(+:o_Cv_tra_mix)
-	for (int s = 0; s <= species_set.NS; s++)	o_Cv_tra_mix	+= data_Ys(s) * species_set.species[s].Cv_tr;
+	for (int s = 0; s <= species_set.NS-1; s++)	o_Cv_tra_mix	+= data_Ys(s) * species_set.species[s].Cv_tr;
 
 	return o_Cv_tra_mix;
 }
@@ -117,8 +117,12 @@ double VariableChangeMixture::Cv_tr_mix(Data::DataStorage& data_Q, CHEM::Species
 
 
 
-void VariableChangeMixture::MIX(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Ys,  Data::DataStorage& data_Xs, unsigned int type, unsigned int CFD_NT, Data::DataStorage& data_MIX)
+void VariableChangeMixture::MIX(Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, unsigned int type, unsigned int CFD_NT, Data::DataStorage& data_Ys,  Data::DataStorage& data_Xs, Data::DataStorage& data_MIX)
 {
+	Xs(data_Q, species_set, ND, data_Xs, CFD_NT);
+	Ys(data_Q, species_set, ND, data_Ys, CFD_NT);
+
+
 	int index;
 	double temp_rhoMix;
 	double temp_RMix;
@@ -147,6 +151,9 @@ void VariableChangeMixture::MIX(Data::DataStorage& data_Q, CHEM::SpeciesSet& spe
 
 		index	= data_MIX.dataMap.find(CFD_VariableSet::Cv_mix(CHEM::EnergyMode::E_TR));
 		data_MIX(index)	= temp_CvtrMix;
+
+		index	= data_MIX.dataMap.find(CFD_VariableSet::gamma_mix());
+		data_MIX(index)	= (temp_CvtrMix + temp_RMix) / temp_CvtrMix;
 	}
 	else
 	{
@@ -167,6 +174,10 @@ void VariableChangeMixture::MIX(Data::DataStorage& data_Q, CHEM::SpeciesSet& spe
 
 		index	= data_MIX.dataMap.find(CFD_VariableSet::Cv_mix(CHEM::EnergyMode::E_ROT));
 		data_MIX(index)	= temp_CvrotMix;
+
+
+		index	= data_MIX.dataMap.find(CFD_VariableSet::gamma_mix());
+		data_MIX(index)	= (temp_CvtraMix + temp_CvrotMix + temp_RMix) / (temp_CvtraMix + temp_CvrotMix);
 	}
 }
 

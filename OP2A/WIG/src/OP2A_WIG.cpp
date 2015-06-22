@@ -95,6 +95,8 @@ int main(int argc, char *argv[])
 	application.preprocessing_grid();
 
 
+
+
 	/*
 	 * =======================================================================
 	 * STEP 4: INITIALIZE FLOW CONDITION/DATA
@@ -104,6 +106,8 @@ int main(int argc, char *argv[])
 	 * ======================================================================
 	 */
 	application.InitializeData(application.problem_setup.IC.INITIALIZE_METHOD, true);
+
+
 
 
 	/*
