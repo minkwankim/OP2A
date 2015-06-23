@@ -27,12 +27,6 @@
 
 void ApplicationOP2A::Cell1DDataTreatement(int typeCase, bool is_initialize)
 {
-	int indexQ		= grid.cells[1].data1D.dataMap.find(NAME_Q);
-	int indexV		= grid.cells[1].data1D.dataMap.find(NAME_V);
-	int indexW		= grid.cells[1].data1D.dataMap.find(NAME_W);
-	int indexMIX	= grid.cells[1].data1D.dataMap.find(NAME_MIX);
-	int indexXs		= grid.cells[1].data1D.dataMap.find(NAME_XS);
-	int indexYs		= grid.cells[1].data1D.dataMap.find(NAME_YS);
 	int indexR		= grid.cells[1].data1D.dataMap.find(NAME_R);
 	int indexdQ		= grid.cells[1].data1D.dataMap.find(NAME_dQ);
 	int indexQnew	= grid.cells[1].data1D.dataMap.find(NAME_Qnew);

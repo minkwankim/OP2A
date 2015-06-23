@@ -128,6 +128,13 @@ public:
 		m_now = localtime(& m_t);
 
 		use_extended_Stencil = false;
+
+		indexQ		= 0;
+		indexV		= 1;
+		indexW		= 2;
+		indexMIX	= 3;
+		indexXs		= 4;
+		indexYs		= 5;
 	}
 
 	~ApplicationOP2A()
@@ -154,6 +161,13 @@ protected:
 	Data::DataStorageVector<Data::DataStorage>		IC_Q;
 	Data::DataStorageVector<Data::DataStorage>		IC_V;
 
+	int indexQ;
+	int indexV;
+	int indexW;
+	int indexMIX;
+	int indexXs;
+	int indexYs;
+
 public:
 	void preparation(int argc, char *argv[], string modulename);
 	void check_elapsed_time(string workname);
@@ -164,12 +178,13 @@ public:
 	void preprocessing_species();
 	void preprocessing_grid();
 
-	void print_result(const string& i_variablename);
+	void print_result(const string& i_variablename, int type);
 	void print_restartCFD(const string& i_variablename);
 
 	void InitializeData(unsigned int num_ic, bool use_restart_file);
 	void DataTreatement(int typeCase, bool is_initialize, int type);
 
+	void ApplyBCInviscidNormal();
 
 
 protected:

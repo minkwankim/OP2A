@@ -14,6 +14,7 @@
 
 
 
+#include "CFD/include/VariableConstants.hpp"
 
 #include "Common/include/CodeLocation.hpp"
 #include "Common/include/Exception_NPExceed.hpp"
@@ -40,6 +41,19 @@ void ApplicationOP2A::preprocessing_grid()
 	for (int f = 0; f <= grid.NFM; f++)	grid.faces[f].data1D	= face_data1D_template;
 	for (int f = 0; f <= grid.NFM; f++)	grid.faces[f].data2D	= face_data2D_template;
 
+	// Ghost cells
+	for (int c = 0; c <= grid.NGM; c++)	grid.cells_ghost[c].data1D = cell_data1D_template;
+	for (int c = 0; c <= grid.NGM; c++)	grid.cells_ghost[c].data2D = cell_data2D_template;
+
+
 	//line_finder(&grid, grid.grid_line.lines, grid.grid_line.lines_bd, grid.grid_line.cell_line_info, grid.grid_line.num_lines);
+	indexQ 		= grid.cells[1].data1D.dataMap.find(NAME_Q);
+	indexV 		= grid.cells[1].data1D.dataMap.find(NAME_V);
+	indexW 		= grid.cells[1].data1D.dataMap.find(NAME_W);
+	indexMIX 	= grid.cells[1].data1D.dataMap.find(NAME_MIX);
+	indexXs 	= grid.cells[1].data1D.dataMap.find(NAME_XS);
+	indexYs 	= grid.cells[1].data1D.dataMap.find(NAME_YS);
+
+
 	check_elapsed_time("Reading/Processing Grid data");
 }

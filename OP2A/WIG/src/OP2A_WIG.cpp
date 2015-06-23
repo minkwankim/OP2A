@@ -105,7 +105,24 @@ int main(int argc, char *argv[])
 	 * 						by: Minkwan Kim
 	 * ======================================================================
 	 */
+	application.show_starting_task("Initializing Flow Data");
 	application.InitializeData(application.problem_setup.IC.INITIALIZE_METHOD, true);
+
+
+
+
+	/*
+	 * =====================================================================
+	 * STEP 5: Apply Boundary conditions
+	 * 		- Development Status: Version 1.0
+	 * 		- Last modified on: Jan 22, 2015
+	 * 						by: Minkwan Kim
+	 * ======================================================================
+	 */
+	application.show_starting_task("Applying Inviscid Boundary Condition");
+	application.ApplyBCInviscidNormal();
+	application.check_elapsed_time("Applying Inviscid Boundary Condition");
+
 
 
 
@@ -118,9 +135,11 @@ int main(int argc, char *argv[])
 	 * 						by: Minkwan Kim
 	 *====================================================================
 	 */
+	// Result Data
 	application.show_starting_task("Print solution Data");
-	application.print_result(string(NAME_V));
+	application.print_result(string(NAME_V), 1);
 
+	// Restart Data
 	application.show_starting_task("Save restart Data");
 	application.print_restartCFD(string(NAME_V));
 

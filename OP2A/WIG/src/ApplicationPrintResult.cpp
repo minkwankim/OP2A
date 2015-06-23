@@ -19,9 +19,17 @@
 #include "../include/OP2A_Application.hpp"
 
 
-void ApplicationOP2A::print_result(const string& i_variablename)
+void ApplicationOP2A::print_result(const string& i_variablename, int type)
 {
-	GRID::ResultDataPrintTecplotCell(P, grid, problem_setup.name, problem_setup.output_file_name, i_variablename);
+	switch (type)
+	{
+	case 0:
+		GRID::ResultDataPrintTecplotCell(P, grid, problem_setup.name, problem_setup.output_file_name, i_variablename);
+		break;
+	case 1:
+		GRID::ResultDataPrintTecplotNode(P, grid, problem_setup.name, problem_setup.output_file_name, i_variablename);
+		break;
+	}
 
 	check_elapsed_time("Print Solution Data");
 }
