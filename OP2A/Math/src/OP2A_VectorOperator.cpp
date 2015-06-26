@@ -74,7 +74,7 @@ void VECTOR::operator += (const VECTOR& S)
 VECTOR operator- (const VECTOR &A, const VECTOR &B)
 {
 	unsigned int N = A.size();
-	if (N != B.size())	throw Common::ExceptionDimensionMatch (FromHere(), "Dimenction of X and Y values do not match");
+	if (N != B.size())	throw Common::ExceptionDimensionMatch (FromHere(), "Dimension of X and Y values do not match");
 	VECTOR C(N, 0.0);
 
 
@@ -86,7 +86,7 @@ VECTOR operator- (const VECTOR &A, const VECTOR &B)
 VECTOR operator+ (const VECTOR &A, const VECTOR &B)
 {
 	unsigned int N = A.size();
-	if (N != B.size())	throw Common::ExceptionDimensionMatch (FromHere(), "Dimenction of X and Y values do not match");
+	if (N != B.size())	throw Common::ExceptionDimensionMatch (FromHere(), "Dimension of X and Y values do not match");
 	VECTOR C(N, 0.0);
 
 
