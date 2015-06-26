@@ -81,6 +81,9 @@ int main(int argc, char *argv[])
 	 */
 	application.show_starting_task("Read Species/Chemisty Data");
 	application.preprocessing_species();
+	/*
+	 * @todo need to add Chemical reaction data reader
+	 */
 
 
 
@@ -123,13 +126,20 @@ int main(int argc, char *argv[])
 	application.ApplyBCInviscidNormal();
 	application.check_elapsed_time("Applying Inviscid Boundary Condition");
 
-
-
+	if (application.problem_setup.is_viscous == true)
+	{
+		application.show_starting_task("Applying Viscous Boundary Condition");
+		application.ApplyBCViscousNormal();
+		application.check_elapsed_time("Applying Viscous Boundary Condition");
+	}
+	/*
+	 * @todo Need to add transport properties calculator
+	 */
 
 
 	/*
 	 * ===================================================================
-	 * STEP 10: Preparing Output data
+	 * STEP 6: Preparing Output data
 	 * 		- Development Status: Version 1.0
 	 * 		- Last modified on: June 15, 2015
 	 * 						by: Minkwan Kim
@@ -145,152 +155,75 @@ int main(int argc, char *argv[])
 
 
 
+
+
+
+
+
+	/*
+	 * =====================================================================
+	 * Physical Solving Loop: CFD Part
+	 *
+	 * @author	Minkwan Kim
+	 * @version 1.0 June/24/2015
+	 * ======================================================================
+	 */
+	application.PrintConvergences(true);
+	application.show_starting_task("Start OP2A-WIG Module....");
+
+	while (application.iter <= 10000) //application.problem_setup.n_total && application.termination != true)
+	{
+		/*
+		 * 1. Calculate time step and CFL number
+		 */
+		application.CalcualteCFL();
+		application.Calcualtedt();
+		application.t_simulation	+= application.dt;
+
+
+		/*
+		 * 2. Inviscid Part
+		 */
+		application.ApplyBCInviscidNormal();
+
+
+
+
+
+
+
+
+
+
+
+		/*
+		 * 7. Time integral and Update
+		 */
+
+
+
+
+
+
+
+		application.PrintConvergences(false);
+
+
+
+
+
+		application.iter++;
+	}
+
+
+
 /*
 
 
-	 vector<SPECIES>	species_entire;
-	 read_species_data_set(species_entire, problem.species_file, problem.NS);
-
-	 vector<SPECIES_DATA_BASIC>	species(problem.multi_fluid);
-	 vector<int> fluid_info(problem.multi_fluid, 0);
-
-	 switch(problem.multi_fluid)
-	 {
-	 case 1:
-	 species[0].allocate_data(species_entire, DATA_ENTIRE);
-	 fluid_info[0]	= 0;
-	 break;
-	 case 2:
-	 species[0].allocate_data(species_entire, DATA_HEAVYSPECIES);
-	 species[1].allocate_data(species_entire, DATA_ELECTRON);
-
-	 fluid_info[0]	= 0;
-	 fluid_info[1]	= -1;
-	 break;
-	 }
-
-	 // Update Problem setup for each fluids
-	 vector<OP2A_PROBLEM> problem_fluid(problem.multi_fluid);
-	 for (int f = 0; f <= problem.multi_fluid-1; f++)	problem_fluid[f]	= problem;
-	 for (int f = 0; f <=problem.multi_fluid-1; f++)		problem_fluid[f].adjust(species[f]);
-	 for (int f = 0; f <=problem.multi_fluid-1; f++)		problem_fluid[f].NS	= species[f].NS;
-
-	 REACTION_DATA_ver2 reactions;
-	 reactions.NS			= species_entire.size();
-	 reactions.species_data	= species_entire;
-	 if (problem.NONEQ_Chem == true)	reactions.read_reaction_data(problem.reaction_file);
 
 
 
 
-
-
-
-
-
-
-
-
-
-	 * =======================================================================
-	 * STEP 8: INITIALIZE FLOW CONDITION/DATA
-	 * 		- Development Status: Version 1.0
-	 * 		- Last modified on: Jan 22, 2015
-	 * 						by: Minkwan Kim
-	 * ======================================================================
-
-	 #ifdef MPI
-	 if (P == 0)	cout << endl << "  Initialize flow conditions [t = " << MPI_Wtime()-t0 << endl;
-	 #else
-	 cout << endl <<"  Initialize flow conditions..." << endl;
-	 #endif
-	 vector < vector < vector <double> > > Q_IC(problem.multi_fluid);
-	 vector < vector < vector <double> > > V_IC(problem.multi_fluid);
-	 Calculate_IC_multi_fluid_ver2(Solution_data, rho_IC, u_IC, T_IC, Tr_IC, Tv_IC, Te_IC, Q_IC, V_IC, species, problem.multi_fluid);
-
-	 // Initialize conditions
-	 Initialize_flows_multi_fluids(Solution_data, Q_IC, V_IC, species, grid.NCM, problem.IC.INITIALIZE_METHOD, problem.multi_fluid, problem.NT);
-	 for (int f = 0; f <= problem.multi_fluid-1; f++)
-	 {
-	 #pragma omp parallel for num_threads(NT)
-	 for (int c = 0; c <= grid.NCM-1; c++)
-	 {
-	 Solution_data[f].mixture_data_c[c].calculate_data(problem_fluid[f].NS, problem_fluid[f].NER, Solution_data[f].Qc[c], species[f].Cv_t, species[f].Cv_r, species[f].R, species[f].M);
-	 CFD_Q_to_V(Solution_data[f].Qc[c], Solution_data[f].Vc[c], Solution_data[f].setup, Solution_data[f].mixture_data_c[c], species[f]);
-	 CFD_V_to_W(Solution_data[f].Vc[c], Solution_data[f].Wc[c], Solution_data[f].setup, Solution_data[f].mixture_data_c[c], species[f]);
-	 }
-	 }
-
-	 if (problem.is_viscous	== true)
-	 {
-	 for (int f = 0; f <= problem.multi_fluid-1; f++)
-	 {
-	 Solution_data[f].setup_transport.Le					=	problem_fluid[f].Le;
-	 Solution_data[f].setup_transport.conductivity_model	=	problem_fluid[f].model_conductivity;
-	 Solution_data[f].setup_transport.viscosity_model	= 	problem_fluid[f].model_viscosity;
-	 Solution_data[f].setup_transport.mixing_rule		=	problem_fluid[f].model_mixing_rule;
-	 }
-
-	 for (int f = 0; f <= problem.multi_fluid-1; f++)
-	 {
-	 for (int c = 0; c <= grid.NCM-1; c++)
-	 {
-	 Solution_data[f].transport_prop_c[c].calculate_transport_properties(Solution_data[f].setup, Solution_data[f].Vc[c], Solution_data[f].mixture_data_c[c].Xs, species[f], Solution_data[f].setup_transport);
-	 }
-	 }
-	 }
-
-	 #ifdef MPI
-	 if (P == 0)	cout << "  --->Done  [t = " << MPI_Wtime()-t0 << endl;
-	 #else
-	 cout << "  --->Done" << endl;
-	 #endif
-
-
-
-
-
-	 * =====================================================================
-	 * STEP 9: Apply Boundary conditions
-	 * 		- Development Status: Version 1.0
-	 * 		- Last modified on: Jan 22, 2015
-	 * 						by: Minkwan Kim
-	 * ======================================================================
-
-	 #ifdef MPI
-	 if (P == 0)	cout << endl << "  Applying boundary conditions [t = " << MPI_Wtime()-t0 << endl;
-	 #else
-	 cout << endl <<"  Applying boundary conditions..." << endl;
-	 #endif
-
-	 //Inviscid case
-	 for (int f = 0; f <= problem.multi_fluid-1; f++)
-	 CFD_assign_BC_inviscid_complete(Solution_data[f], grid, Q_IC[f], V_IC[f], species[f], NT);
-	 cout <<"   - [Step 1] Inviscid BC --> DONE" << endl;
-
-	 // Viscous CASE
-	 if (problem.is_viscous	== true)
-	 {
-	 for (int f = 0; f <= problem.multi_fluid-1; f++)
-	 {
-
-	 CFD_assign_BC_viscous(variable_setup[f], grid,
-	 Cell_solution_Q[f], 		Cell_solution_V[f], 		Cell_solution_W[f], 			Cell_CFD_data[f], transport_data_c[f],
-	 Cell_ghost_solution_Q[f], 	Cell_ghost_solution_V[f], 	Cell_ghost_solution_W[f], 		Cell_CFD_data[f], transport_data_gc[f],
-	 transport_setup[f], species[f],
-	 problem_fluid[f].adiabatic, problem_fluid[f].catalytic, problem_fluid[f].radiative, problem_fluid[f].Ys, problem_fluid[f].Tw,
-	 problem_fluid[f].use_emissivity, problem_fluid[f].emissivity_Tref, problem_fluid[f].emissivity_below, problem_fluid[f].emissivity_above,
-	 problem_fluid[f].NT);
-
-	 }
-	 }
-
-	 #ifdef MPI
-	 if (P == 0)	cout << "  --->Done  [t = " << MPI_Wtime()-t0 << endl;
-	 #else
-	 cout << "  --->Done" << endl;
-	 #endif
-*====================================================================
 
 
 

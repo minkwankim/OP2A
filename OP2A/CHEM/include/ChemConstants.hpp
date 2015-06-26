@@ -35,6 +35,21 @@ namespace CHEM{
 #define AMU_SI 	1.660538782E-27
 #define AMU_CGS 1.660538782E-24
 
+#define STEFAN_BOLTZMANN_SI 5.6704E-8			/*Stefan-Boltzmann constant in SI unit*/
+#define EPS0_SI 8.854E-12 						/* Vacuum permittivity in SI*/
+#define EPS0_CG 5.772156649015329E-1
+#define K_TO_eV 8.67343e-5
+
+#define PLANCK_SI				6.6262e-34
+#define PLANCK_SI_BAR			1.0546e-34
+#define SPEED_OF_LIGHT_SI		2.9979e8
+#define MU0_SI					(4*PI*1.0e-7)			/* Permeability of free space */
+#define BOHR_RADIUS_SI			5.2918e-11				/* Bohr radius */
+#define ATOMIC_CROSS_SECTION_SI	8.7974e-21				// Atomic cross section, pi a0^2
+#define eV_TO_K					11605
+#define E_in_eV					1.6022e-19				// Energy for 1V
+
+
 
 #define OP2A_SPECIES_DATA_BASE_FILE		"species_database.dat"
 #define OP2A_SPECIES_DATA_ROT_FILE		"species_noneq_rot.dat"

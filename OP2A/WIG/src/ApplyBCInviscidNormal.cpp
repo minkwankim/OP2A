@@ -66,7 +66,5 @@ void ApplicationOP2A::ApplyBCInviscidNormal()
 	{
 		CFD::CellData1D::CompleteDataWIGCase1(grid.cells_ghost[c].data1D, species_set, grid.ND, CFD_variabletype, CFD_NT, indexQ, indexV, indexW, indexMIX, indexXs, indexYs);
 	}
-
-
 }
 

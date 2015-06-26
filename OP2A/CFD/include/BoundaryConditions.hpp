@@ -31,9 +31,12 @@ enum CFDBCTypes
 	WallType		= 1,
 	InletType		= 2,
 	FreestreamType 	= 3,
-	ExitType		= 4
+	ExitType		= 4,
+	OtherType		= 5
 };
 
+
+double CFD_CalculateWallTemperature(double Tcl, double kappa_cl, double dn, bool use_emissivity, double Tref, vector<double> emissivity_below, vector<double> emissivity_above, int MaxIter, double epsilon);
 
 
 
@@ -57,9 +60,35 @@ public:
 
 
 
+class CFD_API BCViscous: public Common::NonInstantiable<BCViscous>
+{
+public:
+	static CFDBCTypes	BCTypeInCFD(const int FaceBCType);
+
+	static void  wallTypeBC(Data::DataStorageVector<Data::DataStorage>& CellData1D_cl,
+							Data::DataStorageVector<Data::DataStorage>& CellData1D_cr,
+							CHEM::SpeciesSet& species_set,
+							Data::DataStorage& BCValuesWall,
+							vector<double>& xcl,
+							vector<double>& xf,
+							int  ND,
+							int  CFD_variabletype,
+							int	 CFD_NT,
+							bool adiabaticWall,
+							bool catalyticWall,
+							bool nonSlipWall,
+							bool radiativeWall,
+							double kappa_cl,
+							bool use_emissivity,
+							double Tref,
+							vector<double> emissivity_below,
+							vector<double> emissivity_above);
+
+	static void OtherTypeBC(Data::DataStorageVector<Data::DataStorage>& CellData1D_cl, Data::DataStorageVector<Data::DataStorage>& CellData1D_cr, int ND);
+};
 
 
-class CFD_API BCViscid: public Common::NonInstantiable<BCViscid>
+class CFD_API BCViscousImplicit: public Common::NonInstantiable<BCViscousImplicit>
 {
 public:
 	static void  wallTypeBC(Data::DataStorage& Qcl, vector<double>& face_normal_vector, Data::DataStorage& Qcr, int ND);

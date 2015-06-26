@@ -74,5 +74,42 @@ unsigned int VariableChange::VariableType(int NER, int NEV, int NEE)
 	return (variabletype);
 };
 
+
+
+unsigned int VariableChange::NumEnergyModes(unsigned int variableType)
+{
+	int ne;
+
+	switch (variableType)
+	{
+	case 1:
+		ne = 1;
+		break;
+	case 2:
+		ne = 2;
+		break;
+	case 3:
+		ne = 2;
+		break;
+	case 4:
+		ne = 3;
+		break;
+	case 5:
+		ne = 2;
+		break;
+	case 6:
+		ne = 3;
+		break;
+	case 7:
+		ne = 3;
+		break;
+	case 8:
+		ne = 4;
+		break;
+	}
+
+	return (ne);
+}
+
 }
 }

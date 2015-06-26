@@ -135,6 +135,13 @@ public:
 		indexMIX	= 3;
 		indexXs		= 4;
 		indexYs		= 5;
+
+
+		termination = false;
+		RHS_n		= 0;
+		RHS_max		= 0.0;
+		RHS_2		= 0.0;
+		CFLNumber	= 0.001;
 	}
 
 	~ApplicationOP2A()
@@ -160,6 +167,7 @@ protected:
 
 	Data::DataStorageVector<Data::DataStorage>		IC_Q;
 	Data::DataStorageVector<Data::DataStorage>		IC_V;
+	Data::DataStorageVector<Data::DataStorage>		BCValuesWall;
 
 	int indexQ;
 	int indexV;
@@ -167,6 +175,15 @@ protected:
 	int indexMIX;
 	int indexXs;
 	int indexYs;
+
+
+public:
+	bool 	termination;
+	int 	RHS_n;
+	double 	RHS_max;
+	double 	RHS_2;
+	double	CFLNumber;
+
 
 public:
 	void preparation(int argc, char *argv[], string modulename);
@@ -185,6 +202,11 @@ public:
 	void DataTreatement(int typeCase, bool is_initialize, int type);
 
 	void ApplyBCInviscidNormal();
+	void ApplyBCViscousNormal();
+
+	void PrintConvergences(bool firststart);
+	void CalcualteCFL();
+	void Calcualtedt();
 
 
 protected:

@@ -15,6 +15,10 @@
 
 
 #include "CFD/include/VariableSet.hpp"
+#include "CFD/include/BoundaryConditions.hpp"
+#include "CFD/include/MiscFunctionsCFD.hpp"
+#include "CFD/include/VariableChange.hpp"
+
 
 
 

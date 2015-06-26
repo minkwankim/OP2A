@@ -11,7 +11,8 @@
  *  
  */
 
-
+#include <limits>
+#include <algorithm>
 #include "Common/include/Exception_DimensionMatch.hpp"
 #include "Math/include/MathMisc.hpp"
 
@@ -19,6 +20,33 @@
 namespace OP2A{
 namespace Math{
 
+double fminOMP(const std::vector<double> &V, const int iStart, const int iEnd)
+{
+
+	double Vmin = V[iStart];
+
+#pragma omp parallel for reduction (min:Vmin)
+	for (int i = iStart+1; i <= iEnd; i++)
+	{
+		if (V[i] < Vmin)	Vmin = V[i];
+	}
+
+	return Vmin;
+}
+
+double fmaxOMP(const std::vector<double> &V, const int iStart, const int iEnd)
+{
+
+	double Vmax = V[iStart];
+
+#pragma omp parallel for reduction (min:Vmax)
+	for (int i = iStart+1; i <= iEnd; i++)
+	{
+		if (V[i] > Vmax)	Vmax = V[i];
+	}
+
+	return Vmax;
+}
 
 
 

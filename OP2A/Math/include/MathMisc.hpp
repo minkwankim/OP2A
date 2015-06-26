@@ -90,6 +90,10 @@ T Delta_fn(int i, int j)
 }
 
 
+double fminOMP(const std::vector<double> &V, const int iStart, const int iEnd);
+double fmaxOMP(const std::vector<double> &V, const int iStart, const int iEnd);
+
+
 double interpolate1(std::vector<double> &x, std::vector<double> &y, double xp);
 double MK_fn_ver1(int Xa, int Xb, double y_min, double y_max, int n);
 

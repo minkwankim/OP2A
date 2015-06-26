@@ -30,6 +30,7 @@ class CFD_API VariableChange: public Common::NonInstantiable<VariableChange>
 {
 public:
 	static unsigned int VariableType(int NER, int NEV, int NEE);
+	static unsigned int NumEnergyModes(unsigned int variableType);
 
 	static void V_to_Q(unsigned int variabletype, unsigned int CFD_NT, Data::DataStorage& data_V, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_Q);
 	static void Q_to_V(unsigned int variabletype, unsigned int CFD_NT, Data::DataStorage& data_Q, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& data_V);
