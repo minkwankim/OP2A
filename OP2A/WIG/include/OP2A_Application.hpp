@@ -208,6 +208,7 @@ public:
 	void CalcualteCFL();
 	void Calcualtedt();
 
+	void CalculateFluxInviscidImplicit();
 
 protected:
 	void CalculateIC();
@@ -216,8 +217,8 @@ protected:
 	void Face1DDataTreatement(int typeCase, bool is_initialize);
 	void Face2DDataTreatement(int typeCase, bool is_initialize);
 
-
-
+	void CalculateFluxInviscidImplicit_SWFVM_MUSCL();
+	void CalculateFluxInviscidImplicit_SWFVM_1stOrder();
 
 };
 

@@ -25,7 +25,7 @@ namespace CFD{
 
 void FluxInviscid::SWFVS_Implicit(Data::DataStorageVector<Data::DataStorage>& data1D_L, Data::DataStorageVector<Data::DataStorage>& data1D_R, CHEM::SpeciesSet& species_set, int ND,
 									unsigned int type, unsigned int indexQ, unsigned int indexV, unsigned int indexW,
-									vector< vector<double> >& normal_vector,
+									vector< vector<double> >& normal_vector, int faceID,
 									double dp, double dist_wall, double n_dot_wall, double alpha, double x0, double eps0,
 									Data::DataStorage& Fn_inv)
 {
@@ -244,9 +244,33 @@ void FluxInviscid::SWFVS_Implicit(Data::DataStorageVector<Data::DataStorage>& da
 
 
 	 // 3. Calculate Flux at Face
-	for (int i = 0; i <= VAR-1; i++)	Fn_inv(i) =	0.0;
+	for (int i = 0; i <= VAR-1; i++)
+	{
+		double temp;
+#pragma omp parallel for reduction(+: temp)
+		for (int j = 0; j <= VAR-1; j++)
+		{
+			temp	+= A_pm[0](i,j)*data1D_L(indexQ)(j) + A_pm[1](i,j)*data1D_R(indexQ)(j);
+		}
 
-	Fn_inv.data	= A_pm[0]*data1D_L(indexQ).data + A_pm[1]*data1D_R(indexQ).data;
+		if (temp != temp)
+		{
+			std::ostringstream oss;
+			oss << "NaN value in the calculation of inviscid Flux: [face ID]: " << faceID << "  [VAR]: " << i << "    [Flux]:" << temp;
+			throw Common::ExceptionNaNValue (FromHere(), oss.str());
+		}
+
+		if (temp == numeric_limits<double>::infinity())
+		{
+			std::ostringstream oss;
+			oss << "Infinite Value in the calculation of inviscid Flux: [face ID]: " << faceID << "  [VAR]: " << i << "    [Flux]:" << temp;
+
+			throw Common::ExceptionInfiniteValue (FromHere(), oss.str());
+		}
+
+
+		Fn_inv(i)	= temp;
+	}
 }
 
 }

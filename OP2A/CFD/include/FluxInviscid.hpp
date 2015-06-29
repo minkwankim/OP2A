@@ -14,6 +14,9 @@
 #define FLUXINVISCID_HPP_
 
 
+#include <limits>
+#include "Common/include/Exception_NaNValue.hpp"
+#include "Common/include/Exception_InfiniteValue.hpp"
 
 #include "CFD/include/VariableChange.hpp"
 #include "CFD/include/VariableConstants.hpp"
@@ -54,7 +57,7 @@ class CFD_API FluxInviscid: public Common::NonInstantiable<FluxInviscid>
 public:
 	static void SWFVS_Implicit(Data::DataStorageVector<Data::DataStorage>& data1D_L, Data::DataStorageVector<Data::DataStorage>& data1D_R, CHEM::SpeciesSet& species_set, int ND,
 								unsigned int type, unsigned int indexQ, unsigned int indexV, unsigned int indexW,
-								vector< vector<double> >& normal_vector,
+								vector< vector<double> >& normal_vector, int faceID,
 								double dp, double dist_wall, double n_dot_wall, double alpha, double x0, double eps0,
 								Data::DataStorage& Fn_inv);
 

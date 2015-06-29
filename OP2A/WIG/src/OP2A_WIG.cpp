@@ -54,38 +54,6 @@ using namespace OP2A;
 
 int main(int argc, char *argv[])
 {
-	Math::MATRIX	A(4, 4);
-	Math::MATRIX	C;
-
-	A(1, 1)	= 10;
-	A(1, 2)	= 2;
-	A(1, 3)	= 3;
-	A(1, 4)	= 40;
-
-	A(2, 1)	= 110;
-	A(2, 2)	= 11;
-	A(2, 3)	= 11;
-	A(2, 4)	= 11;
-
-	A(3, 1)	= 33;
-	A(3, 2)	= 33;
-	A(3, 3)	= 33;
-	A(3, 4)	= 33;
-
-	A(4, 1)	= 10;
-	A(4, 2)	= 2;
-	A(4, 3)	= 2;
-	A(4, 4)	= 100;
-
-
-	double det_test = Math::MATRIX_Det(A);
-	C = Math::MATRIX_Inv2(A);
-	C = C * A;
-	double sum_test = C.sum();
-	int aa;
-	aa = 0;
-
-
 	ApplicationOP2A application(OP2A_OPENMP, OP2A_CPU, 23, "OP2A_setup.prob");
 	application.preparation(argc, argv, "CFD");
 
@@ -220,7 +188,7 @@ int main(int argc, char *argv[])
 		 * 2. Inviscid Part
 		 */
 		application.ApplyBCInviscidNormal();
-
+		application.CalculateFluxInviscidImplicit();
 
 
 
