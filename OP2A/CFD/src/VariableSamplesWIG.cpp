@@ -40,10 +40,10 @@ Data::DataStorageVector<Data::DataStorage> CFD_DataTemplateWIG::CellData1D(const
 	sampleData(numData)	= CFD_VariableSet::Ys(species_set, ND, NER, NEV, NEE, viscous, axis);		numData++;
 	sampleData(numData)	= CFD_VariableSet::Residue(species_set, ND, NER, NEV, NEE, viscous, axis);	numData++;
 	sampleData(numData)	= CFD_VariableSet::dQ(species_set, ND, NER, NEV, NEE, viscous, axis); 		numData++;
-	sampleData(numData)	= CFD_VariableSet::Qnew(species_set, ND, NER, NEV, NEE, viscous, axis); 	numData++;
+	//sampleData(numData)	= CFD_VariableSet::Qnew(species_set, ND, NER, NEV, NEE, viscous, axis); 	numData++;
 	sampleData(numData)	= CFD_VariableSet::Source(species_set, ND, NER, NEV, NEE, viscous, axis);	numData++;
 
-	if (axis == true)
+	if (axis == true && viscous == true)
 	{
 		sampleData(numData)	= CFD_VariableSet::DivV(species_set, ND, NER, NEV, NEE, viscous, axis);
 		numData++;

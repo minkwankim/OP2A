@@ -48,6 +48,7 @@ void VariableChangeCommon::Q_to_V(Data::DataStorage& data_Q, CHEM::SpeciesSet& s
 
 #pragma omp parallel for num_threads(CFD_NT)
 	for (int k = species_set.NS; k <= species_set.NS+ND-1; k++)	data_V(k)	= data_Q(k)/rho_mix;
+
 }
 
 

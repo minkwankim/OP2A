@@ -213,6 +213,10 @@ void VariableChangeType8::Q_to_V(Data::DataStorage& data_Q, CHEM::SpeciesSet& sp
 	}
 
 
+	if (rhoCve == 0.0)
+	{
+		int a = 0;
+	}
 
 	T	= (E - E_h0 - E_k - Er - Eve - Ee) / rhoCv_tra_mix;
 	Tr	= Er / rhoCv_rot_mix;

@@ -55,7 +55,7 @@ public:
 class CFD_API FluxInviscid: public Common::NonInstantiable<FluxInviscid>
 {
 public:
-	static void SWFVS_Implicit(Data::DataStorageVector<Data::DataStorage>& data1D_L, Data::DataStorageVector<Data::DataStorage>& data1D_R, CHEM::SpeciesSet& species_set, int ND,
+	static void SWFVS_Explicit(Data::DataStorageVector<Data::DataStorage>& data1D_L, Data::DataStorageVector<Data::DataStorage>& data1D_R, CHEM::SpeciesSet& species_set, int ND,
 								unsigned int type, unsigned int indexQ, unsigned int indexV, unsigned int indexW,
 								vector< vector<double> >& normal_vector, int faceID,
 								double dp, double dist_wall, double n_dot_wall, double alpha, double x0, double eps0,

@@ -135,7 +135,9 @@ public:
 		indexMIX	= 3;
 		indexXs		= 4;
 		indexYs		= 5;
-
+		indexResidue = 6;
+		indexdQ = 7;
+		//indexQnew = 8;
 
 		termination = false;
 		RHS_n		= 0;
@@ -175,6 +177,11 @@ protected:
 	int indexMIX;
 	int indexXs;
 	int indexYs;
+	int indexResidue;
+	int indexdQ;
+	//int indexQnew;
+
+
 
 
 public:
@@ -207,8 +214,14 @@ public:
 	void PrintConvergences(bool firststart);
 	void CalcualteCFL();
 	void Calcualtedt();
+	void CalcualtedResidueNorms();
 
-	void CalculateFluxInviscidImplicit();
+
+	void CalculateFluxInviscidExplicit();
+	void CalculateResidueInviscid();
+	void TimeIntegrate();
+
+
 
 protected:
 	void CalculateIC();
@@ -217,8 +230,14 @@ protected:
 	void Face1DDataTreatement(int typeCase, bool is_initialize);
 	void Face2DDataTreatement(int typeCase, bool is_initialize);
 
-	void CalculateFluxInviscidImplicit_SWFVM_MUSCL();
-	void CalculateFluxInviscidImplicit_SWFVM_1stOrder();
+	void CalculateFluxInviscidExplicit_SWFVM_MUSCL();
+	void CalculateFluxInviscidExplicit_SWFVM_1stOrder();
+
+	void CalculateResidueInviscid_ver1();
+	void CalculateResidueInviscid_ver2();
+
+	void TimeIntegrateExplicit();
+	void UpdateQ();
 
 };
 

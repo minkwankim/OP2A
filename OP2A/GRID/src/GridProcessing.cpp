@@ -54,7 +54,7 @@ void Grid::processingNodeData(const double mesh_factor, bool is_axisymmetric)
 	{
 		for (int n = 1; n <= NNM; n++)
 		{
-			nodes[n].geo.x[1]	+= 1.0E-9;
+			nodes[n].geo.x[1]	+= 1.0E-8;
 		}
 	}
 }
@@ -105,7 +105,10 @@ void Grid::processingFaceData()
 			Math::VECTOR	n12(faces[f].geo.node_list[0]->geo.x, faces[f].geo.node_list[1]->geo.x);
 			n12.normalize();
 
-			face_normal = n12.rotate(-MATH_PI/2, Math::VectorDirection::VectorDirection_Z);
+			//face_normal(1) = n12.rotate(-MATH_PI/2, Math::VectorDirection::VectorDirection_Z);
+			face_normal(1) = n12(2);
+			face_normal(2) = -n12(1);
+
 
 
 			faces[f].geo.n[0][0]	= face_normal(1);

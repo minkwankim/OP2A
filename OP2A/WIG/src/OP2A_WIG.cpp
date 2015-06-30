@@ -20,6 +20,8 @@
 #include <fstream>
 #include <time.h>
 #include <omp.h>
+#include <iomanip>
+
 
 #include "../include/OP2A_Application.hpp"
 #include "../include/OP2A_Problem.hpp"
@@ -174,7 +176,7 @@ int main(int argc, char *argv[])
 	application.PrintConvergences(true);
 	application.show_starting_task("Start OP2A-WIG Module....");
 
-	while (application.iter <= 10000) //application.problem_setup.n_total && application.termination != true)
+	while (application.problem_setup.n_total && application.termination != true)
 	{
 		/*
 		 * 1. Calculate time step and CFL number
@@ -188,11 +190,8 @@ int main(int argc, char *argv[])
 		 * 2. Inviscid Part
 		 */
 		application.ApplyBCInviscidNormal();
-		application.CalculateFluxInviscidImplicit();
-
-
-
-
+		application.CalculateFluxInviscidExplicit();
+		application.CalculateResidueInviscid();
 
 
 
@@ -200,22 +199,47 @@ int main(int argc, char *argv[])
 
 
 		/*
+		 * 6. Calculate Residue Norms
+		 */
+		application.CalcualtedResidueNorms();
+
+
+		/*
 		 * 7. Time integral and Update
 		 */
-
-
-
-
-
-
-
+		application.TimeIntegrate();
+		if(application.P == 0)
+		{
+			cout << "[Iteration]= " << application.iter << scientific << setprecision(8)
+									<< "   [Max. Residual]= " 	<< application.RHS_max
+									<< "   [L2 Residual]= " 	<< application.RHS_2
+									<< "   [dt]= " << scientific << application.dt
+									<< "   [cfl]=" << application.CFLNumber << endl;
+		}
 		application.PrintConvergences(false);
-
-
-
-
-
 		application.iter++;
+
+		/*
+		 * 8. Print result
+		 */
+		// Result Data
+		if (application.iter % application.problem_setup.itv_result == 0)
+		{
+			application.show_starting_task("Print solution Data");
+			application.print_result(string(NAME_V), 1);
+
+			application.show_starting_task("Save restart Data");
+			application.print_restartCFD(string(NAME_V));
+		}
+
+		// Restart Data
+		if (application.iter % application.problem_setup.itv_save == 0)
+		{
+			application.show_starting_task("Save restart Data");
+			application.print_restartCFD(string(NAME_V));
+		}
+
+
 	}
 
 

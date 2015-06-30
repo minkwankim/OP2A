@@ -53,6 +53,11 @@ void ApplicationOP2A::preprocessing_grid()
 	indexMIX 	= grid.cells[1].data1D.dataMap.find(NAME_MIX);
 	indexXs 	= grid.cells[1].data1D.dataMap.find(NAME_XS);
 	indexYs 	= grid.cells[1].data1D.dataMap.find(NAME_YS);
+	indexResidue  = grid.cells[1].data1D.dataMap.find(NAME_R);
+	indexdQ  	= grid.cells[1].data1D.dataMap.find(NAME_dQ);
+	//indexQnew  	= grid.cells[1].data1D.dataMap.find(NAME_Qnew);
+
+
 
 
 	check_elapsed_time("Reading/Processing Grid data");

@@ -29,7 +29,7 @@ void ApplicationOP2A::Cell1DDataTreatement(int typeCase, bool is_initialize)
 {
 	int indexR		= grid.cells[1].data1D.dataMap.find(NAME_R);
 	int indexdQ		= grid.cells[1].data1D.dataMap.find(NAME_dQ);
-	int indexQnew	= grid.cells[1].data1D.dataMap.find(NAME_Qnew);
+	//int indexQnew	= grid.cells[1].data1D.dataMap.find(NAME_Qnew);
 	int indexS		= grid.cells[1].data1D.dataMap.find(NAME_S);
 
 	int indexDivV	= -1;
@@ -38,7 +38,7 @@ void ApplicationOP2A::Cell1DDataTreatement(int typeCase, bool is_initialize)
 	int indexMus	= -1;
 
 
-	if (problem_setup.is_axisymmetric == true) 		indexDivV	= grid.cells[1].data1D.dataMap.find(NAME_DIVV);
+	if (problem_setup.is_axisymmetric == true && problem_setup.is_viscous == true) 		indexDivV	= grid.cells[1].data1D.dataMap.find(NAME_DIVV);
 	if (problem_setup.TIME_INTEGRATION_METHOD != 0)	indexdpdQ	= grid.cells[1].data1D.dataMap.find(NAME_dpdQ);
 	if (problem_setup.is_viscous == true)
 	{
@@ -50,7 +50,7 @@ void ApplicationOP2A::Cell1DDataTreatement(int typeCase, bool is_initialize)
 #pragma omp parallel for num_threads(CFD_NT)
 	for (int c = 1; c <= grid.NCM; c++)
 	{
-		CFD::CellData1D::CompleteDataWIG(grid.cells[c].data1D, species_set, grid.ND, CFD_variabletype, CFD_NT, indexQ, indexV, indexW, indexMIX, indexXs, indexYs, indexR, indexdQ, indexQnew, indexS, indexDivV, indexdpdQ, indexDs,indexMus, typeCase, is_initialize);
+		CFD::CellData1D::CompleteDataWIG(grid.cells[c].data1D, species_set, grid.ND, CFD_variabletype, CFD_NT, indexQ, indexV, indexW, indexMIX, indexXs, indexYs, indexR, indexdQ, indexS, indexDivV, indexdpdQ, indexDs,indexMus, typeCase, is_initialize);
 	}
 }
 

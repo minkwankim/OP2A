@@ -26,7 +26,7 @@ class CFD_API CellData1D: public Common::NonInstantiable<CellData1D>
 public:
 	static void CompleteDataWIG(Data::DataStorageVector<Data::DataStorage>& cell1D, CHEM::SpeciesSet& species_set, int ND, unsigned int variabletype, unsigned int CFD_NT,
 								int indexQ, int indexV, int indexW, int indexMIX, int indexXs, int indexYs,
-								int indexR, int indexdQ, int indexQnew, int indexS, int indexDivV, int indexdpdQ, int indexDs,int indexMus,
+								int indexR, int indexdQ, int indexS, int indexDivV, int indexdpdQ, int indexDs,int indexMus,
 								int typeCase, bool is_initialize);
 
 	static void CompleteDataWIG(Data::DataStorageVector<Data::DataStorage>& cell1D, CHEM::SpeciesSet& species_set, int ND, unsigned int variabletype, unsigned int CFD_NT, bool axis, bool viscous, int implicit, int typeCase, bool is_initialize);
@@ -36,7 +36,7 @@ public:
 	static void CompleteDataWIGCase3(Data::DataStorageVector<Data::DataStorage>& cell1D, CHEM::SpeciesSet& species_set, int ND, unsigned int variabletype, unsigned int CFD_NT, int indexQ, int indexV, int indexW, int indexMIX, int indexXs, int indexYs);
 	static void CompleteDataWIGCase4(Data::DataStorageVector<Data::DataStorage>& cell1D, CHEM::SpeciesSet& species_set, int ND, unsigned int variabletype, unsigned int CFD_NT, int indexQ, int indexV, int indexW, int indexMIX, int indexXs, int indexYs);
 
-	static void InitializeOtherData(Data::DataStorageVector<Data::DataStorage>& cell1D, unsigned int CFD_NT, int indexR, int indexdQ, int indexQnew, int indexS, int indexDivV, int indexdpdQ, int indexDs,int indexMus);
+	static void InitializeOtherData(Data::DataStorageVector<Data::DataStorage>& cell1D, unsigned int CFD_NT, int indexR, int indexdQ, int indexS, int indexDivV, int indexdpdQ, int indexDs,int indexMus);
 };
 
 

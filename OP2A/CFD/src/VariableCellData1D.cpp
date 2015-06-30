@@ -69,7 +69,7 @@ void CellData1D::CompleteDataWIGCase4(Data::DataStorageVector<Data::DataStorage>
 
 
 
-void CellData1D::InitializeOtherData(Data::DataStorageVector<Data::DataStorage>& cell1D, unsigned int CFD_NT, int indexR, int indexdQ, int indexQnew, int indexS, int indexDivV, int indexdpdQ, int indexDs,int indexMus)
+void CellData1D::InitializeOtherData(Data::DataStorageVector<Data::DataStorage>& cell1D, unsigned int CFD_NT, int indexR, int indexdQ, int indexS, int indexDivV, int indexdpdQ, int indexDs,int indexMus)
 {
 	int numVar;
 
@@ -83,10 +83,6 @@ void CellData1D::InitializeOtherData(Data::DataStorageVector<Data::DataStorage>&
 #pragma omp parallel for num_threads(CFD_NT)
 	for (int i = 0; i <= numVar-1; i++)	cell1D(indexdQ).data[i]	= 0.0;
 
-	// 3. Qnew
-	numVar	= cell1D(indexQnew).numData;
-#pragma omp parallel for num_threads(CFD_NT)
-	for (int i = 0; i <= numVar-1; i++)	cell1D(indexQnew).data[i]	= 0.0;
 
 	// 4. Source
 	numVar	= cell1D(indexS).numData;
@@ -132,7 +128,7 @@ void CellData1D::InitializeOtherData(Data::DataStorageVector<Data::DataStorage>&
 
 void CellData1D::CompleteDataWIG(Data::DataStorageVector<Data::DataStorage>& cell1D, CHEM::SpeciesSet& species_set, int ND, unsigned int variabletype, unsigned int CFD_NT,
 							int indexQ, int indexV, int indexW, int indexMIX, int indexXs, int indexYs,
-							int indexR, int indexdQ, int indexQnew, int indexS, int indexDivV, int indexdpdQ, int indexDs,int indexMus,
+							int indexR, int indexdQ, int indexS, int indexDivV, int indexdpdQ, int indexDs,int indexMus,
 							int typeCase, bool is_initialize)
 {
 	switch(typeCase)
@@ -153,7 +149,7 @@ void CellData1D::CompleteDataWIG(Data::DataStorageVector<Data::DataStorage>& cel
 
 	if (is_initialize == true)
 	{
-		InitializeOtherData(cell1D, CFD_NT, indexR, indexdQ, indexQnew, indexS, indexDivV, indexdpdQ, indexDs, indexMus);
+		InitializeOtherData(cell1D, CFD_NT, indexR, indexdQ, indexS, indexDivV, indexdpdQ, indexDs, indexMus);
 	}
 }
 
@@ -167,7 +163,6 @@ void CellData1D::CompleteDataWIG(Data::DataStorageVector<Data::DataStorage>& cel
 	int indexYs		= cell1D.dataMap.find(NAME_YS);
 	int indexR		= cell1D.dataMap.find(NAME_R);
 	int indexdQ		= cell1D.dataMap.find(NAME_dQ);
-	int indexQnew	= cell1D.dataMap.find(NAME_Qnew);
 	int indexS		= cell1D.dataMap.find(NAME_S);
 
 	int indexDivV	= -1;
@@ -203,7 +198,7 @@ void CellData1D::CompleteDataWIG(Data::DataStorageVector<Data::DataStorage>& cel
 
 	if (is_initialize == true)
 	{
-		InitializeOtherData(cell1D, CFD_NT, indexR, indexdQ, indexQnew, indexS, indexDivV, indexdpdQ, indexDs, indexMus);
+		InitializeOtherData(cell1D, CFD_NT, indexR, indexdQ, indexS, indexDivV, indexdpdQ, indexDs, indexMus);
 	}
 }
 

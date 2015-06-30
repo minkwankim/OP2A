@@ -56,7 +56,7 @@ void DerivativesType3::dTdQ(Data::DataStorage& data_Q, Data::DataStorage& data_V
 
 	for (int k = species_set.NS; k <= species_set.NS+ND-1; k++)
 	{
-		dT(k)	= data_V(k) / rho_Cvtr;
+		dT(k)	= -data_V(k) / rho_Cvtr;
 		dTv(k)	= 0.0;
 	}
 
