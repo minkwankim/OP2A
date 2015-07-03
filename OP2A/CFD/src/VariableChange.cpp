@@ -274,6 +274,125 @@ void VariableChange::Q_to_W(unsigned int variabletype, unsigned int CFD_NT, Data
 
 
 
+void VariableChange::From_Q(unsigned int variabletype, Data::DataStorage& data_Q, Data::DataStorage& data_V, Data::DataStorage& data_W, Data::DataStorage& data_MIX, Data::DataStorage& data_Xs, Data::DataStorage& data_Ys, CHEM::SpeciesSet& species_set, int ND, unsigned int CFD_NT)
+{
+	switch (variabletype)
+	{
+	case 1:
+		VariableChangeType1::From_Q(data_Q, data_V, data_W, data_MIX, data_Xs, data_Ys, species_set, ND, CFD_NT);
+		break;
+
+	case 2:
+		VariableChangeType2::From_Q(data_Q, data_V, data_W, data_MIX, data_Xs, data_Ys, species_set, ND, CFD_NT);
+		break;
+
+	case 3:
+		VariableChangeType3::From_Q(data_Q, data_V, data_W, data_MIX, data_Xs, data_Ys, species_set, ND, CFD_NT);
+		break;
+
+	case 4:
+		VariableChangeType4::From_Q(data_Q, data_V, data_W, data_MIX, data_Xs, data_Ys, species_set, ND, CFD_NT);
+		break;
+
+	case 5:
+		VariableChangeType5::From_Q(data_Q, data_V, data_W, data_MIX, data_Xs, data_Ys, species_set, ND, CFD_NT);
+		break;
+
+	case 6:
+		VariableChangeType6::From_Q(data_Q, data_V, data_W, data_MIX, data_Xs, data_Ys, species_set, ND, CFD_NT);
+		break;
+
+	case 7:
+		VariableChangeType7::From_Q(data_Q, data_V, data_W, data_MIX, data_Xs, data_Ys, species_set, ND, CFD_NT);
+		break;
+
+	case 8:
+		VariableChangeType8::From_Q(data_Q, data_V, data_W, data_MIX, data_Xs, data_Ys, species_set, ND, CFD_NT);
+		break;
+	}
+}
+
+
+void VariableChange::From_V(unsigned int variabletype, Data::DataStorage& data_Q, Data::DataStorage& data_V, Data::DataStorage& data_W, Data::DataStorage& data_MIX, Data::DataStorage& data_Xs, Data::DataStorage& data_Ys, CHEM::SpeciesSet& species_set, int ND, unsigned int CFD_NT)
+{
+	switch (variabletype)
+	{
+	case 1:
+		VariableChangeType1::From_V(data_Q, data_V, data_W, data_MIX, data_Xs, data_Ys, species_set, ND, CFD_NT);
+		break;
+
+	case 2:
+		VariableChangeType2::From_V(data_Q, data_V, data_W, data_MIX, data_Xs, data_Ys, species_set, ND, CFD_NT);
+		break;
+
+	case 3:
+		VariableChangeType3::From_V(data_Q, data_V, data_W, data_MIX, data_Xs, data_Ys, species_set, ND, CFD_NT);
+		break;
+
+	case 4:
+		VariableChangeType4::From_V(data_Q, data_V, data_W, data_MIX, data_Xs, data_Ys, species_set, ND, CFD_NT);
+		break;
+
+	case 5:
+		VariableChangeType5::From_V(data_Q, data_V, data_W, data_MIX, data_Xs, data_Ys, species_set, ND, CFD_NT);
+		break;
+
+	case 6:
+		VariableChangeType6::From_V(data_Q, data_V, data_W, data_MIX, data_Xs, data_Ys, species_set, ND, CFD_NT);
+		break;
+
+	case 7:
+		VariableChangeType7::From_V(data_Q, data_V, data_W, data_MIX, data_Xs, data_Ys, species_set, ND, CFD_NT);
+		break;
+
+	case 8:
+		VariableChangeType8::From_V(data_Q, data_V, data_W, data_MIX, data_Xs, data_Ys, species_set, ND, CFD_NT);
+		break;
+
+	}
+}
+
+void VariableChange::From_W(unsigned int variabletype, Data::DataStorage& data_Q, Data::DataStorage& data_V, Data::DataStorage& data_W, Data::DataStorage& data_MIX, Data::DataStorage& data_Xs, Data::DataStorage& data_Ys, CHEM::SpeciesSet& species_set, int ND, unsigned int CFD_NT)
+{
+	switch (variabletype)
+	{
+	case 1:
+		VariableChangeType1::From_W(data_Q, data_V, data_W, data_MIX, data_Xs, data_Ys, species_set, ND, CFD_NT);
+		break;
+
+	case 2:
+		VariableChangeType2::From_W(data_Q, data_V, data_W, data_MIX, data_Xs, data_Ys, species_set, ND, CFD_NT);
+		break;
+
+	case 3:
+		VariableChangeType3::From_W(data_Q, data_V, data_W, data_MIX, data_Xs, data_Ys, species_set, ND, CFD_NT);
+		break;
+
+	case 4:
+		VariableChangeType4::From_W(data_Q, data_V, data_W, data_MIX, data_Xs, data_Ys, species_set, ND, CFD_NT);
+		break;
+
+	case 5:
+		VariableChangeType5::From_W(data_Q, data_V, data_W, data_MIX, data_Xs, data_Ys, species_set, ND, CFD_NT);
+		break;
+
+	case 6:
+		VariableChangeType6::From_W(data_Q, data_V, data_W, data_MIX, data_Xs, data_Ys, species_set, ND, CFD_NT);
+		break;
+
+	case 7:
+		VariableChangeType7::From_W(data_Q, data_V, data_W, data_MIX, data_Xs, data_Ys, species_set, ND, CFD_NT);
+		break;
+
+	case 8:
+		VariableChangeType8::From_W(data_Q, data_V, data_W, data_MIX, data_Xs, data_Ys, species_set, ND, CFD_NT);
+		break;
+
+	}
+}
+
+
+
 
 }
 }

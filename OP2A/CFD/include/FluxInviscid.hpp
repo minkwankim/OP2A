@@ -61,6 +61,14 @@ public:
 								double dp, double dist_wall, double n_dot_wall, double alpha, double x0, double eps0,
 								Data::DataStorage& Fn_inv);
 
+	static void SWFVS_Implicit(Data::DataStorageVector<Data::DataStorage>& data1D_L, Data::DataStorageVector<Data::DataStorage>& data1D_R, CHEM::SpeciesSet& species_set, int ND,
+								unsigned int type, unsigned int indexQ, unsigned int indexV, unsigned int indexW,
+								vector< vector<double> >& normal_vector, int faceID,
+								double dp, double dist_wall, double n_dot_wall, double alpha, double x0, double eps0,
+								Data::DataStorage& Fn_inv,
+								Data::DataStorage2D& dFdQ_plus,
+								Data::DataStorage2D& dFdQ_minus);
+
 
 };
 

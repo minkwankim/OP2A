@@ -27,6 +27,9 @@
 namespace OP2A {
 namespace Common{
 
+double dtime();
+
+
 /*
  * Class for Time usages check
  *

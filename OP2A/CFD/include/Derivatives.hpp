@@ -26,66 +26,70 @@ namespace CFD{
 class CFD_API DerivativesType1 : public Common::NonInstantiable<DerivativesType1>
 {
 public:
-	static void dTdQ(Data::DataStorage& data_Q, Data::DataStorage& data_V, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dT);
-	static void dpdQ(Data::DataStorage& data_V, Data::DataStorage& dT, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dp);
-	static double a2(Data::DataStorage& data_Q, Data::DataStorage& data_W, Data::DataStorage& dp, CHEM::SpeciesSet& species_set, int ND);
+	static void dTdQ(Data::DataStorage& data_Q, Data::DataStorage& data_V, 		Data::DataStorage& data_MIX,	CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dT);
+	static void dpdQ(Data::DataStorage& data_V, Data::DataStorage& data_MIX,	Data::DataStorage& dT, 			CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dp);
+	static double a2(Data::DataStorage& data_Q, Data::DataStorage& data_W,  	Data::DataStorage& data_MIX, 	Data::DataStorage& dp, CHEM::SpeciesSet& species_set, int ND);
+
+	static void dT2dQ2(Data::DataStorage& data_Q, Data::DataStorage& data_V, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dT, Data::DataStorage2D& dT2);
+	static void dp2dQ2(Data::DataStorage& data_V, Data::DataStorage& dT, Data::DataStorage2D& dT2, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage2D& dp2);
+
 };
 
 class CFD_API DerivativesType2 : public Common::NonInstantiable<DerivativesType2>
 {
 public:
-	static void dTdQ(Data::DataStorage& data_Q, Data::DataStorage& data_V, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dT,  Data::DataStorage& dTe);
-	static void dpdQ(Data::DataStorage& data_V, Data::DataStorage& dT, Data::DataStorage& dTe, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dp);
-	static double a2(Data::DataStorage& data_Q, Data::DataStorage& data_W, Data::DataStorage& dp, CHEM::SpeciesSet& species_set, int ND);
+	static void dTdQ(Data::DataStorage& data_Q, Data::DataStorage& data_V,		Data::DataStorage& data_MIX,	CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dT,  Data::DataStorage& dTe);
+	static void dpdQ(Data::DataStorage& data_V, Data::DataStorage& data_MIX,	Data::DataStorage& dT, 			Data::DataStorage& dTe, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dp);
+	static double a2(Data::DataStorage& data_Q, Data::DataStorage& data_W, 		Data::DataStorage& data_MIX,	Data::DataStorage& dp, CHEM::SpeciesSet& species_set, int ND);
 };
 
 
 class CFD_API DerivativesType3 : public Common::NonInstantiable<DerivativesType3>
 {
 public:
-	static void dTdQ(Data::DataStorage& data_Q, Data::DataStorage& data_V, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dT,  Data::DataStorage& dTv);
-	static void dpdQ(Data::DataStorage& data_V, Data::DataStorage& dT, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dp);
-	static double a2(Data::DataStorage& data_Q, Data::DataStorage& data_W, Data::DataStorage& dp, CHEM::SpeciesSet& species_set, int ND);
+	static void dTdQ(Data::DataStorage& data_Q, Data::DataStorage& data_V, 		Data::DataStorage& data_MIX, 	CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dT,  Data::DataStorage& dTv);
+	static void dpdQ(Data::DataStorage& data_V, Data::DataStorage& data_MIX,	Data::DataStorage& dT, 			CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dp);
+	static double a2(Data::DataStorage& data_Q, Data::DataStorage& data_W, 		Data::DataStorage& data_MIX,	Data::DataStorage& dp, CHEM::SpeciesSet& species_set, int ND);
 };
 
 class CFD_API DerivativesType4 : public Common::NonInstantiable<DerivativesType4>
 {
 public:
-	static void dTdQ(Data::DataStorage& data_Q, Data::DataStorage& data_V, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dT, Data::DataStorage& dTv, Data::DataStorage& dTe);
-	static void dpdQ(Data::DataStorage& data_V, Data::DataStorage& dT, Data::DataStorage& dTe, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dp);
-	static double a2(Data::DataStorage& data_Q, Data::DataStorage& data_W, Data::DataStorage& dp, CHEM::SpeciesSet& species_set, int ND);
+	static void dTdQ(Data::DataStorage& data_Q, Data::DataStorage& data_V, 		Data::DataStorage& data_MIX,	CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dT, Data::DataStorage& dTv, Data::DataStorage& dTe);
+	static void dpdQ(Data::DataStorage& data_V, Data::DataStorage& data_MIX,	Data::DataStorage& dT, 			Data::DataStorage& dTe, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dp);
+	static double a2(Data::DataStorage& data_Q, Data::DataStorage& data_W, 		Data::DataStorage& data_MIX,	Data::DataStorage& dp, CHEM::SpeciesSet& species_set, int ND);
 };
 
 class CFD_API DerivativesType5 : public Common::NonInstantiable<DerivativesType5>
 {
 public:
-	static void dTdQ(Data::DataStorage& data_Q, Data::DataStorage& data_V, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dT,  Data::DataStorage& dTr);
-	static void dpdQ(Data::DataStorage& data_V, Data::DataStorage& dT, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dp);
-	static double a2(Data::DataStorage& data_Q, Data::DataStorage& data_W, Data::DataStorage& dp, CHEM::SpeciesSet& species_set, int ND);
+	static void dTdQ(Data::DataStorage& data_Q, Data::DataStorage& data_V, 		Data::DataStorage& data_MIX, 	CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dT,  Data::DataStorage& dTr);
+	static void dpdQ(Data::DataStorage& data_V, Data::DataStorage& data_MIX, 	Data::DataStorage& dT, 			CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dp);
+	static double a2(Data::DataStorage& data_Q, Data::DataStorage& data_W, 		Data::DataStorage& data_MIX, 	Data::DataStorage& dp, CHEM::SpeciesSet& species_set, int ND);
 };
 
 class CFD_API DerivativesType6 : public Common::NonInstantiable<DerivativesType6>
 {
 public:
-	static void dTdQ(Data::DataStorage& data_Q, Data::DataStorage& data_V, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dT,  Data::DataStorage& dTr,   Data::DataStorage& dTe);
-	static void dpdQ(Data::DataStorage& data_V, Data::DataStorage& dT, Data::DataStorage& dTe, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dp);
-	static double a2(Data::DataStorage& data_Q, Data::DataStorage& data_W, Data::DataStorage& dp, CHEM::SpeciesSet& species_set, int ND);
+	static void dTdQ(Data::DataStorage& data_Q, Data::DataStorage& data_V, 		Data::DataStorage& data_MIX,	CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dT,  Data::DataStorage& dTr,   Data::DataStorage& dTe);
+	static void dpdQ(Data::DataStorage& data_V, Data::DataStorage& data_MIX,	Data::DataStorage& dT,			Data::DataStorage& dTe, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dp);
+	static double a2(Data::DataStorage& data_Q, Data::DataStorage& data_W, 		Data::DataStorage& data_MIX,	Data::DataStorage& dp, CHEM::SpeciesSet& species_set, int ND);
 };
 
 class CFD_API DerivativesType7 : public Common::NonInstantiable<DerivativesType7>
 {
 public:
-	static void dTdQ(Data::DataStorage& data_Q, Data::DataStorage& data_V, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dT,  Data::DataStorage& dTr,   Data::DataStorage& dTv);
-	static void dpdQ(Data::DataStorage& data_V, Data::DataStorage& dT, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dp);
-	static double a2(Data::DataStorage& data_Q, Data::DataStorage& data_W, Data::DataStorage& dp, CHEM::SpeciesSet& species_set, int ND);
+	static void dTdQ(Data::DataStorage& data_Q, Data::DataStorage& data_V, 		Data::DataStorage& data_MIX, 	CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dT,  Data::DataStorage& dTr,   Data::DataStorage& dTv);
+	static void dpdQ(Data::DataStorage& data_V, Data::DataStorage& data_MIX,	Data::DataStorage& dT, 			CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dp);
+	static double a2(Data::DataStorage& data_Q, Data::DataStorage& data_W, 		Data::DataStorage& data_MIX,	Data::DataStorage& dp, CHEM::SpeciesSet& species_set, int ND);
 };
 
 class CFD_API DerivativesType8 : public Common::NonInstantiable<DerivativesType8>
 {
 public:
-	static void dTdQ(Data::DataStorage& data_Q, Data::DataStorage& data_V, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dT,  Data::DataStorage& dTr,   Data::DataStorage& dTv, Data::DataStorage& dTe);
-	static void dpdQ(Data::DataStorage& data_V, Data::DataStorage& dT, Data::DataStorage& dTe, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dp);
-	static double a2(Data::DataStorage& data_Q, Data::DataStorage& data_W, Data::DataStorage& dp, CHEM::SpeciesSet& species_set, int ND);
+	static void dTdQ(Data::DataStorage& data_Q, Data::DataStorage& data_V, 		Data::DataStorage& data_MIX,	CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dT,  Data::DataStorage& dTr,   Data::DataStorage& dTv, Data::DataStorage& dTe);
+	static void dpdQ(Data::DataStorage& data_V, Data::DataStorage& data_MIX,	Data::DataStorage& dT, 			Data::DataStorage& dTe, CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dp);
+	static double a2(Data::DataStorage& data_Q, Data::DataStorage& data_W, 		Data::DataStorage& data_MIX,	Data::DataStorage& dp, CHEM::SpeciesSet& species_set, int ND);
 };
 
 
@@ -94,15 +98,15 @@ class CFD_API Derivatives : public Common::NonInstantiable<Derivatives>
 {
 public:
 	static void dTdQ(Data::DataStorageVector<Data::DataStorage>& data1D, CHEM::SpeciesSet& species_set, int ND,
-					unsigned int type, unsigned int indexQ, unsigned int indexV, unsigned int indexW,
+					unsigned int type, unsigned int indexQ, unsigned int indexV, unsigned int indexW,  unsigned int indexMIX,
 					Data::DataStorageVector<Data::DataStorage>& dT);
 
 	static void dpdQ(Data::DataStorageVector<Data::DataStorage>& data1D, Data::DataStorageVector<Data::DataStorage>& dT, CHEM::SpeciesSet& species_set, int ND,
-					unsigned int type, unsigned int indexQ, unsigned int indexV, unsigned int indexW,
+					unsigned int type, unsigned int indexQ, unsigned int indexV, unsigned int indexW,  unsigned int indexMIX,
 					Data::DataStorage& dp);
 
 	static double a2(Data::DataStorageVector<Data::DataStorage>& data1D, Data::DataStorage& dp, CHEM::SpeciesSet& species_set, int ND,
-					unsigned int type, unsigned int indexQ, unsigned int indexV, unsigned int indexW);
+					unsigned int type, unsigned int indexQ, unsigned int indexV, unsigned int indexW,  unsigned int indexMIX);
 
 };
 

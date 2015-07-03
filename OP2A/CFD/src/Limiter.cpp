@@ -29,35 +29,49 @@ double Reconstruct::Limiter(double r, double alpha, int method)
 {
 	double phi;
 
-	switch (static_cast<LimiterType>(method))
+	if (r >= 0.0)
 	{
-	case LimiterType::MinMod:
-		phi = Math::fmax<double>(0.0, Math::fmin<double>(1.0, r));
-		break;
+		switch (static_cast<LimiterType>(method))
+		{
+		case LimiterType::MinMod:
+			phi = Math::fmax<double>(0.0, Math::fmin<double>(1.0, r));
+			break;
 
-	case LimiterType::Harmonic:
-		phi = 4.0*r / pow(r+1.0, 2.0);
-		break;
+		case LimiterType::Harmonic:
+			phi = 4.0*r / pow(r+1.0, 2.0);
+			break;
 
-	case LimiterType::Superbee:
-		phi	= Math::fmax<double>(0.0, Math::fmin<double>(2.0*r, 1.0));
-		phi	= Math::fmax<double>(phi, Math::fmin<double>(r, 2.0));
-		break;
+		case LimiterType::Superbee:
+			phi	= Math::fmax<double>(0.0, Math::fmin<double>(2.0*r, 1.0));
+			phi	= Math::fmax<double>(phi, Math::fmin<double>(r, 2.0));
+			break;
 
-	case LimiterType::VanAlbada:
-		phi = (r*r + r) / (r*r + 1.0);
-		break;
+		case LimiterType::VanAlbada:
+			phi = (r*r + r) / (r*r + 1.0);
+			break;
 
-	default:
-		throw Common::ExceptionOutOfRange (FromHere(), "Out of range in CFD Limiter selection: The selected limited mode is not supported");
+		default:
+			throw Common::ExceptionOutOfRange (FromHere(), "Out of range in CFD Limiter selection: The selected limited mode is not supported");
+		}
+	}
+	else
+	{
+		phi = 0.0;
 	}
 
 
 
 	if (phi != phi)	throw Common::ExceptionNaNValue (FromHere(), "NaN value in CFD Limiter calculation");
 	if (phi == numeric_limits<double>::infinity())	throw Common::ExceptionInfiniteValue (FromHere(), "Infinite value in CFD Limiter calculation");
-	if (phi < 0.0)	throw Common::ExceptionOutOfRange (FromHere(), "Out of range in CFD Limiter calculation: Limiter should give positive value");
-	if (phi > 0.0)	throw Common::ExceptionOutOfRange (FromHere(), "Out of range in CFD Limiter calculation: Limited value should be less than 2");
+	if (phi < 0.0)
+	{
+		throw Common::ExceptionOutOfRange (FromHere(), "Out of range in CFD Limiter calculation: Limiter should give positive value");
+	}
+
+	if (phi > 2.0)
+	{
+		throw Common::ExceptionOutOfRange (FromHere(), "Out of range in CFD Limiter calculation: Limited value should be less than 2");
+	}
 
 
 	phi	= phi / 2.0 * alpha;

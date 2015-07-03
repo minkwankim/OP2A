@@ -30,6 +30,7 @@ void ApplicationOP2A::UpdateQ()
 #pragma omp parallel for
 	for (int c = 1; c <= grid.NCM; c++)
 	{
+#pragma ivdep
 		for (int i = 0;  i<= grid.cells[c].data1D(indexQ).numData-1; i++)
 		{
 			grid.cells[c].data1D(indexQ)(i)	= grid.cells[c].data1D(indexQ)(i) + grid.cells[c].data1D(indexdQ)(i);
@@ -38,6 +39,7 @@ void ApplicationOP2A::UpdateQ()
 
 		// Preliminary Error Check
 		//	A. Density
+#pragma ivdep
 		for (int s = 0; s <= species_set.NS-1; s++)
 		{
 			if (grid.cells[c].data1D(indexQ)(s) < 0.0)
@@ -71,11 +73,20 @@ void ApplicationOP2A::UpdateQ()
 #pragma omp parallel for
 	for (int c = 1; c <= grid.NCM; c++)
 	{
+		CFD::VariableChange::From_Q(CFD_variabletype,
+									grid.cells[c].data1D.data[indexQ],
+									grid.cells[c].data1D.data[indexV],
+									grid.cells[c].data1D.data[indexW],
+									grid.cells[c].data1D.data[indexMIX],
+									grid.cells[c].data1D.data[indexXs],
+									grid.cells[c].data1D.data[indexYs],
+									species_set, grid.ND, CFD_NT);
+
 		// 1. Calculate V
-		CFD::VariableChange::Q_to_V(CFD_variabletype, CFD_NT, grid.cells[c].data1D(indexQ), species_set, grid.ND, grid.cells[c].data1D(indexV));
+		//CFD::VariableChange::Q_to_V(CFD_variabletype, CFD_NT, grid.cells[c].data1D(indexQ), species_set, grid.ND, grid.cells[c].data1D(indexV));
 
 		// 2. Calculate W
-		CFD::VariableChange::V_to_W(CFD_variabletype, CFD_NT, grid.cells[c].data1D(indexV), species_set, grid.ND, grid.cells[c].data1D(indexW));
+		//CFD::VariableChange::V_to_W(CFD_variabletype, CFD_NT, grid.cells[c].data1D(indexV), species_set, grid.ND, grid.cells[c].data1D(indexW));
 	}
 	//Cell1DDataTreatement(1, true);
 }

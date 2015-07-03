@@ -29,7 +29,7 @@ void ApplicationOP2A::CalcualtedResidueNorms()
 	for (int c = 1; c <= grid.NCM; c++)
 	{
 		double aux_inf = 0.0;
-#pragma omp parallel for reduction(+:aux_inf)
+//#pragma omp parallel for reduction(+:aux_inf)
 		for (int s = 0; s <= species_set.NS-1; s++)
 		{
 			aux_inf += grid.cells[c].data1D(indexResidue)(s);

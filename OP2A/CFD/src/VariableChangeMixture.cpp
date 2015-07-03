@@ -136,7 +136,7 @@ void VariableChangeMixture::MIX(Data::DataStorage& data_Q, CHEM::SpeciesSet& spe
 	temp_RMix	= R_mix(data_Q, species_set, ND, data_Xs, data_Ys, CFD_NT);
 	temp_MMix	= M_mix(data_Q, species_set, ND, data_Xs, data_Ys, CFD_NT);
 
-	if (type <= 3)
+	if (type <= 4)
 	{
 		temp_CvtrMix	= Cv_tr_mix(data_Q, species_set, ND, data_Xs, data_Ys, CFD_NT);
 

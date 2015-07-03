@@ -34,9 +34,12 @@
 								<option id="intel.compilestep.coptions.917718539" name="Additional Options" superClass="intel.compilestep.coptions" value="-openmp" valueType="string"/>
 								<option id="intel.compilestep.language.ansi_conformance.17130484" name="ANSI Conformance" superClass="intel.compilestep.language.ansi_conformance" value="ansi_conformance.8" valueType="enumerated"/>
 								<option id="intel.compilestep.perflibs.mkl.1060197007" name="Use Intel(R) Math Kernel Library (-mkl=[arg])" superClass="intel.compilestep.perflibs.mkl" value="perflibs.mkl.parallel" valueType="enumerated"/>
+								<option id="intel.compilestep.optimization.optprefetch.449077899" name="Enable Prefetch Insertion (-opt-prefetch[=n])" superClass="intel.compilestep.optimization.optprefetch" value="optprefetch.zero" valueType="enumerated"/>
+								<option id="intel.compilestep.general.optimization2.1144536924" name="Optimization Level" superClass="intel.compilestep.general.optimization2" value="general.opt.default" valueType="enumerated"/>
 								<inputType id="intel.cpp.compilestep.input.736512544" superClass="intel.cpp.compilestep.input"/>
 							</tool>
 							<tool id="intel.c.compilestep.linux.x86_64.exe.rel.118504867_14.0.0" name="Intel Intel(R) 64 C Compiler" superClass="intel.c.compilestep.linux.x86_64.exe.rel_14.0.0">
+								<option id="intel.compilestep.general.warninglevel.905413216" name="Warning Level" superClass="intel.compilestep.general.warninglevel" value="general.warninglevel.remarks" valueType="enumerated"/>
 								<inputType id="intel.c.compilestep.input.1644516399" superClass="intel.c.compilestep.input"/>
 							</tool>
 							<tool id="intel.c.linkstep.linux.x86_64.exe.rel.556890835_14.0.0" name="Intel Intel(R) 64 C Linker" superClass="intel.c.linkstep.linux.x86_64.exe.rel_14.0.0"/>
@@ -50,6 +53,7 @@
 								</option>
 								<option id="intel.linkstep.perflibs.mkl.1696238540" name="Use Intel(R) Math Kernel Library (-mkl=[arg])" superClass="intel.linkstep.perflibs.mkl" value="perflibs.mkl.parallel" valueType="enumerated"/>
 								<option id="intel.linkstep.libname.1465768974" name="Additional Libraries (-l)" superClass="intel.linkstep.libname"/>
+								<option id="intel.linkstep.general.optimization2.613067968" name="Optimization Level" superClass="intel.linkstep.general.optimization2" value="general.opt.speedHLO" valueType="enumerated"/>
 								<inputType id="intel.linkstep.input.1898927662" superClass="intel.linkstep.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -78,7 +82,7 @@
 					<folderInfo id="intel.linux.x86_64.exe.dbg.842807553._14.0.0" name="/" resourcePath="">
 						<toolChain id="intel.toolchain.linux.x86_64.exe.dbg.278929131_14.0.0" name="Intel Toolchain for Executable on Intel(R) 64" superClass="intel.toolchain.linux.x86_64.exe.dbg_14.0.0">
 							<targetPlatform archList="x86_64" binaryParser="org.eclipse.cdt.core.ELF" id="intel.platform.linux.x86_64.exe.dbg_14.0.0.1473019658" name="Platform.Executable.Debug" osList="linux" superClass="intel.platform.linux.x86_64.exe.dbg_14.0.0"/>
-							<builder buildPath="${workspace_loc:/OP2A}/Debug" id="intel.builder.linux.x86_64.exe.dbg.1128510048_14.0.0" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Intel Builder" superClass="intel.builder.linux.x86_64.exe.dbg_14.0.0"/>
+							<builder arguments="-j12" buildPath="${workspace_loc:/OP2A}/Debug" command="make" id="intel.builder.linux.x86_64.exe.dbg.1128510048_14.0.0" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Intel Builder" superClass="intel.builder.linux.x86_64.exe.dbg_14.0.0"/>
 							<tool id="intel.cpp.compilestep.linux.x86_64.exe.dbg.1725994272_14.0.0" name="Intel Intel(R) 64 C++ Compiler " superClass="intel.cpp.compilestep.linux.x86_64.exe.dbg_14.0.0">
 								<option id="intel.compilestep.preprocessor.defsym.872546277" name="Preprocessor Definitions (-D)" superClass="intel.compilestep.preprocessor.defsym" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="OMPI_SKIP_MPICXX"/>
@@ -90,6 +94,11 @@
 									<listOptionValue builtIn="false" value="/home/user/intel/mkl/include"/>
 									<listOptionValue builtIn="false" value="/home/user/Software/lapack/include/lapackpp"/>
 								</option>
+								<option id="intel.compilestep.optimization.optprefetch.1104603462" name="Enable Prefetch Insertion (-opt-prefetch[=n])" superClass="intel.compilestep.optimization.optprefetch" value="optprefetch.zero" valueType="enumerated"/>
+								<option id="intel.compilestep.general.warninglevel.799727568" name="Warning Level" superClass="intel.compilestep.general.warninglevel" value="general.warninglevel.errors" valueType="enumerated"/>
+								<option id="intel.compilestep.perflibs.mkl.1599554605" name="Use Intel(R) Math Kernel Library (-mkl=[arg])" superClass="intel.compilestep.perflibs.mkl" value="perflibs.mkl.parallel" valueType="enumerated"/>
+								<option id="intel.compilestep.coptions.1163543645" name="Additional Options" superClass="intel.compilestep.coptions" value="-openmp" valueType="string"/>
+								<option id="intel.compilestep.perflibs.tbb.1023471742" name="Use Intel(R) Threading Building Blocks Library (-tbb)" superClass="intel.compilestep.perflibs.tbb" value="true" valueType="boolean"/>
 								<inputType id="intel.cpp.compilestep.input.1205642320" superClass="intel.cpp.compilestep.input"/>
 							</tool>
 							<tool id="intel.c.compilestep.linux.x86_64.exe.dbg.839669989_14.0.0" name="Intel Intel(R) 64 C Compiler" superClass="intel.c.compilestep.linux.x86_64.exe.dbg_14.0.0">
@@ -97,6 +106,15 @@
 							</tool>
 							<tool id="intel.c.linkstep.linux.x86_64.exe.dbg.336417086_14.0.0" name="Intel Intel(R) 64 C Linker" superClass="intel.c.linkstep.linux.x86_64.exe.dbg_14.0.0"/>
 							<tool id="intel.cpp.linkstep.linux.x86_64.exe.dbg.1201062426_14.0.0" name="Intel Intel(R) 64 C++ Linker" superClass="intel.cpp.linkstep.linux.x86_64.exe.dbg_14.0.0">
+								<option id="intel.linkstep.libname.607729552" name="Additional Libraries (-l)" superClass="intel.linkstep.libname" valueType="libs">
+									<listOptionValue builtIn="false" value="mkl_rt"/>
+								</option>
+								<option id="intel.linkstep.libpath.553676366" name="Search Directory for Libraries (-L)" superClass="intel.linkstep.libpath" valueType="stringList">
+									<listOptionValue builtIn="false" value="/home/user/intel/mkl/lib"/>
+									<listOptionValue builtIn="false" value="/home/user/intel/lib"/>
+								</option>
+								<option id="intel.linkstep.perflibs.tbb.587313320" name="Use Intel(R) Threading Building Blocks Library (-tbb)" superClass="intel.linkstep.perflibs.tbb" value="true" valueType="boolean"/>
+								<option id="intel.linkstep.perflibs.mkl.1375049567" name="Use Intel(R) Math Kernel Library (-mkl=[arg])" superClass="intel.linkstep.perflibs.mkl" value="perflibs.mkl.parallel" valueType="enumerated"/>
 								<inputType id="intel.linkstep.input.878710470" superClass="intel.linkstep.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -115,9 +133,6 @@
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="OP2A.intel.linux.executable.2.1787499693" name="Executable" projectType="intel.linux.executable.2"/>
 	</storageModule>
-	<storageModule moduleId="scannerConfiguration">
-		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="refreshScope" versionNumber="2">
 		<configuration configurationName="Release">
@@ -126,5 +141,15 @@
 		<configuration configurationName="Debug">
 			<resource resourceType="PROJECT" workspacePath="/OP2A"/>
 		</configuration>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="intel.linux.x86_64.exe.dbg.842807553_14.0.0;intel.linux.x86_64.exe.dbg.842807553._14.0.0;intel.c.compilestep.linux.x86_64.exe.dbg.839669989_14.0.0;intel.c.compilestep.input.287191063">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.intel.compiler.cdt.managedbuilder.ui.ICCManagedMakePerProjectProfile"/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="intel.linux.x86_64.exe.dbg.842807553_14.0.0;intel.linux.x86_64.exe.dbg.842807553._14.0.0;intel.cpp.compilestep.linux.x86_64.exe.dbg.1725994272_14.0.0;intel.cpp.compilestep.input.1205642320">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.intel.compiler.cdt.managedbuilder.ui.ICCManagedMakePerProjectProfile"/>
+		</scannerConfigBuildInfo>
 	</storageModule>
 </cproject>

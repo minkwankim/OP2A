@@ -95,7 +95,7 @@ void ApplicationOP2A::CalculateResidueInviscid_ver1()
 	}
 	else
 	{
-#pragma omp parallel for
+#pragma omp parallel for num_threads(CFD_NT)
 		for (int c = 1; c <= grid.NCM; c++)
 		{
 			for (int index_i = 0; index_i <= grid.cells[c].geo.NF-1; index_i++)
@@ -122,7 +122,7 @@ void ApplicationOP2A::CalculateResidueInviscid_ver1()
 
 
 	// Check Error
-#pragma omp parallel for
+#pragma omp parallel for num_threads(CFD_NT)
 	for (int c = 1; c <= grid.NCM; c++)
 	{
 		for (int k = 0; k <= grid.cells[c].data1D(indexResidue).numData-1; k++)

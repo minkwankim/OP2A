@@ -42,13 +42,16 @@ void  BCInviscid::wallTypeBC(Data::DataStorage& Qcl, vector< vector<double> > & 
 		}
 	}
 
-#pragma omp parallel for
+//#pragma omp parallel for
+#pragma ivdep
 	for (int s = 0; 			s <= index_rhou-1; 		s++)	Qcr(s)	= Qcl(s);
 
-#pragma omp parallel for
+//#pragma omp parallel for
+#pragma ivdep
 	for (int k = 0;	k <= ND-1;	k++)	Qcr(index_rhou+k)	= rhoV[k];
 
-#pragma omp parallel for
+//#pragma omp parallel for
+#pragma ivdep
 	for (int n = index_E;		n <= Qcl.data.size()-1;	n++)	Qcr(n)	= Qcl(n);
 }
 

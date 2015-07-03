@@ -15,6 +15,7 @@
 
 #include "Common/include/Time_HourMinSec.hpp"
 #include "Common/include/Time_Info.hpp"
+#include <sys/time.h>
 
 
 namespace OP2A{
