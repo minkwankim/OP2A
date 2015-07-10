@@ -190,7 +190,7 @@ int main(int argc, char *argv[])
 		 * 2. Inviscid Part
 		 */
 		application.ApplyBCInviscidNormal();
-		application.CalculateFluxInviscidExplicit();
+		application.CalculateFluxInviscid();
 		application.CalculateResidueInviscid();
 
 

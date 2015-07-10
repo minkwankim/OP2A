@@ -3,13 +3,15 @@
  *
  * 		Copyright (c) 2015 MINKWAN KIM
  *
- * 	Initial Developed Date: Jun 29, 2015
+ * 	Initial Developed Date: Jul 9, 2015
  *      			Author: Minkwan Kim
  *
  * CalculateFluxInviscidImplicit.cpp
  * 			-  
  *  
  */
+
+
 
 
 #include <omp.h>
@@ -22,21 +24,21 @@
 #include "../include/OP2A_Application.hpp"
 
 
-void ApplicationOP2A::CalculateFluxInviscidExplicit()
+void ApplicationOP2A::CalculateFluxInviscidImplicit()
 {
 	if (problem_setup.NUMERICAL_ORDER == 1)
 	{
-		CalculateFluxInviscidExplicit_SWFVM_1stOrder();
+		CalculateFluxInviscidImplicit_SWFVM_1stOrder();
 	}
 	else
 	{
-		CalculateFluxInviscidExplicit_SWFVM_MUSCL();
+		CalculateFluxInviscidImplicit_SWFVM_MUSCL();
 	}
 }
 
 
 
-void ApplicationOP2A::CalculateFluxInviscidExplicit_SWFVM_MUSCL()
+void ApplicationOP2A::CalculateFluxInviscidImplicit_SWFVM_MUSCL()
 {
 
 	int VAR	= grid.cells[1].data1D(indexW).numData;
@@ -67,16 +69,17 @@ void ApplicationOP2A::CalculateFluxInviscidExplicit_SWFVM_MUSCL()
 		double p_cr	= grid.faces[f].geo.cr[GRID::StencilLabel::CR]->data1D(indexW)(indexE);
 		double dp	= Math::fabs<double>(p_cl - p_cr) / Math::fmin<double>(p_cl, p_cr);
 
-		CFD::FluxInviscid::SWFVS_Explicit(data1D_L, data1D_R, species_set, grid.ND,
+		CFD::FluxInviscid::SWFVS_Implicit(data1D_L, data1D_R, species_set, grid.ND,
 										CFD_variabletype, indexQ, indexV, indexW,
 										grid.faces[f].geo.n, f,
 										dp, grid.faces[f].geo.dist_wall, grid.faces[f].geo.n_dot_wall, 5.0, 1.0e-5, 0.3,
-										grid.faces[f].data1D(0));
+										grid.faces[f].data1D(0),
+										grid.faces[f].data2D(0), grid.faces[f].data2D(1));
 	}
 }
 
 
-void ApplicationOP2A::CalculateFluxInviscidExplicit_SWFVM_1stOrder()
+void ApplicationOP2A::CalculateFluxInviscidImplicit_SWFVM_1stOrder()
 {
 
 	int VAR	= grid.cells[1].data1D(indexW).numData;
@@ -99,10 +102,12 @@ void ApplicationOP2A::CalculateFluxInviscidExplicit_SWFVM_1stOrder()
 		double p_cr	= grid.faces[f].geo.cr[GRID::StencilLabel::CR]->data1D(indexW)(indexE);
 		double dp	= Math::fabs<double>(p_cl - p_cr) / Math::fmin<double>(p_cl, p_cr);
 
-		CFD::FluxInviscid::SWFVS_Explicit(data1D_L, data1D_R, species_set, grid.ND,
-										CFD_variabletype, indexQ, indexV, indexW,
-										grid.faces[f].geo.n, f,
-										dp, grid.faces[f].geo.dist_wall, grid.faces[f].geo.n_dot_wall, 5.0, 1.0e-5, 0.3,
-										grid.faces[f].data1D(0));
+		CFD::FluxInviscid::SWFVS_Implicit(data1D_L, data1D_R, species_set, grid.ND,
+											CFD_variabletype, indexQ, indexV, indexW,
+											grid.faces[f].geo.n, f,
+											dp, grid.faces[f].geo.dist_wall, grid.faces[f].geo.n_dot_wall, 5.0, 1.0e-5, 0.3,
+											grid.faces[f].data1D(0),
+											grid.faces[f].data2D(0), grid.faces[f].data2D(1));
+
 	}
 }

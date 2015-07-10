@@ -10,6 +10,7 @@
  *  
  */
 
+#include "Common/include/MultiDimension.hpp"
 #include "CFD/include/BoundaryConditions.hpp"
 
 namespace OP2A{
@@ -57,6 +58,68 @@ void  BCInviscid::wallTypeBC(Data::DataStorage& Qcl, vector< vector<double> > & 
 
 
 
+void  BCInviscidImplicit::wallTypeBC(Data::DataStorage2D& J_plus, Data::DataStorage2D& J_minus, vector< vector<double> >& face_normal_vector, int NS, int ND, int NE)
+{
+	int VAR = NS + ND + NE;
+
+	vector< vector<double> >	E 		= Common::vector_2D(VAR, VAR, 0.0);
+	vector< vector<double> >	R 		= Common::vector_2D(ND, ND, 0.0);
+	vector< vector<double> >	R_inv 	= Common::vector_2D(ND, ND, 0.0);
+
+#pragma ivdep
+	for (int i = 0; i <= VAR-1; i++)
+	{
+		E[i][i]	= 1.0;
+	}
+
+
+#pragma ivdep
+	for (int j = 0; j <= ND-1; j++)
+	{
+		for (int k = 0; k <= ND-1; k++)
+		{
+			R[j][k]		= face_normal_vector[j][k];
+			R_inv[j][k]	= face_normal_vector[k][j];
+		}
+	}
+
+#pragma ivdep
+	for (int k = 0; k <= ND-1; k++)
+	{
+		R[0][k]	= -R[0][k];
+	}
+
+#pragma ivdep
+	for (int k = 0; k <= ND-1; k++)
+	{
+		for (int l = 0; l <= ND-1; l++)
+		{
+			double aux = 0.0;
+			for (int m = 0; m <= ND-1; m++)
+			{
+				aux	+= R_inv[k][m] * R[m][l];
+			}
+
+			E[NS + k][NS + l]	= aux;
+		}
+	}
+
+#pragma ivdep
+	for (int k = 0; k <= VAR-1; k++)
+	{
+		for (int l = 0; l <= VAR-1; l++)
+		{
+			double aux = 0.0;
+			for (int m = 0; m <= VAR-1; m++)
+			{
+				aux	+= J_minus(k,m) * E[m][l];
+			}
+
+			J_plus(k,l)		+= aux;
+			J_minus(k, l)	= 0.0;
+		}
+	}
+}
 
 
 

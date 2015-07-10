@@ -51,8 +51,6 @@ void Grid::calculate_distance_to_wall()
 
 
 	// 2. Calculate distance for 1st layer
-	Cell *left_cell;
-	Cell *right_cell;
 	for (int c = 1; c <= NGM; c++)
 	{
 		if (is_wall_typeBC(cells_ghost[c].geo.BC))

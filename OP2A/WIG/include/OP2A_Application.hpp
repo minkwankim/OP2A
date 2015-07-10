@@ -209,6 +209,8 @@ public:
 	void DataTreatement(int typeCase, bool is_initialize, int type);
 
 	void ApplyBCInviscidNormal();
+	void ApplyBCInviscidImplicit();
+
 	void ApplyBCViscousNormal();
 
 	void PrintConvergences(bool firststart);
@@ -216,8 +218,10 @@ public:
 	void Calcualtedt();
 	void CalcualtedResidueNorms();
 
-
+	void CalculateFluxInviscid();
 	void CalculateFluxInviscidExplicit();
+	void CalculateFluxInviscidImplicit();
+
 	void CalculateResidueInviscid();
 	void TimeIntegrate();
 
@@ -233,10 +237,18 @@ protected:
 	void CalculateFluxInviscidExplicit_SWFVM_MUSCL();
 	void CalculateFluxInviscidExplicit_SWFVM_1stOrder();
 
+	void CalculateFluxInviscidImplicit_SWFVM_MUSCL();
+	void CalculateFluxInviscidImplicit_SWFVM_1stOrder();
+
+	void UpdateFluxJacobian();
+	void CalculatedTdQ_dpdQ_at_cells();
+
+
 	void CalculateResidueInviscid_ver1();
 	void CalculateResidueInviscid_ver2();
 
 	void TimeIntegrateExplicit();
+	void TimeIntegrateImplicitPoint();
 	void UpdateQ();
 
 };

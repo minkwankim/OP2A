@@ -55,7 +55,7 @@ enum BCType
 
 inline bool is_wall_typeBC(const int& bctype)
 {
-	if (bctype == BCType::wall || bctype == BCType::axis || bctype == BCType::cathode || bctype == BCType::dielectricwall)	return (true);
+	if (bctype == BCType::wall || bctype == BCType::cathode || bctype == BCType::dielectricwall)	return (true);
 	else return (false);
 }
 

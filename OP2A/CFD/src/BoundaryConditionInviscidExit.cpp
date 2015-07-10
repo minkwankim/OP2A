@@ -27,6 +27,22 @@ void BCInviscid::exitTypeBC(Data::DataStorage& Qcl, Data::DataStorage& Qcr, int 
 }
 
 
+void BCInviscidImplicit::exitTypeBC(Data::DataStorage2D& J_plus, Data::DataStorage2D& J_minus, vector< vector<double> >& face_normal_vector, int NS, int ND, int NE)
+{
+	int VAR = NS + ND + NE;
+
+#pragma ivdep
+	for (int k = 0; k <= VAR-1; k++)
+	{
+		for (int l = 0; l <= VAR-1; l++)
+		{
+			J_plus(k,l)	+= J_minus(k,l);
+			J_minus(k,l) = 0.0;
+		}
+	}
+}
+
+
 
 }
 }

@@ -44,9 +44,16 @@ void ApplicationOP2A::UpdateQ()
 		{
 			if (grid.cells[c].data1D(indexQ)(s) < 0.0)
 			{
-				std::ostringstream oss;
-				oss << "It has negative species density: [Cell ID]: " << c << "  [Species ID]: " << s;
-				throw Common::ExceptionNegativeValue (FromHere(), oss.str());
+				if (Math::fabs<double>(grid.cells[c].data1D(indexQ)(s)) <= 1.0e-15)
+				{
+					grid.cells[c].data1D(indexQ)(s) = 0.0;
+				}
+				else
+				{
+					std::ostringstream oss;
+					oss << "It has negative species density: [Cell ID]: " << c << "  [Species ID]: " << s;
+					throw Common::ExceptionNegativeValue (FromHere(), oss.str());
+				}
 			}
 
 			/*

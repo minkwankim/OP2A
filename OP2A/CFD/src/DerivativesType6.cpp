@@ -149,5 +149,226 @@ double DerivativesType6::a2(Data::DataStorage& data_Q, Data::DataStorage& data_W
 }
 
 
+void DerivativesType6::d2TdQ2(Data::DataStorage& data_Q, Data::DataStorage& data_V,  	Data::DataStorage& data_MIX,	CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dT, Data::DataStorage& dTe, Data::DataStorage2D& d2T, Data::DataStorage2D& d2Te)
+{
+	// Basic variables
+	double rho_Cvtr = data_MIX(4);
+	double rho = data_MIX(0);
+
+	double rhoe_Cve;
+#pragma ivdep
+	for (int s = 0; s <= species_set.NS-1; s++)
+	{
+		if (species_set.species[s].type == CHEM::SpeciesType::Electron)
+		{
+			rhoe_Cve	= species_set.species[s].Cv_tra * data_Q(s);
+			break;
+		}
+	}
+
+
+	double sum_u2	= 0.0;
+	for (int k = species_set.NS; k <= species_set.NS+ND-1; k++)
+		sum_u2	+= pow(data_V(k), 2.0);
+
+	sum_u2 /= rho;
+
+	int index_e1 = species_set.NS+ND;
+	int index_e2 = species_set.NS+ND;
+	int NE	= 3;
+	int VAR	= data_Q.numData;
+
+	// A. Species
+#pragma ivdep
+	for (int s1= 0; s1 <= species_set.NS-1; s1++)
+	{
+		if (species_set.species[s1].type != CHEM::SpeciesType::Electron)
+		{
+			// a. Species, s2
+			for (int s2 = 0; s2 <= species_set.NS-1; s2++)
+			{
+				if (species_set.species[s2].type != CHEM::SpeciesType::Electron)
+				{
+					d2T(s1, s2)		= (-sum_u2 - species_set.species[s2].Cv_tra*dT(s1) - species_set.species[s1].Cv_tra*dT(s2)) / rho_Cvtr;
+					d2Te(s1, s2)	= 0.0;
+				}
+				else
+				{
+					d2T(s1, s2)	= (-sum_u2 - species_set.species[s1].Cv_tra*dT(s2)) / rho_Cvtr;
+					d2Te(s1, s2)	= 0.0;
+				}
+			}
+
+			// b. Momentum, k2
+			for (int k2 = species_set.NS; k2 <= index_e2-1; k2++)
+			{
+				d2T(s1, k2)		= (data_V(k2)/rho - species_set.species[s1].Cv_tra*dT(k2)) / rho_Cvtr;
+				d2Te(s1, k2)	= 0.0;
+			}
+
+			// c. Energy: total and electron
+			for (int e2 = index_e2; e2 <= index_e2+NE-1; e2++)
+			{
+				d2T(s1, e2)		= (-species_set.species[s1].Cv_tra*dT(e2)) 	/ rho_Cvtr;
+				d2Te(s1, e2)	= 0.0;
+			}
+		}
+		else
+		{
+			// a. Species, s2
+			for (int s2 = 0; s2 <= species_set.NS-1; s2++)
+			{
+				if (species_set.species[s2].type != CHEM::SpeciesType::Electron)
+				{
+					d2T(s1, s2)		= (-sum_u2 - species_set.species[s2].Cv_tra*dT(s1)) / rho_Cvtr;
+					d2Te(s1, s2) 	= 0.0;
+				}
+				else
+				{
+					d2T(s1, s2)		= (-sum_u2) / rho_Cvtr;
+					d2Te(s1, s2)	= (-species_set.species[s2].Cv_tra*dTe(s1) - species_set.species[s1].Cv_tra*dTe(s2)) / rhoe_Cve;
+				}
+			}
+
+			// b. Momentum, k2
+			for (int k2 = species_set.NS; k2 <= index_e2-1; k2++)
+			{
+				d2T(s1, k2)		= (data_V(k2)/rho) / rho_Cvtr;
+				d2Te(s1, k2)	= 0.0;
+			}
+
+			// c. Energy: total and electron
+			for (int e2 = index_e2; e2 <= index_e2+NE-1; e2++)
+			{
+				d2T(s1, e2) 	= 0.0;
+				d2Te(s1, e2)	= (-species_set.species[s1].Cv_tra * dTe(e2)) / rhoe_Cve;
+			}
+		}
+	}
+
+
+	// B. Momentum, k1
+	for (int k1 = species_set.NS; k1 <= index_e1-1; k1++)
+	{
+		double uk_rho = data_V(k1)/rho;
+
+		// a. Species, s2
+#pragma ivdep
+		for (int s2 = 0; s2 <= species_set.NS-1; s2++)
+		{
+			if (species_set.species[s2].type != CHEM::SpeciesType::Electron)
+			{
+				d2T(k1, s2)		= (uk_rho - species_set.species[s2].Cv_tra*dT(k1)) / rho_Cvtr;
+				d2Te(k1, s2)	= 0.0;
+			}
+			else
+			{
+				d2T(k1, s2)		= (uk_rho) / rho_Cvtr;
+				d2Te(k1, s2)	= 0.0;
+			}
+		}
+
+		// b. Momentum, k2
+#pragma ivdep
+		for (int k2 = species_set.NS; k2 <= index_e2-1; k2++)
+		{
+			if (k1 == k2)	d2T(k1, k2)	= -(1.0/rho) / rho_Cvtr;
+			else			d2T(k1, k2)	= 0.0;
+
+			d2Te(k1, k2)	= 0.0;
+		}
+
+
+		// c. Energy: total and electron
+#pragma ivdep
+		for (int e2 = index_e2; e2 <= index_e2+NE-1; e2++)
+		{
+			d2T(k1, e2) 	= 0.0;
+			d2Te(k1, e2)	= 0.0;
+		}
+	}
+
+
+	// C. Energy
+	//		C1. Total energy
+	// a. Species, s2
+#pragma ivdep
+	for (int s2 = 0; s2 <= species_set.NS-1; s2++)
+	{
+		if (species_set.species[s2].type != CHEM::SpeciesType::Electron)
+		{
+			d2T(index_e1, s2)	= (-species_set.species[s2].Cv_tra*dT(index_e1)) / rho_Cvtr;
+			d2Te(index_e1, s2)	= 0.0;
+		}
+		else
+		{
+			d2T(index_e1, s2)	= 0.0;
+			d2Te(index_e1, s2)	= 0.0;
+		}
+	}
+
+	// b. Momentum, k2
+#pragma ivdep
+	for (int k2 = species_set.NS; k2 <= index_e2-1; k2++)
+	{
+		d2T(index_e1, k2)	= 0.0;
+		d2Te(index_e1, k2)	= 0.0;
+	}
+
+	// c. Energy. e2
+#pragma ivdep
+	for (int e2 = index_e2; e2 <= index_e2+NE-1; e2++)
+	{
+		d2T(index_e1, e2)	= 0.0;
+		d2Te(index_e1, e2)	= 0.0;
+	}
+
+	//		C2. OTHER energy
+#pragma ivdep
+	for (int e1 = 1; e1 <= index_e1+NE-2; e1++)
+	{
+		for (int j = 0; j <= VAR-1; j++)
+		{
+			d2T(e1, j)	= -d2T(index_e1, j);
+			d2Te(e1, j)	= 0.0;
+		}
+	}
+
+	//		C3. Electron energy
+	// a. Species, s2
+	int e1e = index_e1+NE-1;
+#pragma ivdep
+	for (int s2 = 0; s2 <= species_set.NS-1; s2++)
+	{
+		if (species_set.species[s2].type != CHEM::SpeciesType::Electron)
+		{
+			d2T(e1e, s2)	= -d2T(index_e1, s2);
+			d2Te(e1e, s2)	= 0.0;
+		}
+		else
+		{
+			d2T(e1e, s2)	= 0.0;
+			d2Te(e1e, s2)	= (-species_set.species[s2].Cv_tra*dTe(e1e)) / rhoe_Cve;
+		}
+	}
+
+	// b. Momentum, k2
+#pragma ivdep
+	for (int k2 = species_set.NS; k2 <= index_e2-1; k2++)
+	{
+		d2T(e1e, k2)	= 0.0;
+		d2Te(e1e, k2)	= 0.0;
+	}
+
+	// c. Energy
+#pragma ivdep
+	for (int e2 = index_e2; e2 <= index_e2+NE-1; e2++)
+	{
+		d2T(e1e, e2)	= 0.0;
+		d2Te(e1e, e2)	= 0.0;
+	}
+}
+
+
 }
 }

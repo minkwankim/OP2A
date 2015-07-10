@@ -111,6 +111,91 @@ double DerivativesType3::a2(Data::DataStorage& data_Q, Data::DataStorage& data_W
 
 
 
+void DerivativesType3::d2TdQ2(Data::DataStorage& data_Q, Data::DataStorage& data_V,  	Data::DataStorage& data_MIX,	CHEM::SpeciesSet& species_set, int ND, Data::DataStorage& dT, Data::DataStorage2D& dT2)
+{
+	double rho_Cvtr = data_MIX(4);
+	double rho = data_MIX(0);
+
+
+	double sum_u2	= 0.0;
+	for (int k = species_set.NS; k <= species_set.NS+ND-1; k++)	sum_u2	+= pow(data_V(k), 2.0);
+	sum_u2 /= rho;
+
+	int e1 = species_set.NS+ND;
+	int e2 = species_set.NS+ND;
+
+	// Species, S1
+#pragma ivdep
+	for (int s1= 0; s1 <= species_set.NS-1; s1++)
+	{
+		for (int s2 = 0; s2 <= species_set.NS-1; s2++)
+		{
+			dT2(s1, s2)	= (-sum_u2 - species_set.species[s1].Cv_tr*dT(s2) - species_set.species[s2].Cv_tr*dT(s1)) / rho_Cvtr;
+		}
+
+		for (int k2 = species_set.NS; k2 <= species_set.NS+ND-1; k2++)
+		{
+			dT2(s1, k2)	= (data_V(k2)/rho - species_set.species[s1].Cv_tr*dT(k2)) / rho_Cvtr;
+		}
+
+		dT2(s1, e2) 	= (-species_set.species[s1].Cv_tr*dT(e2)) 	/ rho_Cvtr;
+		dT2(s1, e2+1) 	= (-species_set.species[s1].Cv_tr*dT(e2+1)) / rho_Cvtr;
+	}
+
+	// Momentum, K1
+	for (int k1 = species_set.NS; k1 <= species_set.NS+ND-1; k1++)
+	{
+#pragma ivdep
+		for (int s2 = 0; s2 <= species_set.NS-1; s2++)
+		{
+			dT2(k1, s2)	= (data_V(k1)/rho - species_set.species[s2].Cv_tr*dT(k1)) / rho_Cvtr;
+		}
+
+#pragma ivdep
+		for (int k2 = species_set.NS; k2 <= species_set.NS+ND-1; k2++)
+		{
+			if (k1 == k2)	dT2(k1, k2)	= -(1.0/rho) / rho_Cvtr;
+			else			dT2(k1, k2)	= 0.0;
+		}
+
+		dT2(k1, e2) 	= 0.0;
+		dT2(k1, e2+1)	= 0.0;
+	}
+
+	// Energy, S1(Total)
+#pragma ivdep
+	for (int s2 = 0; s2 <= species_set.NS-1; s2++)
+	{
+		dT2(e1, s2)	= (-species_set.species[s2].Cv_tr*dT(e1)) / rho_Cvtr;
+	}
+
+#pragma ivdep
+	for (int k2 = species_set.NS; k2 <= species_set.NS+ND-1; k2++)
+	{
+		dT2(e1, k2)	= 0.0;
+	}
+
+	dT2(e1, e2) 	= 0.0;
+	dT2(e1, e2+1)	= 0.0;
+
+
+	// Energy, S1(Vib)
+#pragma ivdep
+	for (int s2 = 0; s2 <= species_set.NS-1; s2++)
+	{
+		dT2(e1+1, s2)	= (species_set.species[s2].Cv_tr*dT(e1+1)) / rho_Cvtr;
+	}
+
+#pragma ivdep
+	for (int k2 = species_set.NS; k2 <= species_set.NS+ND-1; k2++)
+	{
+		dT2(e1+1, k2)	= 0.0;
+	}
+
+	dT2(e1+1, e2) 	= 0.0;
+	dT2(e1+1, e2+1)	= 0.0;
+}
+
 
 
 }

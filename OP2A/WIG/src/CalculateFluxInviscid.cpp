@@ -3,10 +3,10 @@
  *
  * 		Copyright (c) 2015 MINKWAN KIM
  *
- * 	Initial Developed Date: Jun 29, 2015
+ * 	Initial Developed Date: Jul 9, 2015
  *      			Author: Minkwan Kim
  *
- * TimeIntegrate.cpp
+ * CalculateFluxInviscid.cpp
  * 			-  
  *  
  */
@@ -22,21 +22,17 @@
 
 #include "../include/OP2A_Application.hpp"
 
-void ApplicationOP2A::TimeIntegrate()
+
+void ApplicationOP2A::CalculateFluxInviscid()
 {
-	switch (problem_setup.TIME_INTEGRATION_METHOD)
+
+	if (problem_setup.TIME_INTEGRATION_METHOD == 0)
 	{
-	case 0:
-		TimeIntegrateExplicit();
-		break;
-
-	case 1:
-		UpdateFluxJacobian();
-		CalculatedTdQ_dpdQ_at_cells();
-		TimeIntegrateImplicitPoint();
-		break;
+		CalculateFluxInviscidExplicit();
 	}
-
-
-	UpdateQ();
+	else
+	{
+		CalculateFluxInviscidImplicit();
+		ApplyBCInviscidImplicit();
+	}
 }
