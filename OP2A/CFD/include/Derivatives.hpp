@@ -145,6 +145,21 @@ public:
 							unsigned int indexQ, unsigned int indexV, unsigned int indexW,  unsigned int indexMIX,
 							Data::DataStorage2D& d2p);
 
+
+	static void d2pdQ_CaseB1(Data::DataStorageVector<Data::DataStorage>& data1D,
+							Data::DataStorage& dT,
+							Data::DataStorage& dTe,
+							CHEM::SpeciesSet& species_set, int ND,
+							unsigned int indexQ, unsigned int indexV, unsigned int indexW,  unsigned int indexMIX,
+							Data::DataStorage2D& d2p);
+
+	static void d2pdQ_CaseB2(Data::DataStorageVector<Data::DataStorage>& data1D,
+							Data::DataStorage& dT,
+							Data::DataStorage& dTe,
+							CHEM::SpeciesSet& species_set, int ND,
+							unsigned int indexQ, unsigned int indexV, unsigned int indexW,  unsigned int indexMIX,
+							Data::DataStorage2D& d2p);
+
 	static void d2pdQ_CaseB(Data::DataStorageVector<Data::DataStorage>& data1D,
 							Data::DataStorage& dT,
 							Data::DataStorage& dTe,

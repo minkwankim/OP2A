@@ -238,7 +238,7 @@ public:
 	// @pre before using find() the Map1D has to be sorted
 	void sortKeys()
 	{
-		std::sort(m_vectorMap.begin(),m_vectorMap.end(), LessThan());
+		std::sort(m_vectorMap.begin(), m_vectorMap.end(), LessThan());
 		m_sorted = true;
 	}
 

@@ -50,6 +50,7 @@ void FluxInviscid::SWFVS_Explicit(Data::DataStorageVector<Data::DataStorage>& da
 	{
 		double signal	= pow(-1.0, l);
 
+
 		Data::DataStorageVector<Data::DataStorage>	data1D_j(6);
 		data1D_j(0).resize(VAR);	// Q
 		data1D_j(1).resize(VAR);	// V
@@ -57,6 +58,8 @@ void FluxInviscid::SWFVS_Explicit(Data::DataStorageVector<Data::DataStorage>& da
 		data1D_j(3).resize(6);	// MIX
 		data1D_j(4).resize(species_set.NS);	// Xs
 		data1D_j(5).resize(species_set.NS);	// Ys
+
+
 
 		// 2.1 Get Q at face Qj(+/-)
 		switch(l)
@@ -135,36 +138,35 @@ void FluxInviscid::SWFVS_Explicit(Data::DataStorageVector<Data::DataStorage>& da
 		// 2.5.1 Species
 		double rho_a2	= rho * a2;
 
-#pragma omp parallel for private(temp1, temp2)
+#pragma ivdep
 		for (int s1 = 0; s1 <= species_set.NS-1; s1++)
 		{
 			// Species
-			temp1	= -data1D_j.data[0].data[s1] / rho_a2 * 0.5;
-			temp2	= data1D_j.data[5].data[s1] * Up[0] / two_a;
+			double temp1A	= -data1D_j.data[0].data[s1] / rho_a2 * 0.5;
+			double temp2A	= data1D_j.data[5].data[s1] * Up[0] / two_a;
 
 			for (int s2 = 0; s2 <= species_set.NS-1; s2++)
 			{
-				A_pm[l](s1, s2)	= temp1*dp.data[s2]*aux1 - temp2*aux2;
+				A_pm[l](s1, s2)	= temp1A*dp.data[s2]*aux1 - temp2A*aux2;
 			}
 			A_pm[l](s1, s1) += lambda1;
 
 
 			// Momentum
-			temp2	= data1D_j.data[5].data[s1] / two_a;
+			temp2A	= data1D_j.data[5].data[s1] / two_a;
 
 			for (int k2 = 0; k2 <= ND-1; k2++)
 			{
-				A_pm[l](s1, index_u + k2) = temp1*dp.data[index_u+k2]*aux1 + temp2*normal_vector[0][k2]*aux2;
+				A_pm[l](s1, index_u + k2) = temp1A*dp.data[index_u+k2]*aux1 + temp2A*normal_vector[0][k2]*aux2;
 			}
 
 
 			// Energy modes
 			for (int e2 = 0; e2 <= NE-1; e2++)
 			{
-				A_pm[l](s1, index_E + e2) = temp1*dp.data[index_E + e2]*aux1;
+				A_pm[l](s1, index_E + e2) = temp1A*dp.data[index_E + e2]*aux1;
 			}
 		}
-
 
 		// 2.5.2. Momentum
 		for (int k1 = 0; k1 <= ND-1; k1++)
@@ -252,8 +254,9 @@ void FluxInviscid::SWFVS_Explicit(Data::DataStorageVector<Data::DataStorage>& da
 		}
 	}
 
+
 	 // 3. Calculate Flux at Face
-#pragma omp parallel for
+#pragma ivdep
 	for (int i = 0; i <= VAR-1; i++)
 	{
 		Fn_inv(i) = 0.0;

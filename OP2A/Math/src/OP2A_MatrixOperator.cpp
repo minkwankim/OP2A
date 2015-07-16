@@ -265,43 +265,41 @@ MATRIX operator* (MATRIX &A, MATRIX &B)
 
 	if (C.is_MatlabType() == true)
 	{
-#pragma omp parallel
+#pragma ivdep
+		for (int i = 1; i <= C.sizeI(); i++)
 		{
-			for (int i = 1; i <= C.sizeI(); i++)
+#pragma ivdep
+			for (int j = 1; j <= C.sizeJ(); j++)
 			{
-				for (int j = 1; j <= C.sizeJ(); j++)
+
+				double sum_temp = 0.0;
+//#pragma omp parallel for reduction(+: sum_temp)
+				for (int index = 1; index <= A.sizeJ(); index++)
 				{
-
-					double sum_temp = 0.0;
-					#pragma omp parallel for reduction(+: sum_temp)
-					for (int index = 1; index <= A.sizeJ(); index++)
-					{
-						sum_temp += A(i, index) * B(index, j);
-					}
-
-					C(i, j)	= sum_temp;
+					sum_temp += A(i, index) * B(index, j);
 				}
+
+				C(i, j)	= sum_temp;
 			}
 		}
 	}
 	else
 	{
-#pragma omp parallel
+#pragma ivdep
+		for (int i = 0; i <= C.sizeI()-1; i++)
 		{
-			for (int i = 0; i <= C.sizeI()-1; i++)
+
+#pragma ivdep
+			for (int j = 0; j <= C.sizeJ()-1; j++)
 			{
-				for (int j = 0; j <= C.sizeJ()-1; j++)
+				double sum_temp = 0.0;
+//#pragma omp parallel for reduction(+: sum_temp)
+				for (int index = 0; index <= A.sizeJ()-1; index++)
 				{
-
-					double sum_temp = 0.0;
-					#pragma omp parallel for reduction(+: sum_temp)
-					for (int index = 0; index <= A.sizeJ()-1; index++)
-					{
-						sum_temp += A(i, index) * B(index, j);
-					}
-
-					C(i, j)	= sum_temp;
+					sum_temp += A(i, index) * B(index, j);
 				}
+
+				C(i, j)	= sum_temp;
 			}
 		}
 	}
@@ -322,7 +320,7 @@ std::vector<double> operator* (MATRIX &A, std::vector<double> &B)
 		for (int i = 1; i <= A.sizeI(); i++)
 		{
 			double temp = 0.0;
-#pragma omp parallel for reduction(+: temp)
+//#pragma omp parallel for reduction(+: temp)
 			for (int j = 1; j <= B.size(); j++)
 			{
 				temp += A(i,j) * B[j-1];
@@ -337,7 +335,7 @@ std::vector<double> operator* (MATRIX &A, std::vector<double> &B)
 		for (int i = 0; i <= A.sizeI()-1; i++)
 		{
 			double temp = 0.0;
-#pragma omp parallel for reduction(+: temp)
+//#pragma omp parallel for reduction(+: temp)
 			for (int j = 0; j <= B.size()-1; j++)
 			{
 				temp += A(i,j) * B[j];

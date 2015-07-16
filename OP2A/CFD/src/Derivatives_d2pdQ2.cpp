@@ -29,7 +29,6 @@ void Derivatives::d2pdQ_CaseA1(Data::DataStorageVector<Data::DataStorage>& data1
 								Data::DataStorage2D& d2p)
 {
 	int VAR	= data1D(indexQ).numData;
-
 	double rho		= data1D(indexMIX)(0);
 	double Cv_bar	= data1D(indexMIX)(4) / rho;
 	double R_bar	= data1D(indexMIX)(1) / rho;
@@ -88,10 +87,14 @@ void Derivatives::d2pdQ_CaseA1(Data::DataStorageVector<Data::DataStorage>& data1
 	{
 		temp1	= 0.5*u_square - species_set.species[s].h0;
 
+		double temp2 = species_set.species[s].R - R_bar_over_Cv_bar*species_set.species[s].Cv_tr;
+		double temp3 = species_set.species[s].Cv_tr*data1D(indexV)(species_set.NS+ND);
+
 #pragma ivdep
 		for (int k = 0; k <= VAR-1; k++)
 		{
 			d2p(s,k) = dR_o_Cv_dQ[k]*temp1 + 0.5*R_bar_over_Cv_bar*u_square_dQ[k];
+			d2p(s,k) += temp2 * dT(k) -  dR_o_Cv_dQ[k]*temp3;
 		}
 	}
 
@@ -188,10 +191,14 @@ void Derivatives::d2pdQ_CaseA2(Data::DataStorageVector<Data::DataStorage>& data1
 	{
 		temp1	= 0.5*u_square - species_set.species[s].h0;
 
+		double temp2 = species_set.species[s].R - R_bar_over_Cv_bar*species_set.species[s].Cv_tra;
+		double temp3 = species_set.species[s].Cv_tra*data1D(indexV)(species_set.NS+ND);
+
 #pragma ivdep
 		for (int k = 0; k <= VAR-1; k++)
 		{
 			d2p(s,k) = dR_o_Cv_dQ[k]*temp1 + 0.5*R_bar_over_Cv_bar*u_square_dQ[k];
+			d2p(s,k) += temp2 * dT(k) -  dR_o_Cv_dQ[k]*temp3;
 		}
 	}
 
@@ -253,6 +260,284 @@ void Derivatives::d2pdQ_CaseA(Data::DataStorageVector<Data::DataStorage>& data1D
 		}
 	}
 }
+
+
+
+
+
+
+void Derivatives::d2pdQ_CaseB1(Data::DataStorageVector<Data::DataStorage>& data1D,
+								Data::DataStorage& dT,
+								Data::DataStorage& dTe,
+								CHEM::SpeciesSet& species_set, int ND,
+								unsigned int indexQ, unsigned int indexV, unsigned int indexW,  unsigned int indexMIX,
+								Data::DataStorage2D& d2p)
+{
+	int VAR	= data1D(indexQ).numData;
+
+	double rho			= data1D(indexMIX)(0);
+	double Cv_bar_wo_e	= data1D(indexMIX)(4);
+	double R_bar_wo_e	= data1D(indexMIX)(1);
+	double R_bar_over_Cv_bar	= R_bar_wo_e / Cv_bar_wo_e;
+
+	double u_square	= 0.0;
+	for (int k = 0; k <= ND-1; k++)	u_square	+= pow(data1D(indexV)(species_set.NS+k), 2.0);
+
+
+	// Variable 1
+	vector<double>	dR_o_Cv_dQ(VAR, 0.0);
+	double rho_Cv_bar2	= pow(Cv_bar_wo_e, 2.0);
+	double rhoe_Re;
+	double rhoe_Cve;
+
+#pragma ivdep
+	for (int s = 0; s <= species_set.NS-1; s++)
+	{
+		if(species_set.species[s].type != CHEM::SpeciesType::Electron)
+		{
+			dR_o_Cv_dQ[s]	= (species_set.species[s].R*Cv_bar_wo_e - species_set.species[s].Cv_tr*R_bar_wo_e) / rho_Cv_bar2;
+		}
+		else
+		{
+			dR_o_Cv_dQ[s]	= 0.0;
+			rhoe_Re			= data1D(indexQ)(s)*species_set.species[s].R;
+			rhoe_Cve		= data1D(indexQ)(s)*species_set.species[s].Cv_tra;
+		}
+	}
+
+
+	// Variable 2
+	vector<double>	u_square_dQ(VAR, 0.0);
+	double temp1	= -2.0*u_square/rho;
+
+#pragma ivdep
+	for (int s = 0; s <= species_set.NS-1; s++)
+	{
+		u_square_dQ[s] = temp1;
+	}
+
+#pragma ivdep
+	for (int k = species_set.NS; k <= species_set.NS+ND-1; k++)
+	{
+		u_square_dQ[k]	= 2.0*data1D(indexV)(k)/rho;
+	}
+
+	vector <vector<double> >	du_dQ	= Common::vector_2D(ND, VAR, 0.0);
+	for (int k = 0; k <= ND-1; k++)
+	{
+		temp1	= -data1D(indexV)(species_set.NS+k)/rho;
+
+#pragma ivdep
+		for (int s = 0; s <= species_set.NS-1; s++)
+		{
+			du_dQ[k][s] = temp1;
+		}
+
+		du_dQ[k][species_set.NS+k]	= 1.0/rho;
+	}
+
+
+
+	/*
+	 * Calculate d2p_dQ2
+	 */
+	for (int s = 0; s <= species_set.NS-1; s++)
+	{
+		if(species_set.species[s].type != CHEM::SpeciesType::Electron)
+		{
+			temp1	= 0.5*u_square - species_set.species[s].h0;
+
+			double temp2 = species_set.species[s].R - R_bar_over_Cv_bar*species_set.species[s].Cv_tr;
+			double temp3 = species_set.species[s].Cv_tr*data1D(indexV)(species_set.NS+ND);
+
+	#pragma ivdep
+			for (int k = 0; k <= VAR-1; k++)
+			{
+				d2p(s,k) = dR_o_Cv_dQ[k]*temp1 + 0.5*R_bar_over_Cv_bar*u_square_dQ[k];
+				d2p(s,k) += temp2 * dT(k) -  dR_o_Cv_dQ[k]*temp3;
+			}
+		}
+		else
+		{
+			temp1	= 0.5*u_square;
+
+	#pragma ivdep
+			for (int k = 0; k <= VAR-1; k++)
+			{
+				d2p(s,k) = dR_o_Cv_dQ[k]*temp1 + 0.5*R_bar_over_Cv_bar*u_square_dQ[k];
+			}
+		}
+	}
+
+	for (int k = 0; k <= ND-1; k++)
+	{
+
+#pragma ivdep
+		for (int i = 0; i <= VAR-1; i++)
+		{
+			d2p(species_set.NS+k,i)	= -(dR_o_Cv_dQ[i]*data1D(indexV)(species_set.NS+k) + R_bar_over_Cv_bar*du_dQ[k][i]);
+		}
+	}
+
+
+	// Total Energy
+#pragma ivdep
+	for (int i = 0; i <= VAR-1; i++)
+	{
+		d2p(species_set.NS+ND, i)	= dR_o_Cv_dQ[i];
+	}
+
+
+	// Other energy mode
+	for (int k = species_set.NS+ND+1; k <= VAR-1; k++)
+	{
+#pragma ivdep
+		for (int i = 0; i <= VAR-1; i++)
+		{
+			d2p(k,i) = -dR_o_Cv_dQ[i];
+		}
+	}
+}
+
+
+void Derivatives::d2pdQ_CaseB2(Data::DataStorageVector<Data::DataStorage>& data1D,
+								Data::DataStorage& dT,
+								Data::DataStorage& dTe,
+								CHEM::SpeciesSet& species_set, int ND,
+								unsigned int indexQ, unsigned int indexV, unsigned int indexW,  unsigned int indexMIX,
+								Data::DataStorage2D& d2p)
+{
+	int VAR	= data1D(indexQ).numData;
+
+	double rho			= data1D(indexMIX)(0);
+	double Cv_bar_wo_e	= data1D(indexMIX)(4);
+	double R_bar_wo_e	= data1D(indexMIX)(1);
+	double R_bar_over_Cv_bar	= R_bar_wo_e / Cv_bar_wo_e;
+
+	double u_square	= 0.0;
+	for (int k = 0; k <= ND-1; k++)	u_square	+= pow(data1D(indexV)(species_set.NS+k), 2.0);
+
+
+	// Variable 1
+	vector<double>	dR_o_Cv_dQ(VAR, 0.0);
+	double rho_Cv_bar2	= pow(Cv_bar_wo_e, 2.0);
+	double rhoe_Re;
+	double rhoe_Cve;
+
+#pragma ivdep
+	for (int s = 0; s <= species_set.NS-1; s++)
+	{
+		if(species_set.species[s].type != CHEM::SpeciesType::Electron)
+		{
+			dR_o_Cv_dQ[s]	= (species_set.species[s].R*Cv_bar_wo_e - species_set.species[s].Cv_tra*R_bar_wo_e) / rho_Cv_bar2;
+		}
+		else
+		{
+			dR_o_Cv_dQ[s]	= 0.0;
+			rhoe_Re			= data1D(indexQ)(s)*species_set.species[s].R;
+			rhoe_Cve		= data1D(indexQ)(s)*species_set.species[s].Cv_tra;
+		}
+	}
+
+
+	// Variable 2
+	vector<double>	u_square_dQ(VAR, 0.0);
+	double temp1	= -2.0*u_square/rho;
+
+#pragma ivdep
+	for (int s = 0; s <= species_set.NS-1; s++)
+	{
+		u_square_dQ[s] = temp1;
+	}
+
+#pragma ivdep
+	for (int k = species_set.NS; k <= species_set.NS+ND-1; k++)
+	{
+		u_square_dQ[k]	= 2.0*data1D(indexV)(k)/rho;
+	}
+
+	vector <vector<double> >	du_dQ	= Common::vector_2D(ND, VAR, 0.0);
+	for (int k = 0; k <= ND-1; k++)
+	{
+		temp1	= -data1D(indexV)(species_set.NS+k)/rho;
+
+#pragma ivdep
+		for (int s = 0; s <= species_set.NS-1; s++)
+		{
+			du_dQ[k][s] = temp1;
+		}
+
+		du_dQ[k][species_set.NS+k]	= 1.0/rho;
+	}
+
+
+
+	/*
+	 * Calculate d2p_dQ2
+	 */
+	for (int s = 0; s <= species_set.NS-1; s++)
+	{
+		if(species_set.species[s].type != CHEM::SpeciesType::Electron)
+		{
+			temp1	= 0.5*u_square - species_set.species[s].h0;
+
+			double temp2 = species_set.species[s].R - R_bar_over_Cv_bar*species_set.species[s].Cv_tra;
+			double temp3 = species_set.species[s].Cv_tra*data1D(indexV)(species_set.NS+ND);
+
+	#pragma ivdep
+			for (int k = 0; k <= VAR-1; k++)
+			{
+				d2p(s,k) = dR_o_Cv_dQ[k]*temp1 + 0.5*R_bar_over_Cv_bar*u_square_dQ[k];
+				d2p(s,k) += temp2 * dT(k) -  dR_o_Cv_dQ[k]*temp3;
+			}
+		}
+		else
+		{
+			temp1	= 0.5*u_square;
+
+	#pragma ivdep
+			for (int k = 0; k <= VAR-1; k++)
+			{
+				d2p(s,k) = dR_o_Cv_dQ[k]*temp1 + 0.5*R_bar_over_Cv_bar*u_square_dQ[k];
+			}
+		}
+	}
+
+	for (int k = 0; k <= ND-1; k++)
+	{
+
+#pragma ivdep
+		for (int i = 0; i <= VAR-1; i++)
+		{
+			d2p(species_set.NS+k,i)	= -(dR_o_Cv_dQ[i]*data1D(indexV)(species_set.NS+k) + R_bar_over_Cv_bar*du_dQ[k][i]);
+		}
+	}
+
+
+	// Total Energy
+#pragma ivdep
+	for (int i = 0; i <= VAR-1; i++)
+	{
+		d2p(species_set.NS+ND, i)	= dR_o_Cv_dQ[i];
+	}
+
+
+	// Other energy mode
+	for (int k = species_set.NS+ND+1; k <= VAR-1; k++)
+	{
+#pragma ivdep
+		for (int i = 0; i <= VAR-1; i++)
+		{
+			d2p(k,i) = -dR_o_Cv_dQ[i];
+		}
+	}
+}
+
+
+
+
+
+
 
 
 void Derivatives::d2pdQ_CaseB(Data::DataStorageVector<Data::DataStorage>& data1D,
@@ -322,8 +607,9 @@ void Derivatives::d2pdQ(Data::DataStorageVector<Data::DataStorage>& data1D,
 
 	case 2:
 		indexTe = 1;
-		DerivativesType2::d2TdQ2(data1D(indexQ), data1D(indexV), data1D(indexMIX), species_set, ND, dT(indexT), dT(indexTe), d2T, d2Te);
-		d2pdQ_CaseB(data1D, dT(indexT), dT(indexTe), d2T, d2Te, species_set, ND, indexQ, indexV, indexW,  indexMIX, d2p);
+		//DerivativesType2::d2TdQ2(data1D(indexQ), data1D(indexV), data1D(indexMIX), species_set, ND, dT(indexT), dT(indexTe), d2T, d2Te);
+		//d2pdQ_CaseB(data1D, dT(indexT), dT(indexTe), d2T, d2Te, species_set, ND, indexQ, indexV, indexW,  indexMIX, d2p);
+		d2pdQ_CaseB1(data1D, dT(indexT), dT(indexTe), species_set, ND, indexQ, indexV, indexW,  indexMIX, d2p);
 		break;
 
 	case 3:
@@ -334,8 +620,9 @@ void Derivatives::d2pdQ(Data::DataStorageVector<Data::DataStorage>& data1D,
 
 	case 4:
 		indexTe = 2;
-		DerivativesType4::d2TdQ2(data1D(indexQ), data1D(indexV), data1D(indexMIX), species_set, ND, dT(indexT), dT(indexTe), d2T, d2Te);
-		d2pdQ_CaseB(data1D, dT(indexT), dT(indexTe), d2T, d2Te, species_set, ND, indexQ, indexV, indexW,  indexMIX, d2p);
+		//DerivativesType4::d2TdQ2(data1D(indexQ), data1D(indexV), data1D(indexMIX), species_set, ND, dT(indexT), dT(indexTe), d2T, d2Te);
+		//d2pdQ_CaseB(data1D, dT(indexT), dT(indexTe), d2T, d2Te, species_set, ND, indexQ, indexV, indexW,  indexMIX, d2p);
+		d2pdQ_CaseB1(data1D, dT(indexT), dT(indexTe), species_set, ND, indexQ, indexV, indexW,  indexMIX, d2p);
 		break;
 
 	case 5:
@@ -346,8 +633,9 @@ void Derivatives::d2pdQ(Data::DataStorageVector<Data::DataStorage>& data1D,
 
 	case 6:
 		indexTe = 2;
-		DerivativesType6::d2TdQ2(data1D(indexQ), data1D(indexV), data1D(indexMIX), species_set, ND, dT(indexT), dT(indexTe), d2T, d2Te);
-		d2pdQ_CaseB(data1D, dT(indexT), dT(indexTe), d2T, d2Te, species_set, ND, indexQ, indexV, indexW,  indexMIX, d2p);
+		//DerivativesType6::d2TdQ2(data1D(indexQ), data1D(indexV), data1D(indexMIX), species_set, ND, dT(indexT), dT(indexTe), d2T, d2Te);
+		//d2pdQ_CaseB(data1D, dT(indexT), dT(indexTe), d2T, d2Te, species_set, ND, indexQ, indexV, indexW,  indexMIX, d2p);
+		d2pdQ_CaseB2(data1D, dT(indexT), dT(indexTe), species_set, ND, indexQ, indexV, indexW,  indexMIX, d2p);
 		break;
 
 	case 7:
@@ -358,8 +646,9 @@ void Derivatives::d2pdQ(Data::DataStorageVector<Data::DataStorage>& data1D,
 
 	case 8:
 		indexTe = 3;
-		DerivativesType8::d2TdQ2(data1D(indexQ), data1D(indexV), data1D(indexMIX), species_set, ND, dT(indexT), dT(indexTe), d2T, d2Te);
-		d2pdQ_CaseB(data1D, dT(indexT), dT(indexTe), d2T, d2Te, species_set, ND, indexQ, indexV, indexW,  indexMIX, d2p);
+		//DerivativesType8::d2TdQ2(data1D(indexQ), data1D(indexV), data1D(indexMIX), species_set, ND, dT(indexT), dT(indexTe), d2T, d2Te);
+		//d2pdQ_CaseB(data1D, dT(indexT), dT(indexTe), d2T, d2Te, species_set, ND, indexQ, indexV, indexW,  indexMIX, d2p);
+		d2pdQ_CaseB2(data1D, dT(indexT), dT(indexTe), species_set, ND, indexQ, indexV, indexW,  indexMIX, d2p);
 		break;
 	}
 }

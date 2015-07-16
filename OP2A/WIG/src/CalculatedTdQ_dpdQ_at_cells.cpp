@@ -40,8 +40,8 @@ void ApplicationOP2A::CalculatedTdQ_dpdQ_at_cells()
 		Data::DataStorageVector<Data::DataStorage>	dT(NE);
 		for (int i = 0; i <= NE-1; i++)	dT(i).resize(VAR);
 
-		CFD::Derivatives::dTdQ(grid.cells[c].data1D, species_set, grid.ND, CFD_variabletype, indexQ, indexV, indexW, indexQ, dT);
-		CFD::Derivatives::dpdQ(grid.cells[c].data1D, dT, species_set, grid.ND, CFD_variabletype, indexQ, indexV, indexW, indexQ, grid.cells[c].data1D(index_dp));
+		CFD::Derivatives::dTdQ(grid.cells[c].data1D, species_set, grid.ND, CFD_variabletype, indexQ, indexV, indexW, indexMIX, dT);
+		CFD::Derivatives::dpdQ(grid.cells[c].data1D, dT, species_set, grid.ND, CFD_variabletype, indexQ, indexV, indexW, indexMIX, grid.cells[c].data1D(index_dp));
 
 		for (int e1 = 0; e1 <= NE-1; e1++)
 		{

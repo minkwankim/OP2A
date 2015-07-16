@@ -32,7 +32,12 @@ void ApplicationOP2A::TimeIntegrate()
 
 	case 1:
 		UpdateFluxJacobian();
+		CalculateJacobianSourceTerm();
+		/*
 		CalculatedTdQ_dpdQ_at_cells();
+		if (problem_setup.is_axisymmetric == true)	JacobianSourceAxis();
+		*/
+
 		TimeIntegrateImplicitPoint();
 		break;
 	}

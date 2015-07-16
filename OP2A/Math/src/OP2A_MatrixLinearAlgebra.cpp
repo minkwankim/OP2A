@@ -121,12 +121,14 @@ MATRIX MATRIX_Inv(MATRIX &A)
 	// Store element in Column-major order
 	if (A.is_MatlabType() == true)
 	{
+#pragma ivdep
 		for (i = 0; i <= A.sizeI()-1; i++)
 			for (j = 0; j <= A.sizeJ()-1; j++)
 				element[i + j*A.sizeI()] = A(i+1,j+1);
 	}
 	else
 	{
+#pragma ivdep
 		for (i = 0; i <= A.sizeI()-1; i++)
 			for (j = 0; j <= A.sizeJ()-1; j++)
 				element[i + j*A.sizeI()] = A(i,j);
@@ -167,6 +169,8 @@ MATRIX MATRIX_Inv(MATRIX &A)
 
 	return (A_inv);
 }
+
+
 
 
 MATRIX MATRIX_Confactor(MATRIX &A)

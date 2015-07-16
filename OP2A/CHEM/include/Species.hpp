@@ -12,6 +12,8 @@
  */
 
 
+#ifndef SPECIESOP2A_HPP_
+#define SPECIESOP2A_HPP_
 
 
 #include <iostream>
@@ -102,3 +104,5 @@ private:
 
 }
 }
+
+#endif

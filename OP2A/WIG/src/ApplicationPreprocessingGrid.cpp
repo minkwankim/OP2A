@@ -55,6 +55,8 @@ void ApplicationOP2A::preprocessing_grid()
 	indexYs 	= grid.cells[1].data1D.dataMap.find(NAME_YS);
 	indexResidue  = grid.cells[1].data1D.dataMap.find(NAME_R);
 	indexdQ  	= grid.cells[1].data1D.dataMap.find(NAME_dQ);
+	indexS  	= grid.cells[1].data1D.dataMap.find(NAME_S);
+
 	//indexQnew  	= grid.cells[1].data1D.dataMap.find(NAME_Qnew);
 
 

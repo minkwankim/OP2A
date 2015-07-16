@@ -25,7 +25,7 @@ namespace OP2A{
 namespace CHEM{
 
 
-SpeciesSet::SpeciesSet(): NS(0), n_atom(0), n_electron(0), n_molecule(0), data_assigned(false), speciesMap(1)
+SpeciesSet::SpeciesSet(): NS(0), n_atom(0), n_electron(0), n_molecule(0), data_assigned(false), speciesMap(1), NR(0)
 {
 
 }

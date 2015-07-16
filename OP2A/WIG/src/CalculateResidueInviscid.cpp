@@ -46,6 +46,7 @@ void ApplicationOP2A::CalculateResidueInviscid_ver1()
 #pragma omp parallel num_threads(CFD_NT)
 	for (int c = 1; c <= grid.NCM; c++)
 	{
+#pragma ivdep
 		for (int i = 0; i <= grid.cells[c].data1D(indexResidue).numData-1; i++)
 		{
 			grid.cells[c].data1D(indexResidue)(i)	= 0.0;
@@ -79,7 +80,6 @@ void ApplicationOP2A::CalculateResidueInviscid_ver1()
 					}
 				}
 			}
-
 		}
 
 
@@ -125,8 +125,17 @@ void ApplicationOP2A::CalculateResidueInviscid_ver1()
 #pragma omp parallel for num_threads(CFD_NT)
 	for (int c = 1; c <= grid.NCM; c++)
 	{
+
+#pragma ivdep
 		for (int k = 0; k <= grid.cells[c].data1D(indexResidue).numData-1; k++)
 		{
+
+			/*
+			if (Math::fabs<double>(grid.cells[c].data1D(indexResidue)(k)) <= 1.0e-18)
+			{
+				grid.cells[c].data1D(indexResidue)(k) = 0.0;
+			}
+			*/
 
 			if (grid.cells[c].data1D(indexResidue)(k) != grid.cells[c].data1D(indexResidue)(k))
 			{
@@ -161,6 +170,7 @@ void ApplicationOP2A::CalculateResidueInviscid_ver2()
 #pragma omp parallel
 	for (int c = 1; c <= grid.NCM; c++)
 	{
+#pragma ivdep
 		for (int i = 0; i <= grid.cells[c].data1D(indexResidue).numData-1; i++)
 		{
 			grid.cells[c].data1D(indexResidue)(i)	= 0.0;
@@ -170,6 +180,7 @@ void ApplicationOP2A::CalculateResidueInviscid_ver2()
 #pragma omp parallel
 	for (int c = 1; c <= grid.NGM; c++)
 	{
+#pragma ivdep
 		for (int i = 0; i <= grid.cells_ghost[c].data1D(indexResidue).numData-1; i++)
 		{
 			grid.cells_ghost[c].data1D(indexResidue)(i)	= 0.0;
@@ -185,7 +196,7 @@ void ApplicationOP2A::CalculateResidueInviscid_ver2()
 			double S = 0.0;
 			S = grid.faces[f].geo.S * Math::fabs<double>(grid.faces[f].geo.x[1]);
 
-#pragma omp parallel for
+#pragma ivdep
 			for (int k = 0; k <= grid.faces[f].data1D(0).numData-1; k++)
 			{
 				double flux	= grid.faces[f].data1D(0)(k) * S;
@@ -212,7 +223,7 @@ void ApplicationOP2A::CalculateResidueInviscid_ver2()
 			double S = 0.0;
 			S = grid.faces[f].geo.S;;
 
-#pragma omp parallel for
+#pragma ivdep
 			for (int k = 0; k <= grid.faces[f].data1D(0).numData-1; k++)
 			{
 				double flux	= grid.faces[f].data1D(0)(k) * S;
@@ -228,6 +239,7 @@ void ApplicationOP2A::CalculateResidueInviscid_ver2()
 #pragma omp parallel for
 	for (int c = 1; c <= grid.NCM; c++)
 	{
+#pragma ivdep
 		for (int k = 0; k <= grid.cells[c].data1D(indexResidue).numData-1; k++)
 		{
 

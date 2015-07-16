@@ -67,5 +67,6 @@ void ApplicationOP2A::ApplyBCInviscidNormal()
 		CFD::VariableChange::From_Q(CFD_variabletype, grid.cells_ghost[c].data1D(indexQ), grid.cells_ghost[c].data1D(indexV), grid.cells_ghost[c].data1D(indexW), grid.cells_ghost[c].data1D(indexMIX), grid.cells_ghost[c].data1D(indexXs), grid.cells_ghost[c].data1D(indexYs), species_set, grid.ND, CFD_NT);
 		//CFD::CellData1D::CompleteDataWIGCase1(grid.cells_ghost[c].data1D, species_set, grid.ND, CFD_variabletype, CFD_NT, indexQ, indexV, indexW, indexMIX, indexXs, indexYs);
 	}
+
 }
 

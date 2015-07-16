@@ -164,8 +164,32 @@ public:
 	}
 
 
+	static void split(const std::string& s, char c, std::vector<std::string>& v)
+	{
+		std::string::size_type i = 0;
+		std::string::size_type j = s.find(c);
 
+		while (j != std::string::npos)
+		{
+			v.push_back(s.substr(i, j-i));
+			i = ++j;
+			j = s.find(c, j);
 
+			if (j == std::string::npos)
+				v.push_back(s.substr(i, s.length()));
+		}
+	}
+
+	template <class T>
+	static T extractingNumber(std::string& s)
+	{
+		T c = -1;
+		std::stringstream str_temp(s);
+		str_temp >> c >> s;
+
+		if (c == -1 || c == 0)	c = 1.0;
+		return (c);
+	}
 
 }; // class StringOps
 

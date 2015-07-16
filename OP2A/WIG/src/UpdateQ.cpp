@@ -42,9 +42,10 @@ void ApplicationOP2A::UpdateQ()
 #pragma ivdep
 		for (int s = 0; s <= species_set.NS-1; s++)
 		{
+			/*
 			if (grid.cells[c].data1D(indexQ)(s) < 0.0)
 			{
-				if (Math::fabs<double>(grid.cells[c].data1D(indexQ)(s)) <= 1.0e-15)
+				if (Math::fabs<double>(grid.cells[c].data1D(indexQ)(s)) <= 1.0e-16)
 				{
 					grid.cells[c].data1D(indexQ)(s) = 0.0;
 				}
@@ -55,16 +56,23 @@ void ApplicationOP2A::UpdateQ()
 					throw Common::ExceptionNegativeValue (FromHere(), oss.str());
 				}
 			}
+			*/
 
-			/*
-			if (grid.cells[c].data1D(indexQ)(s) <=  1.0e-15)
+			if (Math::fabs<double>(grid.cells[c].data1D(indexQ)(s)) <= 1.0e-16)
 			{
 				grid.cells[c].data1D(indexQ)(s) = 0.0;
 			}
-			*/
+
+			if (grid.cells[c].data1D(indexQ)(s) < 0.0)
+			{
+				std::ostringstream oss;
+				oss << "It has negative species density: [Cell ID]: " << c << "  [Species ID]: " << s;
+				throw Common::ExceptionNegativeValue (FromHere(), oss.str());
+			}
 		}
 
 		// B. Energy
+#pragma ivdep
 		for (int m = indexE; m <= grid.cells[c].data1D(indexQ).numData-1; m++)
 		{
 			if (grid.cells[c].data1D(indexQ)(m) < 0.0)
@@ -88,7 +96,6 @@ void ApplicationOP2A::UpdateQ()
 									grid.cells[c].data1D.data[indexXs],
 									grid.cells[c].data1D.data[indexYs],
 									species_set, grid.ND, CFD_NT);
-
 		// 1. Calculate V
 		//CFD::VariableChange::Q_to_V(CFD_variabletype, CFD_NT, grid.cells[c].data1D(indexQ), species_set, grid.ND, grid.cells[c].data1D(indexV));
 

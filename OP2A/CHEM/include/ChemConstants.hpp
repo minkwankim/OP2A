@@ -49,6 +49,10 @@ namespace CHEM{
 #define eV_TO_K					11605
 #define E_in_eV					1.6022e-19				// Energy for 1V
 
+#define ELECTRON_CHARGE_CGS 4.803E-10
+#define ELECTRON_CHARGE_SI 1.60217646E-19
+#define ELECTRON_CHARGE_CGS_2 (ELECTRON_CHARGE_CGS*ELECTRON_CHARGE_CGS)
+
 
 
 #define OP2A_SPECIES_DATA_BASE_FILE		"species_database.dat"

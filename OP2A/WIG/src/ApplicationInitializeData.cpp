@@ -201,6 +201,10 @@ void ApplicationOP2A::InitializeData(unsigned int num_ic, bool use_restart_file)
 	DataTreatement(4, true, OP2A_DataCatogories::OP2A_CELL2D);
 	DataTreatement(4, true, OP2A_DataCatogories::OP2A_FACE1D);
 	DataTreatement(4, true, OP2A_DataCatogories::OP2A_FACE2D);
+
+
+
+
 	check_elapsed_time("Initialization of Flow Conditions");
 }
 

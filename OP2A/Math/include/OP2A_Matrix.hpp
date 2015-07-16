@@ -97,6 +97,7 @@ MATRIX MATRIX_Minor(MATRIX &A, const int r, const int c);
 double MATRIX_Det(MATRIX &A);
 MATRIX MATRIX_Inv(MATRIX &A);
 
+
 MATRIX MATRIX_Confactor(MATRIX &A);
 MATRIX MATRIX_Adjoint(MATRIX &A);
 MATRIX MATRIX_Inv2(MATRIX &A);

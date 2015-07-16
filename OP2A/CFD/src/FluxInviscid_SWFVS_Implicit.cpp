@@ -141,36 +141,35 @@ void FluxInviscid::SWFVS_Implicit(Data::DataStorageVector<Data::DataStorage>& da
 		// 2.5.1 Species
 		double rho_a2	= rho * a2;
 
-#pragma omp parallel for private(temp1, temp2)
+#pragma ivdep
 		for (int s1 = 0; s1 <= species_set.NS-1; s1++)
 		{
 			// Species
-			temp1	= -data1D_j.data[0].data[s1] / rho_a2 * 0.5;
-			temp2	= data1D_j.data[5].data[s1] * Up[0] / two_a;
+			double temp1A	= -data1D_j.data[0].data[s1] / rho_a2 * 0.5;
+			double temp2A	= data1D_j.data[5].data[s1] * Up[0] / two_a;
 
 			for (int s2 = 0; s2 <= species_set.NS-1; s2++)
 			{
-				A_pm[l](s1, s2)	= temp1*dp.data[s2]*aux1 - temp2*aux2;
+				A_pm[l](s1, s2)	= temp1A*dp.data[s2]*aux1 - temp2A*aux2;
 			}
 			A_pm[l](s1, s1) += lambda1;
 
 
 			// Momentum
-			temp2	= data1D_j.data[5].data[s1] / two_a;
+			temp2A	= data1D_j.data[5].data[s1] / two_a;
 
 			for (int k2 = 0; k2 <= ND-1; k2++)
 			{
-				A_pm[l](s1, index_u + k2) = temp1*dp.data[index_u+k2]*aux1 + temp2*normal_vector[0][k2]*aux2;
+				A_pm[l](s1, index_u + k2) = temp1A*dp.data[index_u+k2]*aux1 + temp2A*normal_vector[0][k2]*aux2;
 			}
 
 
 			// Energy modes
 			for (int e2 = 0; e2 <= NE-1; e2++)
 			{
-				A_pm[l](s1, index_E + e2) = temp1*dp.data[index_E + e2]*aux1;
+				A_pm[l](s1, index_E + e2) = temp1A*dp.data[index_E + e2]*aux1;
 			}
 		}
-
 
 		// 2.5.2. Momentum
 		for (int k1 = 0; k1 <= ND-1; k1++)
@@ -188,6 +187,7 @@ void FluxInviscid::SWFVS_Implicit(Data::DataStorageVector<Data::DataStorage>& da
 
 
 			// Momentum
+#pragma ivdep
 			for (int k2 = 0; k2 <= ND-1; k2++)
 			{
 				A_pm[l](index_u+k1, index_u+k2)	= -(dp(index_u+k2)*temp1 + normal_vector[0][k1]*normal_vector[0][k2])*0.5*aux1
@@ -196,6 +196,7 @@ void FluxInviscid::SWFVS_Implicit(Data::DataStorageVector<Data::DataStorage>& da
 			A_pm[l](index_u+k1, index_u+k1)	+= lambda1;
 
 			// Energy
+#pragma ivdep
 			for (int e2 = 0; e2 <= NE-1; e2++)
 			{
 				A_pm[l](index_u+k1, index_E+e2) = -0.5*temp1*dp(index_E+e2)*aux1 + dp(index_E+e2)*normal_vector[0][k1]/two_a*aux2;
@@ -213,6 +214,7 @@ void FluxInviscid::SWFVS_Implicit(Data::DataStorageVector<Data::DataStorage>& da
 		}
 
 		// Momentum
+#pragma ivdep
 		for (int k2 = 0; k2 <= ND-1; k2++)
 		{
 			A_pm[l](index_E, index_u+k2) = -(dp(index_u+k2)*temp1 + Up[0]*normal_vector[0][k2])*0.5*aux1
@@ -220,6 +222,7 @@ void FluxInviscid::SWFVS_Implicit(Data::DataStorageVector<Data::DataStorage>& da
 		}
 
 		// Energy
+#pragma ivdep
 		for (int e2 = 0; e2 <= NE-1; e2++)
 		{
 			A_pm[l](index_E, index_E+e2) = -dp(index_E+e2)*temp1*0.5*aux1	+ dp(index_E+e2)*Up[0]/two_a*aux2;
@@ -245,7 +248,7 @@ void FluxInviscid::SWFVS_Implicit(Data::DataStorageVector<Data::DataStorage>& da
 #pragma ivdep
 			for (int k2 = 0; k2 <= ND-1; k2++)
 			{
-				A_pm[l](index_E+e1, index_u+k2) = -dp(index_u+k2)*temp1*0.5*aux1 + temp2*normal_vector[0][k2]/(2.0*a)*aux2;
+				A_pm[l](index_E+e1, index_u+k2) = -dp(index_u+k2)*temp1*0.5*aux1 + temp2*normal_vector[0][k2]/two_a*aux2;
 			}
 
 			// Energy
@@ -376,6 +379,7 @@ void FluxInviscid::SWFVS_Implicit(Data::DataStorageVector<Data::DataStorage>& da
 #pragma ivdep
 		for (int r = 0; r <= VAR-1;	r++)
 		{
+#pragma ivdep
 			for (int s = 0; s <= VAR-1;	s++)
 			{
 				dQp_dQ(r, s) = (Math::Delta_fn<double>(s,r)*rho	- drho_dQ(s)*data1D_j(0)(r)) / rho2;
@@ -412,9 +416,10 @@ void FluxInviscid::SWFVS_Implicit(Data::DataStorageVector<Data::DataStorage>& da
 		/*
 		 * B. Momentum
 		 */
-#pragma ivdep
+
 		for (int k = 0; k <= ND-1; k++)
 		{
+#pragma ivdep
 			for (int i = 0; i <= VAR-1; i++)
 			{
 				dFdQpm(index_u+k,i)	 = (A*dQp_dQ(index_u+k,i) + dA_dQ(i)*Qp(index_u+k))*lambda1	+ A*Qp(index_u+k)*dlambda1(i);
@@ -439,9 +444,9 @@ void FluxInviscid::SWFVS_Implicit(Data::DataStorageVector<Data::DataStorage>& da
 		/*
 		 * D. Other energy modes
 		 */
-	#pragma ivdep
 		for (int e1 = index_E+1; e1 <= NE-1; e1++)
 		{
+#pragma ivdep
 			for (int i = 0; i <= VAR-1; i++)
 			{
 				dFdQpm(e1,i)	 = (A*dQp_dQ(e1,i) + dA_dQ(i)*Qp(e1))*lambda1;
@@ -462,7 +467,7 @@ void FluxInviscid::SWFVS_Implicit(Data::DataStorageVector<Data::DataStorage>& da
 	}
 
 	 // 3. Calculate Flux at Face
-#pragma omp parallel for
+#pragma ivdep
 	for (int i = 0; i <= VAR-1; i++)
 	{
 		Fn_inv(i) = 0.0;

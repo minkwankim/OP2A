@@ -88,6 +88,8 @@ void ApplicationOP2A::CalculateFluxInviscidImplicit_SWFVM_1stOrder()
 #pragma omp parallel for num_threads(CFD_NT)
 	for (int f = 1; f <= grid.NFM; f++)
 	{
+
+
 		Data::DataStorageVector<Data::DataStorage> data1D_L = cell_data1D_template;
 		Data::DataStorageVector<Data::DataStorage> data1D_R = cell_data1D_template;
 
@@ -102,12 +104,13 @@ void ApplicationOP2A::CalculateFluxInviscidImplicit_SWFVM_1stOrder()
 		double p_cr	= grid.faces[f].geo.cr[GRID::StencilLabel::CR]->data1D(indexW)(indexE);
 		double dp	= Math::fabs<double>(p_cl - p_cr) / Math::fmin<double>(p_cl, p_cr);
 
+
+
 		CFD::FluxInviscid::SWFVS_Implicit(data1D_L, data1D_R, species_set, grid.ND,
 											CFD_variabletype, indexQ, indexV, indexW,
 											grid.faces[f].geo.n, f,
 											dp, grid.faces[f].geo.dist_wall, grid.faces[f].geo.n_dot_wall, 5.0, 1.0e-5, 0.3,
 											grid.faces[f].data1D(0),
 											grid.faces[f].data2D(0), grid.faces[f].data2D(1));
-
 	}
 }

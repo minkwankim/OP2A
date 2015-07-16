@@ -29,17 +29,18 @@ void ApplicationOP2A::UpdateFluxJacobian()
 
 	if (problem_setup.is_axisymmetric == true)
 	{
-	#pragma omp parallel for num_threads(CFD_NT)
+#pragma omp parallel for num_threads(CFD_NT)
 		for (int f = 1; f <= grid.NFM; f++)
 		{
 			double S = grid.faces[f].geo.S * Math::fabs<double>(grid.faces[f].geo.x[1]);
+
+#pragma ivdep
 			for (int i = 0; i <= VAR-1; i++)
 			{
 				for (int j = 0; j <= VAR-1; j++)
 				{
 					grid.faces[f].data2D(0)(i,j) *= S;
 					grid.faces[f].data2D(1)(i,j) *= S;
-
 				}
 			}
 		}
@@ -50,13 +51,14 @@ void ApplicationOP2A::UpdateFluxJacobian()
 		for (int f = 1; f <= grid.NFM; f++)
 		{
 			double S = grid.faces[f].geo.S;
+
+#pragma ivdep
 			for (int i = 0; i <= VAR-1; i++)
 			{
 				for (int j = 0; j <= VAR-1; j++)
 				{
 					grid.faces[f].data2D(0)(i,j) *= S;
 					grid.faces[f].data2D(1)(i,j) *= S;
-
 				}
 			}
 		}

@@ -39,6 +39,10 @@ public:
 	std::vector<Species*>	molecules;
 	std::vector<Species*>	electrons;
 
+	unsigned int NR;
+	std::vector< std::vector <double> > ReactionMatrix;
+
+
 	SpeciesSet();
 	explicit SpeciesSet(const std::string& file_name);
 	explicit SpeciesSet(const std::string& file_name, unsigned int ns);

@@ -35,6 +35,7 @@ void ApplicationOP2A::TimeIntegrateImplicitPoint()
 
 	vector<Math::MATRIX> M_cl(grid.NCM+1, matrix_temp1);
 	vector<Math::MATRIX> B(grid.NCM+1, matrix_temp1);
+	vector<Math::MATRIX> B_inv(grid.NCM+1, matrix_temp1);
 
 	vector<Math::MATRIX> R(grid.NCM+1, matrix_temp2);
 	vector<Math::MATRIX> X(grid.NCM+1, matrix_temp2);
@@ -43,25 +44,29 @@ void ApplicationOP2A::TimeIntegrateImplicitPoint()
 	// STEP 1: Set-up matrix M_CL and R_CL
 	if (problem_setup.is_axisymmetric == true)
 	{
-#pragma omp parallel for num_threads(CFD_NT)
+#pragma omp parallel for
 		for (int c = 1; c <= grid.NCM; c++)
 		{
 			double Vol 		= grid.cells[c].geo.S * Math::fabs<double>(grid.cells[c].geo.x[1]);
 			double Vol_dt	= Vol / dt;
 
+#pragma ivdep
 			for (int r = 0; r <= VAR-1; r++)
 			{
+#pragma ivdep
 				for (int l = 0; l <= VAR-1; l++)
 				{
 					M_cl[c](r, l)	= -grid.cells[c].data2D(1)(r,l);
 				}
 			}
 
+#pragma ivdep
 			for (int r = 0; r <= VAR-1; r++)
 			{
 				M_cl[c](r, r)	+= Vol_dt;
 			}
 
+#pragma ivdep
 			for (int r = 0; r <= VAR-1; r++)
 			{
 				R[c](r,0) = -grid.cells[c].data1D(indexResidue)(r);
@@ -70,25 +75,29 @@ void ApplicationOP2A::TimeIntegrateImplicitPoint()
 	}
 	else
 	{
-#pragma omp parallel for num_threads(CFD_NT)
+#pragma omp parallel for
 		for (int c = 1; c <= grid.NCM; c++)
 		{
 			double Vol 		= grid.cells[c].geo.S;
 			double Vol_dt	= Vol / dt;
 
+#pragma ivdep
 			for (int r = 0; r <= VAR-1; r++)
 			{
+#pragma ivdep
 				for (int l = 0; l <= VAR-1; l++)
 				{
 					M_cl[c](r, l)	= -grid.cells[c].data2D(1)(r,l);
 				}
 			}
 
+#pragma ivdep
 			for (int r = 0; r <= VAR-1; r++)
 			{
 				M_cl[c](r, r)	+= Vol_dt;
 			}
 
+#pragma ivdep
 			for (int r = 0; r <= VAR-1; r++)
 			{
 				R[c](r,0) = -grid.cells[c].data1D(indexResidue)(r);
@@ -97,9 +106,8 @@ void ApplicationOP2A::TimeIntegrateImplicitPoint()
 	}
 
 
-
 	// SETP 2: ADD Viscous/inviscid Jacobian
-#pragma omp parallel for num_threads(CFD_NT)
+#pragma omp parallel for
 	for (int c = 1; c <= grid.NCM; c++)
 	{
 		for (int f = 0; f <= grid.cells[c].geo.NF-1; f++)
@@ -131,9 +139,7 @@ void ApplicationOP2A::TimeIntegrateImplicitPoint()
 	}
 
 
-	/*
-	 * @todo: Need to add Viscous
-	 */
+	// @todo: Need to add Viscous
 
 
 
@@ -147,13 +153,13 @@ void ApplicationOP2A::TimeIntegrateImplicitPoint()
 	// STEP 6 SOLVE BLOCK TRI-DIAGONAL MATRIX
 	// 6.1. Initialize
 	B 	= M_cl;
-	vector<Math::MATRIX> B_inv(grid.NCM+1, matrix_temp1);
 
-#pragma omp parallel for num_threads(CFD_NT)
+#pragma omp parallel for
 	for (int i = 1; i <= grid.NCM; i++)
 	{
 		B_inv[i]	= MATRIX_Inv(B[i]);
 	}
+
 
 	// 6.2 Solve
 	// 		1. Initial solution
@@ -161,6 +167,8 @@ void ApplicationOP2A::TimeIntegrateImplicitPoint()
 	for (int i = 1; i <= grid.NCM; i++)
 	{
 		X[i] = B_inv[i] * R[i];
+
+#pragma ivdep
 		for (int r = 0; r <= VAR-1; r++)
 		{
 			if(X[i](r,0) != X[i](r,0))
@@ -173,9 +181,11 @@ void ApplicationOP2A::TimeIntegrateImplicitPoint()
 
 	}
 
+
 #pragma omp parallel for num_threads(CFD_NT)
 	for (int c = 1; c <= grid.NCM; c++)
 	{
+#pragma ivdep
 		for (int j = 0; j <= VAR-1; j++)
 		{
 			grid.cells[c].data1D(indexdQ)(j) = X[c](j, 0);
@@ -185,11 +195,12 @@ void ApplicationOP2A::TimeIntegrateImplicitPoint()
 
 
 
-	for (int p = 1; p <= 4; p++)
+	for (int p = 1; p <= 3; p++)
 	{
 #pragma omp parallel for num_threads(CFD_NT)
 		for (int c = 1; c <= grid.NCM; c++)
 		{
+#pragma ivdep
 			for (int r = 0; r <= VAR-1; r++)
 			{
 				R[c](r,0) = -grid.cells[c].data1D(indexResidue)(r);
@@ -212,6 +223,7 @@ void ApplicationOP2A::TimeIntegrateImplicitPoint()
 				{
 					if (grid.cells[c].geo.face_list[k]->geo.cr[0]->geo.ID > 0)
 					{
+#pragma ivdep
 						for (int j = 0; j <= VAR-1; j++)
 						{
 							double aux = 0.0;
@@ -230,6 +242,7 @@ void ApplicationOP2A::TimeIntegrateImplicitPoint()
 				{
 					if (grid.cells[c].geo.face_list[k]->geo.cl[0]->geo.ID > 0)
 					{
+#pragma ivdep
 						for (int j = 0; j <= VAR-1; j++)
 						{
 							double aux = 0.0;
@@ -254,6 +267,8 @@ void ApplicationOP2A::TimeIntegrateImplicitPoint()
 #pragma omp parallel for num_threads(CFD_NT)
 		for (int i = 1; i <= grid.NCM; i++)
 		{
+
+#pragma ivdep
 			for (int r = 0; r <= VAR-1; r++)
 			{
 				if(X[i](r,0) != X[i](r,0))

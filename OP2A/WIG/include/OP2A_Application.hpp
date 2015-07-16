@@ -137,7 +137,7 @@ public:
 		indexYs		= 5;
 		indexResidue = 6;
 		indexdQ = 7;
-		//indexQnew = 8;
+		indexS = 8;
 
 		termination = false;
 		RHS_n		= 0;
@@ -179,7 +179,7 @@ protected:
 	int indexYs;
 	int indexResidue;
 	int indexdQ;
-	//int indexQnew;
+	int indexS;
 
 
 
@@ -223,6 +223,9 @@ public:
 	void CalculateFluxInviscidImplicit();
 
 	void CalculateResidueInviscid();
+	void CalculateSourceTerm();
+	void CalculateJacobianSourceTerm();
+
 	void TimeIntegrate();
 
 
@@ -240,8 +243,11 @@ protected:
 	void CalculateFluxInviscidImplicit_SWFVM_MUSCL();
 	void CalculateFluxInviscidImplicit_SWFVM_1stOrder();
 
+	void CalculateSourceNONEQ(bool needToInitialize);
+
 	void UpdateFluxJacobian();
 	void CalculatedTdQ_dpdQ_at_cells();
+	void JacobianSourceAxis();
 
 
 	void CalculateResidueInviscid_ver1();
