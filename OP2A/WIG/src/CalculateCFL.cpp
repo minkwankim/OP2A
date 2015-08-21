@@ -28,6 +28,5 @@ void ApplicationOP2A::CalcualteCFL()
 	else
 	{
 		CFLNumber	= CFD::CalculateCFLNumber(iter, problem_setup.iteration_before_1, problem_setup.CFL_start, problem_setup.CFL_max);
-		//CFLNumber	= problem_setup.CFL_start;
 	}
 }

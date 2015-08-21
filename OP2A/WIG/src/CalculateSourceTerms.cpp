@@ -24,8 +24,8 @@
 
 void ApplicationOP2A::CalculateSourceTerm()
 {
-	// Calcualete course term for Thermal NONEQ
-	CalculateSourceNONEQ(true);
+	CalculateSourceCHEM(true);
+	CalculateSourceNONEQ(false);
 
 
 

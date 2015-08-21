@@ -75,8 +75,6 @@ int main(int argc, char *argv[])
 	application.check_elapsed_time("Read Problem Information");
 
 
-
-
 	/*
 	 * =========================================================
 	 * STEP 2: Read Species/chemistry data (For NOEQ-CFD mode)
@@ -85,18 +83,8 @@ int main(int argc, char *argv[])
 	 * 						by: Minkwan Kim
 	 * =========================================================
 	 */
-	application.show_starting_task("Read Species/Chemisty Data");
+	application.show_starting_task("Read Species/Chemistry Data");
 	application.preprocessing_species();
-	/*
-	 * @todo need to add Chemical reaction data reader
-	 */
-	CHEM::Reaction testreaction("N+N2=2N+N+N");
-	testreaction.data_completing(application.species_set.species);
-
-
-
-
-
 
 
 	/* ======================================================================
@@ -108,7 +96,6 @@ int main(int argc, char *argv[])
 	 */
 	application.show_starting_task("Read/Generate Grid and allocate solution Data");
 	application.preprocessing_grid();
-
 
 
 
@@ -168,10 +155,6 @@ int main(int argc, char *argv[])
 
 
 
-
-
-
-
 	/*
 	 * =====================================================================
 	 * Physical Solving Loop: CFD Part
@@ -187,14 +170,20 @@ int main(int argc, char *argv[])
 	{
 		/*
 		 * 1. Calculate time step and CFL number
+		 * @author Minkwan Kim
+		 * @version 1.0 June/24/2015
+		 * [Done]: It does not need to be improved
 		 */
-		application.CalcualteCFL();
-		application.Calcualtedt();
+		application.CalcualteCFL();						// Calculate CFL number based on explicit/implicit methods
+		application.Calcualtedt();						// Calculate time step
 		application.t_simulation	+= application.dt;
+
 
 
 		/*
 		 * 2. Inviscid Part
+		 * @author Minkwan Kim
+		 * @version 1.0 Aug/19/2015
 		 */
 		application.ApplyBCInviscidNormal();
 		application.CalculateFluxInviscid();

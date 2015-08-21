@@ -29,6 +29,11 @@ void ApplicationOP2A::preprocessing_species()
 	 species_set.showInfo();
 	 check_elapsed_time("Reading Species data set");
 
+	 species_set.read_Reaction("reactions.dat");
+	 species_set.showInfoReaction();
+	 check_elapsed_time("Reading Reaction data set");
+
+
 	 create_sampleDataCFD();
 	 CFD_variabletype = CFD::VariableChange::VariableType(problem_setup.NER, problem_setup.NEV, problem_setup.NEE);
 }

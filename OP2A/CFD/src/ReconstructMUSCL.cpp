@@ -135,6 +135,84 @@ void Reconstruct:: SecondOrderMUSCL(Data::DataStorage& Wcll, Data::DataStorage& 
 }
 
 
+void Reconstruct::SecondOrderMUSCL_ver2(Data::DataStorage& Wcll, Data::DataStorage& Wcl, Data::DataStorage& Wcr, Data::DataStorage& Wcrr,
+										vector<double>&	xcll, vector<double>&	xcl, vector<double>&	xcr, vector<double>&	xcrr,
+										vector<double>&	xf, bool use_limiter, int limiter,
+										Data::DataStorage& Wp, Data::DataStorage& Wm)
+{
+	double dx, dx_plus, dx_minus, dx_f, dx_fp;
+
+	Math::VECTOR	x(xcl, xcr);
+	Math::VECTOR	x_plus(xcr, xcrr);
+	Math::VECTOR	x_minus(xcll, xcl);
+	Math::VECTOR	x_f(xcl, xf);
+
+	dx			= x.length();
+	dx_plus		= x_plus.length();
+	dx_minus 	= x_minus.length();
+
+	dx_f 			= x_f.length();
+	dx_fp 			= dx - dx_f;
+	double dxf_dx 	= dx_f / dx;
+	double dxfp_dx 	= dx_fp / dx;
+	double dxp_dx	= dx_plus / dx;
+	double dxm_dx	= dx_minus / dx;
+
+
+
+
+	double dW;
+	double dW_plus;
+	double dW_minus;
+	double r, alpha;
+	double phi;
+
+	double W_min;
+	double W_max;
+
+	bool error = false;
+
+	for  (int index = 0; index <= Wcll.numData-1; index++)
+	{
+		dW = (Wcr(index) - Wcl(index));
+		if (dW != 0.0 && dx > 1.0e-10)
+		{
+			dW_minus	= Wcl(index) 	- Wcll(index);
+			dW_plus		= Wcrr(index)	- Wcr(index);
+
+
+			r			= dW / dW_plus * dxp_dx;
+			phi			= Limiter2(r, limiter);
+			Wp(index)	= Wcl(index) + phi*dW*dxf_dx;
+
+			r			= dW / dW_minus * dxm_dx;
+			phi			= Limiter2(r, limiter);
+			Wm(index)	= Wcr(index) - phi*dW*dxfp_dx;
+
+
+
+			W_min	= Math::fmin<double>(Wcl(index), Wcr(index));
+			W_max	= Math::fmax<double>(Wcl(index), Wcr(index));
+
+			if (Wp(index) < W_min || Wm(index) < W_min || Wp(index) > W_max ||Wm(index) > W_max)
+			{
+				error = true;
+				break;
+			}
+		}
+		else
+		{
+			Wp(index)	= Wcl(index);
+			Wm(index)	= Wcr(index);
+		}
+	}
+
+	if (error == true)
+	{
+		Wp	= Wcl;
+		Wm	= Wcr;
+	}
+}
 
 }
 }

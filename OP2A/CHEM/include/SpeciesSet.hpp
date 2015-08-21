@@ -16,6 +16,7 @@
 
 
 #include "CHEM/include/Species.hpp"
+#include "CHEM/include/Reaction.hpp"
 #include "Common/include/Map1D.hpp"
 
 
@@ -41,6 +42,7 @@ public:
 
 	unsigned int NR;
 	std::vector< std::vector <double> > ReactionMatrix;
+	std::vector< Reaction> reactions;
 
 
 	SpeciesSet();
@@ -56,7 +58,12 @@ private:
 public:
 	void read_SpeciesSet(const std::string& file_name);
 	void read_SpeciesSet(const std::string& file_name, unsigned int ns);
+
+	void read_Reaction(const std::string& file_name);
+
 	void showInfo();
+	void showInfoReaction();
+
 
 };
 

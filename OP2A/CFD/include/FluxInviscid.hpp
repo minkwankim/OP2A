@@ -39,9 +39,14 @@ class CFD_API Reconstruct: public Common::NonInstantiable< Reconstruct>
 {
 public:
 	static double Limiter(double r, double alpha, int method);
+	static double Limiter2(double r, int method);
 
 	static void FirstOrder(Data::DataStorage& Wcl, Data::DataStorage& Wcr, Data::DataStorage& Wp, Data::DataStorage& Wm);
 	static void SecondOrderMUSCL(Data::DataStorage& Wcll, Data::DataStorage& Wcl, Data::DataStorage& Wcr, Data::DataStorage& Wcrr,
+								vector<double>&	xcll, vector<double>&	xcl, vector<double>&	xcr, vector<double>&	xcrr,
+								vector<double>&	xf, bool use_limiter, int limiter,
+								Data::DataStorage& Wp, Data::DataStorage& Wm);
+	static void SecondOrderMUSCL_ver2(Data::DataStorage& Wcll, Data::DataStorage& Wcl, Data::DataStorage& Wcr, Data::DataStorage& Wcrr,
 								vector<double>&	xcll, vector<double>&	xcl, vector<double>&	xcr, vector<double>&	xcrr,
 								vector<double>&	xf, bool use_limiter, int limiter,
 								Data::DataStorage& Wp, Data::DataStorage& Wm);

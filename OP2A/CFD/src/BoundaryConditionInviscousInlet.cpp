@@ -38,6 +38,7 @@ void BCInviscidImplicit::inletTypeBC(Data::DataStorage2D& J_plus, Data::DataStor
 		for (int l = 0; l <= VAR-1; l++)
 		{
 			J_minus(k,l)	= 0.0;
+			J_plus(k,l)	= 0.0;
 		}
 	}
 }

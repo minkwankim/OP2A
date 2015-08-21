@@ -41,7 +41,7 @@ void FluxInviscid::SWFVS_Explicit(Data::DataStorageVector<Data::DataStorage>& da
 	vector <Math::MATRIX> A_pm(2, Math::MATRIX(VAR, VAR, false));
 
 	// 1. Caculate Omega (Pressure Switch factor)
-	double omega	= 0.5 / (pow(alpha*dp, 2.0) + 1.0);
+	double omega	 = 0.5 / (pow(alpha*dp, 2.0) + 1.0);
 	double o_m_omega = 1.0 - omega;
 
 
@@ -241,7 +241,7 @@ void FluxInviscid::SWFVS_Explicit(Data::DataStorageVector<Data::DataStorage>& da
 #pragma ivdep
 			for (int k2 = 0; k2 <= ND-1; k2++)
 			{
-				A_pm[l](index_E+e1, index_u+k2) = -dp(index_u+k2)*temp1*0.5*aux1 + temp2*normal_vector[0][k2]/(2.0*a)*aux2;
+				A_pm[l](index_E+e1, index_u+k2) = -dp(index_u+k2)*temp1*0.5*aux1 + temp2*normal_vector[0][k2]/two_a*aux2;
 			}
 
 			// Energy

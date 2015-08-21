@@ -243,6 +243,7 @@ protected:
 	void CalculateFluxInviscidImplicit_SWFVM_MUSCL();
 	void CalculateFluxInviscidImplicit_SWFVM_1stOrder();
 
+	void CalculateSourceCHEM(bool needToInitialize);
 	void CalculateSourceNONEQ(bool needToInitialize);
 
 	void UpdateFluxJacobian();

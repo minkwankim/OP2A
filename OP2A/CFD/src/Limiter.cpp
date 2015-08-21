@@ -80,5 +80,47 @@ double Reconstruct::Limiter(double r, double alpha, int method)
 
 
 
+
+double Reconstruct::Limiter2(double r, int method)
+{
+	double phi;
+
+	switch (static_cast<LimiterType>(method))
+	{
+	case LimiterType::MinMod:
+		if (r > 0.0)
+		{
+			phi = Math::fmin<double>(1.0, r);
+		}
+		else
+		{
+			phi = 0.0;
+		}
+		break;
+
+	case LimiterType::Harmonic:
+		if (r > 0.0)	phi = (r + Math::fabs<double>(r)) / (r + 1.0);
+		else			phi = 0.0;
+		break;
+
+	case LimiterType::Superbee:
+		phi	= Math::fmax<double>(0.0, Math::fmin<double>(2.0*r, 1.0));
+		phi	= Math::fmax<double>(phi, Math::fmin<double>(r, 2.0));
+		break;
+
+	case LimiterType::VanAlbada:
+		if (r > 0.0)	phi = (r*r + r) / (r*r + 1.0);
+		else			phi = 0.0;
+		break;
+
+	default:
+		throw Common::ExceptionOutOfRange (FromHere(), "Out of range in CFD Limiter selection: The selected limited mode is not supported");
+	}
+
+	return phi;
+}
+
+
+
 }
 }

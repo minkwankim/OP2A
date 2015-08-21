@@ -19,6 +19,65 @@ namespace OP2A{
 namespace CHEM{
 
 
+enum ReactionType
+{
+	DISSOCIATION					= 0,
+	EXCHANGE						= 1,
+	DISSOCIATIVE_RECOMBINATION		= 2,
+	CHARGE_EXCHANGE					= 3,
+	ELECTRON_IMPACT_DISSOCIATION	= 4,
+	ELECTRON_IMPACT_IONIZATION		= 5
+};
+
+enum KeqModel
+{
+	PARK85							= 85,
+	PARK90							= 90,
+	PARK94							= 94,
+	LeRC							= 0
+};
+
+double Calc_Tc(double T, double Tr, double Tv, double Te, ReactionType type, int direction);
+
+
+class Rate_coeff_Arrhenius
+{
+public:
+	double Cf;
+	double nu;
+	double theta;
+	double k;
+
+	Rate_coeff_Arrhenius();
+	~Rate_coeff_Arrhenius();
+
+	double ReactionRate(double Tc);
+};
+
+
+class EquilibriumConstants
+{
+public:
+	int model;
+	std::vector<double>	n;
+	std::vector<double>	A1;
+	std::vector<double>	A2;
+	std::vector<double>	A3;
+	std::vector<double>	A4;
+	std::vector<double>	A5;
+
+	EquilibriumConstants();
+	~EquilibriumConstants();
+
+protected:
+	int m_num_data;
+
+public:
+	double Keq(double T, double n_mix);
+
+};
+
+
 
 class Reaction
 {
@@ -31,7 +90,7 @@ public:
 	// Reactant/product coefficient INFORMATION
 	std::vector<double>	alpha;				// Reactant coefficient, alapha_j
 	std::vector<double>	beta;				// Product coefficient, beta_j
-	std::vector<double>	alpha_m_beta;
+	std::vector<double>	beta_m_alpha;
 
 	Reaction();
 	Reaction(int NS);
@@ -44,12 +103,14 @@ public:
 	~Reaction();
 
 protected:
+
+
+public:
 	void data_assigning(std::string data_raw);
 	void data_processing();
 	void data_processing(std::string data_raw);
-
-public:
 	void data_completing(const std::vector<Species>& species);
+
 
 protected:
 	std::string m_data_react;
@@ -62,7 +123,21 @@ protected:
 
 	bool		m_allocated;
 	bool		m_hasdata;
+
+public:
+	int method_kb;
+	Rate_coeff_Arrhenius	ForwardReaction;
+	Rate_coeff_Arrhenius	BackwardReaction;
+	EquilibriumConstants	Keq;
+	double Tref;
+
+	double kf(double T);
+	double kf(double T, double n_mix);
+
+	double kb(double T);
+	double kb(double T, double n_mix);
 };
+
 
 
 

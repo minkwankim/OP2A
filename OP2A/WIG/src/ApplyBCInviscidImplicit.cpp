@@ -39,7 +39,7 @@ void ApplicationOP2A::ApplyBCInviscidImplicit()
 		switch (BC_index)
 		{
 		case CFD::CFDBCTypes::WallType:
-			CFD::BCInviscidImplicit::wallTypeBC(grid.cells_ghost[c].geo.face_list[0]->data2D(index_J_plus),
+			CFD::BCInviscidImplicit::axisTypeBC(grid.cells_ghost[c].geo.face_list[0]->data2D(index_J_plus),
 												grid.cells_ghost[c].geo.face_list[0]->data2D(index_J_minus),
 												grid.cells_ghost[c].geo.face_list[0]->geo.n,
 												NS, ND, NE);

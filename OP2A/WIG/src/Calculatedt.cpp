@@ -22,7 +22,7 @@
 
 void ApplicationOP2A::Calcualtedt()
 {
-	int index_u	= grid.cells[1].data1D(indexV).dataMap.find(CFD::CFD_VariableSet::var_stringV(0, CFD::FluxCategory::Momentum));
+	int index_u		= grid.cells[1].data1D(indexV).dataMap.find(CFD::CFD_VariableSet::var_stringV(0, CFD::FluxCategory::Momentum));
 	double dt_min	= 1.0e-14;
 
 	vector<double>	dt_temp(grid.NCM+1, dt_min);

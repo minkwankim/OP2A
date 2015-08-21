@@ -25,7 +25,7 @@ void ApplicationOP2A::ApplyBCInviscidNormal()
 {
 	int indexAMB = 0;
 
-#pragma omp parallel for num_threads(CFD_NT)
+#pragma omp parallel for
 	for (int c = 1; c <= grid.NGM; c++)
 	{
 		CFD::CFDBCTypes BC_index = CFD::BCInviscid::BCTypeInCFD(grid.cells_ghost[c].geo.face_list[0]->geo.BC);
@@ -61,7 +61,7 @@ void ApplicationOP2A::ApplyBCInviscidNormal()
 	}
 
 
-#pragma omp parallel for num_threads(CFD_NT)
+#pragma omp parallel for
 	for (int c = 1; c <= grid.NGM; c++)
 	{
 		CFD::VariableChange::From_Q(CFD_variabletype, grid.cells_ghost[c].data1D(indexQ), grid.cells_ghost[c].data1D(indexV), grid.cells_ghost[c].data1D(indexW), grid.cells_ghost[c].data1D(indexMIX), grid.cells_ghost[c].data1D(indexXs), grid.cells_ghost[c].data1D(indexYs), species_set, grid.ND, CFD_NT);
