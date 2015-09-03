@@ -15,10 +15,16 @@
 #include <vector>
 
 #include "CHEM/include/SpeciesSet.hpp"
+#include "Common/include/MultiDimension.hpp"
 #include "Common/include/Exception_FileSystem.hpp"
 #include "Common/include/Exception_DimensionMatch.hpp"
 #include "UTIL/include/OP2A_read_write.hpp"
+#include "Math/include/OP2A_Math.hpp"
+#include "Math/include/MathMisc.hpp"
 
+#include "Common/include/Exception_NaNValue.hpp"
+#include "Common/include/Exception_NegativeValue.hpp"
+#include "Common/include/Exception_InfiniteValue.hpp"
 
 using namespace std;
 
@@ -228,6 +234,177 @@ void SpeciesSet::read_SpeciesSet(const std::string& file_name, unsigned int ns)
 	if ((n_atom + n_molecule + n_electron) != NS)	throw Common::ExceptionDimensionMatch (FromHere(), "Size of species data does not match[atom/molecule/electron]. Need to check data");
 	else											data_assigned = true;
 
+
+	/*
+	 * Assign Collision cross section data
+	 */
+	// 1. Assign Data storage based on NS
+	method_collision_integral	= Common::vector_2D<int>(NS, NS, -1);
+	CCS_A						= Common::vector_3D<double>(NS, NS, 3, 0.0);
+	CCS_B						= Common::vector_3D<double>(NS, NS, 3, 0.0);
+	CCS_C						= Common::vector_3D<double>(NS, NS, 3, 0.0);
+	CCS_D						= Common::vector_3D<double>(NS, NS, 3, 0.0);
+	Omega_temp					= Common::vector_4D<double>(NS, NS, 3, 12, 0.0);
+	Omega						= Common::vector_4D<double>(NS, NS, 3, 12, 0.0);
+
+
+	// 2. Read Collision Cross Section and Omega data
+	string		sp1, sp2;
+	ifstream	datafile(OP2A_SPECIES_DATA_OMEGA11_FILE);
+
+	// 2.1. Omega 11
+	if(!datafile)	throw Common::ExceptionFileSystem (FromHere(), "CANNOT FIND A SPECIES DATABASE FILE FOR COLLISION CROSS SECTION DATA. PLEASE CHECK THE FILE: species_omega11.dat");
+	while (! datafile.eof())
+	{
+		double		data_temp[12];
+		double 		data_omega[12];
+
+		int s1 = -1;
+		int r1 = -1;
+
+		datafile >> sp1	>> sp2;
+		datafile >> data_temp[0]	>> data_temp[1] 	>> data_temp[2] 	>> data_temp[3] 	>> data_temp[4]		>> data_temp[5] 	>> data_temp[6] 	>> data_temp[7] 	>> data_temp[8] 	>> data_temp[9] 	>> data_temp[10] 	>> data_temp[11];
+		datafile >> data_omega[0] 	>> data_omega[1] 	>> data_omega[2] 	>> data_omega[3] 	>> data_omega[4]	>> data_omega[5]	>> data_omega[6]	>> data_omega[7]	>> data_omega[8]	>> data_omega[9]	>> data_omega[10]	>> data_omega[11];
+
+		for (int s = 0; s <= NS-1; s++)
+		{
+			if (sp1 == species[s].name) s1 = s;
+			if (sp2 == species[s].name) r1 = s;
+		}
+
+		if (s1 != -1 && r1 != -1)
+		{
+			for (int ii = 0; ii <= 11; ii++)	Omega_temp[s1][r1][1][ii]	= data_temp[ii];
+			for (int ii = 0; ii <= 11; ii++)	Omega_temp[r1][s1][1][ii]	= data_temp[ii];
+
+			for (int ii = 0; ii <= 11; ii++)	Omega[s1][r1][1][ii]		= data_omega[ii];
+			for (int ii = 0; ii <= 11; ii++)	Omega[r1][s1][1][ii]		= data_omega[ii];
+
+			method_collision_integral[s1][r1]	= 1;
+			method_collision_integral[r1][s1]	= 1;
+		}
+	}
+	datafile.close();
+
+
+	// 2.2. Omega 22
+	datafile.open(OP2A_SPECIES_DATA_OMEGA22_FILE);
+	if(!datafile)	throw Common::ExceptionFileSystem (FromHere(), "CANNOT FIND A SPECIES DATABASE FILE FOR COLLISION CROSS SECTION DATA. PLEASE CHECK THE FILE: species_omega22.dat");
+	while (! datafile.eof())
+	{
+		double		data_temp[12];
+		double 		data_omega[12];
+
+		int s1 = -1;
+		int r1 = -1;
+
+		datafile >> sp1	>> sp2;
+		datafile >> data_temp[0]	>> data_temp[1] 	>> data_temp[2] 	>> data_temp[3] 	>> data_temp[4]		>> data_temp[5] 	>> data_temp[6] 	>> data_temp[7] 	>> data_temp[8] 	>> data_temp[9] 	>> data_temp[10] 	>> data_temp[11];
+		datafile >> data_omega[0] 	>> data_omega[1] 	>> data_omega[2] 	>> data_omega[3] 	>> data_omega[4]	>> data_omega[5]	>> data_omega[6]	>> data_omega[7]	>> data_omega[8]	>> data_omega[9]	>> data_omega[10]	>> data_omega[11];
+
+		for (int s = 0; s <= NS-1; s++)
+		{
+			if (sp1 == species[s].name) s1 = s;
+			if (sp2 == species[s].name) r1 = s;
+		}
+
+		if (s1 != -1 && r1 != -1)
+		{
+			for (int ii = 0; ii <= 11; ii++)	Omega_temp[s1][r1][2][ii]	= data_temp[ii];
+			for (int ii = 0; ii <= 11; ii++)	Omega_temp[r1][s1][2][ii]	= data_temp[ii];
+
+			for (int ii = 0; ii <= 11; ii++)	Omega[s1][r1][2][ii]		= data_omega[ii];
+			for (int ii = 0; ii <= 11; ii++)	Omega[r1][s1][2][ii]		= data_omega[ii];
+		}
+	}
+	datafile.close();
+
+
+	// 2.3. CCS: diffusion
+	datafile.open(OP2A_SPECIES_DATA_DIFF_FILE);
+	if(!datafile)	throw Common::ExceptionFileSystem (FromHere(), "CANNOT FIND A SPECIES DATABASE FILE FOR COLLISION CROSS SECTION DATA. PLEASE CHECK THE FILE: species_diff.dat");
+	while (! datafile.eof())
+	{
+		double		temp1, temp2, temp3, temp4;
+		datafile >> sp1	>> sp2 >> temp1 >> temp2 >> temp3 >> temp4;
+
+		int s1 = -1;
+		int r1 = -1;
+
+		for (int s = 0; s <= NS-1; s++)
+		{
+			if (sp1 == species[s].name) s1 = s;
+			if (sp2 == species[s].name) r1 = s;
+		}
+
+		CCS_A[s1][r1][1]	= temp1;
+		CCS_B[s1][r1][1]	= temp2;
+		CCS_C[s1][r1][1]	= temp3;
+		CCS_D[s1][r1][1]	= temp4;
+
+		CCS_A[r1][s1][1]	= temp1;
+		CCS_B[r1][s1][1]	= temp2;
+		CCS_C[r1][s1][1]	= temp3;
+		CCS_D[r1][s1][1]	= temp4;
+
+		if (method_collision_integral[s1][r1] == -1)	method_collision_integral[s1][r1] = 0;
+		if (method_collision_integral[r1][s1] == -1)	method_collision_integral[r1][s1] = 0;
+	}
+	datafile.close();
+
+
+	// 2.4. CCS: viscosity
+	datafile.open(OP2A_SPECIES_DATA_VIS_FILE);
+	if(!datafile)	throw Common::ExceptionFileSystem (FromHere(), "CANNOT FIND A SPECIES DATABASE FILE FOR COLLISION CROSS SECTION DATA. PLEASE CHECK THE FILE: species_vis.dat");
+	while (! datafile.eof())
+	{
+		double		temp1, temp2, temp3, temp4;
+
+		datafile >> sp1	>> sp2 >> temp1 >> temp2 >> temp3 >> temp4;
+
+		int s1 = -1;
+		int r1 = -1;
+
+		for (int s = 0; s <= NS-1; s++)
+		{
+			if (sp1 == species[s].name) s1 = s;
+			if (sp2 == species[s].name) r1 = s;
+		}
+
+		CCS_A[s1][r1][2]	= temp1;
+		CCS_B[s1][r1][2]	= temp2;
+		CCS_C[s1][r1][2]	= temp3;
+		CCS_D[s1][r1][2]	= temp4;
+
+		CCS_A[r1][s1][2]	= temp1;
+		CCS_B[r1][s1][2]	= temp2;
+		CCS_C[r1][s1][2]	= temp3;
+		CCS_D[r1][s1][2]	= temp4;
+	}
+	datafile.close();
+
+
+	// 3. Decide pi_Omega calculation method
+	for (int s = 0; s <= NS-1; s++)
+	{
+		for (int r = 0; r <= NS-1; r++)
+		{
+			if (method_collision_integral[s][r] == -1)
+			{
+				if (species[s].charge * species[r].charge < 0.0)
+				{
+					method_collision_integral[s][r] = 2;
+					method_collision_integral[r][s] = 2;
+				}
+
+				if (species[s].charge * species[r].charge > 0.0)
+				{
+					method_collision_integral[s][r] = 3;
+					method_collision_integral[r][s] = 3;
+				}
+			}
+		}
+	}
 }
 
 
@@ -498,6 +675,357 @@ void SpeciesSet::showInfoReaction()
 	cout << "=============================" << endl;
 }
 
+
+
+
+
+
+double SpeciesSet::collisionTerm(const int s, const int r, const int l, const double T, const double ne, const double Te)
+{
+
+	double Tp = T;
+	if (species[s].type == SpeciesType::Electron || species[r].type == SpeciesType::Electron)	Tp = Te;
+
+
+	double Rmass;
+	Rmass	= 2.0*species[s].M*species[r].M / (species[s].M + species[r].M);
+
+	double aux = sqrt(Rmass/(MATH_PI*Ru*Tp));
+
+
+	double omega = pi_Omega(s, r, l, T, ne, Te);
+	double delta_sr;
+
+	switch (l)
+	{
+	case 1:
+		delta_sr = 8.0/3.0 * aux *omega;
+		break;
+
+	case 2:
+		delta_sr = 16.0/5.0 * aux *omega;
+		break;
+	}
+
+	return (delta_sr);
+}
+
+
+double SpeciesSet::DiffusionBinary_sr(const int s, const int r, const double T, const double ne, const double Te, const double p)
+{
+	double To = T;
+	if (species[s].type == SpeciesType::Electron || species[r].type == SpeciesType::Electron)	To = Te;
+
+	double delta;
+	double Dsr = 0.0;
+
+	if (s != r)
+	{
+		delta = collisionTerm(s, r, 1, T, ne, Te);
+		Dsr	= C_BOLTZMANN_SI*To / (p*delta);
+	}
+
+	return (Dsr);
+}
+
+
+
+std::vector<double> SpeciesSet::Diffusion_s_Gupta(const double T, const double ne, const double Te, const double p, std::vector<double>& Ys)
+{
+	vector<double> Ds (NS, 0.0);
+	vector<double> gamma_s (NS, 0.0);
+
+	for (int s1 = 0; s1 <= NS-1; s1++)	gamma_s[s1] = Ys[s1]/species[s1].M;
+
+	double gamma_t = 0.0;
+	for (int s1 = 0; s1 <= NS-1; s1++)	gamma_t += gamma_s[s1];
+
+
+
+	double aux, Dsr;
+	for (int s = 0; s <= NS-1; s++)
+	{
+		aux = 0.0;
+		for (int r = 0; r <= NS-1; r++)
+		{
+			if (r != s)
+			{
+				Dsr = DiffusionBinary_sr(s, r, T, ne, Te, p);
+				aux += gamma_s[r]/Dsr;
+			}
+		}
+
+		Ds[s] = gamma_t*gamma_t*species[s].M * (1.0 - species[s].M*gamma_s[s]) / aux;
+
+
+		if (Ds[s] != Ds[s])
+		{
+			throw Common::ExceptionNaNValue (FromHere(), "NaN value for Diffusion coefficient ");
+		}
+
+		if (Ds[s] == numeric_limits<double>::infinity())
+		{
+			throw Common::ExceptionInfiniteValue (FromHere(), "Infinite Value for Diffusion coefficient");
+		}
+
+		if (Ds[s] < 0.0)
+		{
+			throw Common::ExceptionNegativeValue (FromHere(), "Negative Value for Diffusion coefficient");
+		}
+	}
+
+	return (Ds);
+}
+
+
+
+
+double SpeciesSet::Viscosity_mix_Gupta(const double T, const double ne, const double Te, const double p, std::vector<double>& Ys)
+{
+	double mu_mix = 0.0;
+
+	vector<double> gamma_s (NS, 0.0);
+	for (int s1 = 0; s1 <= NS-1; s1++)	gamma_s[s1] = Ys[s1]/species[s1].M;
+
+	double gamma_t = 0.0;
+	for (int s1 = 0; s1 <= NS-1; s1++)	gamma_t += gamma_s[s1];
+
+	double aux;
+	for (int s = 0; s <= NS-1; s++)
+	{
+		aux = 0.0;
+		for (int r = 0; r <= NS-1; r++)	aux += gamma_s[r]*	collisionTerm(s, r, 2, T, ne, Te);
+
+		mu_mix += species[s].m*gamma_s[s] / aux;
+	}
+
+
+	if (mu_mix != mu_mix)
+	{
+		throw Common::ExceptionNaNValue (FromHere(), "NaN value for mixture viscosity coefficient ");
+	}
+
+	if (mu_mix == numeric_limits<double>::infinity())
+	{
+		throw Common::ExceptionInfiniteValue (FromHere(), "Infinite Value for mixture viscosity coefficient");
+	}
+
+	if (mu_mix < 0.0)
+	{
+		throw Common::ExceptionNegativeValue (FromHere(), "Negative Value for mixture viscosity coefficient");
+	}
+
+	return (mu_mix);
+}
+
+
+double SpeciesSet::ThermalConductivity_tra_Gupta(const double T, const double ne, const double Te, const double p, std::vector<double>& Ys)
+{
+	double kappa_tra = 0.0;
+	double a_sr;
+	double ms_mr;
+	double aux1;
+
+
+	vector<double> gamma_s (NS, 0.0);
+	for (int s1 = 0; s1 <= NS-1; s1++)	gamma_s[s1] = Ys[s1]/species[s1].M;
+
+	double gamma_t = 0.0;
+	for (int s1 = 0; s1 <= NS-1; s1++)	gamma_t += gamma_s[s1];
+
+
+	for (int s = 0; s <= NS-1; s++)
+	{
+		if (species[s].type != SpeciesType::Electron)
+		{
+			aux1 = 0.0;
+
+			for (int r = 0; r <= NS-1; r++)
+			{
+				if (species[r].type != SpeciesType::Electron)
+				{
+					ms_mr = species[s].m / species[r].m;
+					a_sr = 1 + (1.0 - ms_mr)*(0.45 - 2.54*ms_mr) / pow(1+ms_mr, 2.0);
+				}
+				else
+				{
+					a_sr = 3.54;
+				}
+
+				aux1 += gamma_s[r] * collisionTerm(s, r, 2, T, ne, Te);
+			}
+
+			kappa_tra += gamma_s[s]/aux1;
+		}
+	}
+
+
+	kappa_tra *= 15.0/4.0*C_BOLTZMANN_SI;
+
+	if (kappa_tra != kappa_tra)
+	{
+		throw Common::ExceptionNaNValue (FromHere(), "NaN value for translational thermal conductivity");
+	}
+
+	if (kappa_tra == numeric_limits<double>::infinity())
+	{
+	throw Common::ExceptionInfiniteValue (FromHere(), "Infinite Value for translational thermal conductivity");
+	}
+
+	if (kappa_tra < 0.0)
+	{
+		throw Common::ExceptionNegativeValue (FromHere(), "Negative Value for translational thermal conductivity");
+	}
+
+	return (kappa_tra);
+}
+
+
+double SpeciesSet::ThermalConductivity_rot_Gupta(const double T, const double ne, const double Te, const double p, std::vector<double>& Ys)
+{
+	double kappa_rot = 0.0;
+	double aux1;
+
+
+	vector<double> gamma_s (NS, 0.0);
+	for (int s1 = 0; s1 <= NS-1; s1++)	gamma_s[s1] = Ys[s1]/species[s1].M;
+
+	double gamma_t = 0.0;
+	for (int s1 = 0; s1 <= NS-1; s1++)	gamma_t += gamma_s[s1];
+
+
+	for (int s = 0; s <= NS-1; s++)
+	{
+		if (species[s].type == SpeciesType::Molecule)
+		{
+			aux1 = 0.0;
+
+			for (int r = 0; r <= NS-1; r++)
+			{
+				aux1 += gamma_s[r] * collisionTerm(s, r, 1, T, ne, Te);
+			}
+
+			kappa_rot += gamma_s[s]/aux1;
+		}
+	}
+
+	kappa_rot *= C_BOLTZMANN_SI;
+
+	if (kappa_rot != kappa_rot)
+	{
+		throw Common::ExceptionNaNValue (FromHere(), "NaN value for rotational thermal conductivity");
+	}
+
+	if (kappa_rot == numeric_limits<double>::infinity())
+	{
+		throw Common::ExceptionInfiniteValue (FromHere(), "Infinite Value for rotational thermal conductivity");
+	}
+
+	if (kappa_rot < 0.0)
+	{
+		throw Common::ExceptionNegativeValue (FromHere(), "Negative Value for rotational thermal conductivity");
+	}
+
+	return (kappa_rot);
+}
+
+
+
+double SpeciesSet::ThermalConductivity_vib_Gupta(const double T, const double ne, const double Te, const double p, std::vector<double>& Ys)
+{
+	double kappa_vib = 0.0;
+	double aux1;
+	double aux2;
+
+	vector<double> gamma_s (NS, 0.0);
+	for (int s1 = 0; s1 <= NS-1; s1++)	gamma_s[s1] = Ys[s1]/species[s1].M;
+
+	double gamma_t = 0.0;
+	for (int s1 = 0; s1 <= NS-1; s1++)	gamma_t += gamma_s[s1];
+
+
+	for (int s = 0; s <= NS-1; s++)
+	{
+		if (species[s].type == SpeciesType::Molecule)
+		{
+			aux1 = 0.0;
+
+			for (int r = 0; r <= NS-1; r++)
+			{
+				aux1 += gamma_s[r] * collisionTerm(s, r, 1, T, ne, Te);
+			}
+
+			aux2 = species[s].Cv_VE(T) / species[s].R;
+			kappa_vib += aux2 * (gamma_s[s]/aux1);
+		}
+	}
+
+	kappa_vib *= C_BOLTZMANN_SI;
+
+	if (kappa_vib != kappa_vib)
+	{
+		throw Common::ExceptionNaNValue (FromHere(), "NaN value for vibrational thermal conductivity");
+	}
+
+	if (kappa_vib == numeric_limits<double>::infinity())
+	{
+		throw Common::ExceptionInfiniteValue (FromHere(), "Infinite Value for vibrational thermal conductivity");
+	}
+
+	if (kappa_vib < 0.0)
+	{
+		throw Common::ExceptionNegativeValue (FromHere(), "Negative Value for vibrational thermal conductivity");
+	}
+
+	return (kappa_vib);
+}
+
+
+double SpeciesSet::ThermalConductivity_e_Gupta(const double T, const double ne, const double Te, const double p, std::vector<double>& Ys)
+{
+	double kappa_e = 0.0;
+	double aux1;
+
+	vector<double> gamma_s (NS, 0.0);
+	for (int s1 = 0; s1 <= NS-1; s1++)	gamma_s[s1] = Ys[s1]/species[s1].M;
+
+
+	int s = -1;
+	for (int r = 0; r <= NS-1; r++)
+	{
+		if (species[r].type == SpeciesType::Electron)
+		{
+			s = r;
+			break;
+		}
+	}
+
+
+	aux1 = 0.0;
+	for (int r = 0; r <= NS-1; r++)
+	{
+		aux1 += 1.45 * gamma_s[r] * collisionTerm(s, r, 1, T, ne, Te);
+	}
+
+	kappa_e = 15.0/4.0 * C_BOLTZMANN_SI * gamma_s[s] / aux1;
+
+	if (kappa_e != kappa_e)
+	{
+		throw Common::ExceptionNaNValue (FromHere(), "NaN value for electron thermal conductivity");
+	}
+
+	if (kappa_e == numeric_limits<double>::infinity())
+	{
+		throw Common::ExceptionInfiniteValue (FromHere(), "Infinite Value for electron thermal conductivity");
+	}
+
+	if (kappa_e < 0.0)
+	{
+		throw Common::ExceptionNegativeValue (FromHere(), "Negative Value for electron thermal conductivity");
+	}
+
+	return (kappa_e);
+}
 
 }
 }

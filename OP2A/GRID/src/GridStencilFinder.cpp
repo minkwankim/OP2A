@@ -34,6 +34,7 @@ using namespace std;
 #include "Math/include/AreaCalculation.hpp"
 #include "Math/include/MathMisc.hpp"
 #include "Math/include/OP2A_Vector.hpp"
+#include "Math/include/OP2A_Matrix.hpp"
 
 
 
@@ -319,6 +320,175 @@ void Grid::find_stencil(bool extended_stencill)
 			}
 		}
 	}
+
+
+
+
+	/*
+	 * Find Neighbor Cell List
+	 * @version 1.0
+	 * @author Minkwan Kim
+	 */
+#pragma omp parallel for
+	for (int f = 1; f <= NFM; f++)
+	{
+		int num_N = 2;
+		int cr, cl;
+
+		faces[f].geo.Neighbor_list.resize(2);
+		faces[f].geo.Neighbor_list[0]	= faces[f].geo.cl[0];
+		faces[f].geo.Neighbor_list[1]	= faces[f].geo.cr[0];
+
+
+		for (int nn = 0; nn <= faces[f].geo.NN-1; nn++)
+		{
+			for (int cc = 0; cc <= faces[f].geo.node_list[nn]->geo.NSC-1; cc++)
+			{
+				if (faces[f].geo.node_list[nn]->geo.CellList[cc] != faces[f].geo.cl[0] && faces[f].geo.node_list[nn]->geo.CellList[cc] != faces[f].geo.cr[0])
+				{
+					num_N++;
+					if (faces[f].geo.Neighbor_list.size() < num_N)
+					{
+						faces[f].geo.Neighbor_list.push_back(faces[f].geo.node_list[nn]->geo.CellList[cc]);
+					}
+					else
+					{
+						faces[f].geo.Neighbor_list[num_N-1] = faces[f].geo.node_list[nn]->geo.CellList[cc];
+					}
+
+				}
+			}
+		}
+
+	}
+
+
+#pragma omp parallel for
+	for (int c = 1; c <= NCM; c++)
+	{
+		int num_N = cells[c].geo.neighbor_list.size();
+
+		for (int nn = 0; nn <= cells[c].geo.NN-1; nn++)
+		{
+			for (int cc = 0; cc <= cells[c].geo.node_list[nn]->geo.NSC-1; cc++)
+			{
+				bool flag_exist = false;
+				for (int c2 = 0; c2 <= num_N-1; c2++)
+				{
+					if (cells[c].geo.node_list[nn]->geo.CellList[cc]->geo.ID == cells[c].geo.neighbor_list[c2]->geo.ID)
+					{
+						flag_exist = true;
+						break;
+					}
+				}
+
+				if (flag_exist == false && cells[c].geo.node_list[nn]->geo.CellList[cc]->geo.ID != cells[c].geo.ID)
+				{
+					num_N++;
+					cells[c].geo.neighbor_list.push_back(cells[c].geo.node_list[nn]->geo.CellList[cc]);
+				}
+			}
+		}
+	}
+
+
+	/*
+	 * Calculate Matrix for LSQS gradient method
+	 * @author Minkwan Kim
+	 * @veraion 1.0		3/09/2015
+	 */
+#pragma omp parallel for
+	for (int c = 1; c <= NCM; c++)
+	{
+		int N = cells[c].geo.neighbor_list.size();
+
+		cells[c].geo.LSQRS_matrix	= Common::vector_2D(ND, ND, 0.0);
+		cells[c].geo.omega_i2_dx	= Common::vector_2D(N, ND, 0.0);
+
+
+		vector< vector<double> > di	= Common::vector_2D<double>(N, ND, 0.0);
+		vector< double >	omega_i(N, 0.0);
+
+
+		// 1. Find di (di = xi - x0, where x0 is current cell center)
+		for (int i = 0; i <= N-1; i++)
+		{
+			for (int k = 0; k <= ND-1; k++)
+			{
+				di[i][k]	= cells[c].geo.neighbor_list[i]->geo.x[k]	- cells[c].geo.x[k];
+				omega_i[i]	+= di[i][k]*di[i][k];
+			}
+			omega_i[i]	= 1.0 / sqrt(omega_i[i]);
+		}
+
+
+		double sum_omega2_dx2 	= 0.0;
+		double sum_omega2_dy2 	= 0.0;
+		double sum_omega2_dxdy 	= 0.0;
+
+		for (int i = 1; i <= N-1; i++)
+		{
+			double omega2 		= omega_i[i] * omega_i[i];
+			double omega2_dx	= omega2*di[i][0];
+			double omega2_dy	= omega2*di[i][1];
+
+			sum_omega2_dx2	+= omega2_dx * di[i][0];
+			sum_omega2_dy2	+= omega2_dy * di[i][1];
+			sum_omega2_dxdy	+= omega2_dx * di[i][1];
+
+			cells[c].geo.omega_i2_dx[i][0]	=	omega2_dx;
+			cells[c].geo.omega_i2_dx[i][1]	=	omega2_dy;
+		}
+
+
+		Math::MATRIX A(ND, ND, false);
+
+		if (ND == 2)
+		{
+			A(0,0)	= sum_omega2_dx2;
+			A(0,1)	= sum_omega2_dxdy;
+
+			A(1,0)	= sum_omega2_dxdy;
+			A(1,1)	= sum_omega2_dy2;
+		}
+		else
+		{
+			double sum_omega2_dz2 	= 0.0;
+			double sum_omega2_dxdz 	= 0.0;
+			double sum_omega2_dydz 	= 0.0;
+
+			for (int i = 1; i <= N; i++)
+			{
+				double omega2 		= omega_i[i] * omega_i[i];
+				double omega2_dz	= omega2*di[i][2];
+
+				sum_omega2_dxdz	+= omega2_dz * di[i][0];
+				sum_omega2_dydz	+= omega2_dz * di[i][1];
+				sum_omega2_dydz	+= omega2_dz * di[i][2];
+
+				cells[c].geo.omega_i2_dx[i][2]	=	omega2_dz;
+			}
+
+			A(0,0)	= sum_omega2_dx2;
+			A(0,1)	= sum_omega2_dxdy;
+			A(0,2)	= sum_omega2_dxdz;
+
+			A(1,0)	= sum_omega2_dxdy;
+			A(1,1)	= sum_omega2_dy2;
+			A(1,2)	= sum_omega2_dydz;
+
+			A(2,0)	= sum_omega2_dxdz;
+			A(2,1)	= sum_omega2_dydz;
+			A(2,2)	= sum_omega2_dz2;
+		}
+
+		Math::MATRIX Ainv = Math::MATRIX_Inv(A);
+		for (int k1 = 0; k1 <= ND-1; k1++)
+			for (int k2 = 0; k2 <= ND-1; k2++)
+				cells[c].geo.LSQRS_matrix[k1][k2]	= Ainv(k1,k2);
+
+	}
+
 }
 
 

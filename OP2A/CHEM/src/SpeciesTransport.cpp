@@ -132,9 +132,9 @@ void SpeciesTransport::AssignTransport(const std::string& species_name)
 {
 	if (data_assignedTransport == false)
 	{
-		if (data_assignedBlottner == false)	AssignBlottner(species_name);
+		if (data_assignedBlottner == false)		AssignBlottner(species_name);
 		if (data_assignedSutherland == false)	AssignSutherland(species_name);
-		if (data_assignedKinetic == false)	AssignKinetic(species_name);
+		if (data_assignedKinetic == false)		AssignKinetic(species_name);
 
 		data_assignedTransport = true;
 	}

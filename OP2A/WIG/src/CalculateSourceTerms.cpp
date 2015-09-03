@@ -24,8 +24,28 @@
 
 void ApplicationOP2A::CalculateSourceTerm()
 {
-	CalculateSourceCHEM(true);
-	CalculateSourceNONEQ(false);
+
+	// Initizlize Source Term
+#pragma omp parallel
+	for (int c = 1; c <= grid.NCM; c++)
+	{
+#pragma ivdep
+		for (int i = 0; i <= grid.cells[c].data1D(indexS).numData-1; i++)
+		{
+			grid.cells[c].data1D(indexS)(i)	= 0.0;
+		}
+	}
+
+
+	if (problem_setup.NONEQ_Chem == true)
+	{
+		CalculateSourceCHEM(false);
+	}
+
+	if (problem_setup.NER != 0 || problem_setup.NEV != 0 || problem_setup.NEE != 0)
+	{
+		CalculateSourceNONEQ(false);
+	}
 
 
 

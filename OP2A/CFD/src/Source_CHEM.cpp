@@ -125,8 +125,8 @@ void Source_CHEM::S_chem(Data::DataStorageVector<Data::DataStorage>& data1D, CHE
 	{
 		for (int s = 0; s <= species_set.NS-1; s++)
 		{
-			if (species_set.reactions[k].alpha[s] != 0)	Rk_f[k] *= pow(rho_M[s], species_set.reactions[k].alpha[s]);
-			if (species_set.reactions[k].beta[s] != 0)	Rk_b[k] *= pow(rho_M[s], species_set.reactions[k].beta[s]);
+			if (species_set.reactions[k].alpha[s] != 0.0)	Rk_f[k] *= pow(rho_M[s], species_set.reactions[k].alpha[s]);
+			if (species_set.reactions[k].beta[s]  != 0.0)	Rk_b[k] *= pow(rho_M[s], species_set.reactions[k].beta[s]);
 		}
 
 		Rk_f[k] *= kf[k];

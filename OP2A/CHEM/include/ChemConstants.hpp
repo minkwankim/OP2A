@@ -51,6 +51,8 @@ namespace CHEM{
 
 #define ELECTRON_CHARGE_CGS 4.803E-10
 #define ELECTRON_CHARGE_SI 1.60217646E-19
+
+#define ELECTRON_CHARGE_SI_2  (ELECTRON_CHARGE_SI_2*ELECTRON_CHARGE_SI_2)
 #define ELECTRON_CHARGE_CGS_2 (ELECTRON_CHARGE_CGS*ELECTRON_CHARGE_CGS)
 
 
@@ -67,6 +69,9 @@ namespace CHEM{
 #define OP2A_SPECIES_DATA_PARK_FILE		"species_Parker.dat"
 #define OP2A_SPECIES_DATA_OMEGA11_FILE	"species_Omega11.dat"
 #define OP2A_SPECIES_DATA_OMEGA22_FILE	"species_Omega22.dat"
+#define OP2A_SPECIES_DATA_DIFF_FILE		"species_diff.dat"
+#define OP2A_SPECIES_DATA_VIS_FILE		"species_vis.dat"
+
 
 }
 }

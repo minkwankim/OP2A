@@ -61,6 +61,8 @@ public:
 	int	NF;
 	vector<Face *> face_list;
 	vector<Cell *> neighbor_list;
+	vector<vector<double> > omega_i2_dx;
+	vector<vector<double> > LSQRS_matrix;
 
 
 	double S;

@@ -19,7 +19,7 @@ namespace OP2A{
 namespace GRID{
 
 
-FaceStencil::FaceStencil():cl(2), cr(2), extended(false)
+FaceStencil::FaceStencil():cl(2), cr(2), Neighbor_list(2), extended(false)
 {
 
 }

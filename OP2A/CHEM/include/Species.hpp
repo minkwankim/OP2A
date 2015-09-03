@@ -95,6 +95,7 @@ public:
 	double thermalConductivityCoeff(const double& Tvib, const double& Tele, const double& mu,int model,int mode);
 
 
+
 private:
 	bool data_assigned;
 

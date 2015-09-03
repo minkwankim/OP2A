@@ -53,6 +53,12 @@ class FaceStencil
 public:
 	vector<Cell*>	cl;
 	vector<Cell*>	cr;
+	vector<Cell*>	Neighbor_list;
+
+	vector<vector<double> > omega_i2;
+	vector<vector<double> > omega_i2_dx;
+	vector<double>			LSQRS_matrix_1;
+
 
 	FaceStencil();
 	explicit FaceStencil(bool extendedStencil);

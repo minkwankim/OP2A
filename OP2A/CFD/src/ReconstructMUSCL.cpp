@@ -181,11 +181,13 @@ void Reconstruct::SecondOrderMUSCL_ver2(Data::DataStorage& Wcll, Data::DataStora
 			dW_plus		= Wcrr(index)	- Wcr(index);
 
 
-			r			= dW / dW_plus * dxp_dx;
+			if (dW_plus != 0.0) r = dW / dW_plus * dxp_dx;
+			else				r = 0.0;
 			phi			= Limiter2(r, limiter);
 			Wp(index)	= Wcl(index) + phi*dW*dxf_dx;
 
-			r			= dW / dW_minus * dxm_dx;
+			if (dW_minus != 0.0) r	= dW / dW_minus * dxm_dx;
+			else				 r = 0.0;
 			phi			= Limiter2(r, limiter);
 			Wm(index)	= Wcr(index) - phi*dW*dxfp_dx;
 

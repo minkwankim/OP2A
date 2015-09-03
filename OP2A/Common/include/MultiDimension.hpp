@@ -82,6 +82,32 @@ vector <vector<vector<T> > > vector_3D(int n, int m, int k)
 
 /*
  * ================================
+ * 	$D Vector
+ * ================================
+ */
+template <class T>
+vector <vector <vector<vector<T> > > > vector_4D(int i, int j, int k,  int l, T value)
+{
+	vector <vector <vector<vector<T> > > > myVector(i, vector_3D<T>(j, k, l, value));
+
+	return myVector;
+}
+
+
+template <class T>
+vector <vector <vector<vector<T> > > > vector_4D(int i, int j, int k,  int l)
+{
+	vector <vector <vector<vector<T> > > > myVector(i, vector_3D<T>(j, k, l));
+
+	return myVector;
+}
+
+
+
+
+
+/*
+ * ================================
  * 	Resize Pointer and Array
  * ================================
  */

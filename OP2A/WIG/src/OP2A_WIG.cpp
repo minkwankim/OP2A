@@ -35,6 +35,7 @@
 #include "Common/include/Map2D.hpp"
 #include "Common/include/Vector1D.hpp"
 #include "Common/include/Vector2D.hpp"
+#include "Common/include/MultiDimension.hpp"
 
 #include "CFD/include/VariableConstants.hpp"
 
@@ -47,7 +48,10 @@
 
 #include "Math/include/OP2A_Vector.hpp"
 #include "Math/include/OP2A_Matrix.hpp"
+#include "Math/include/OP2A_Math.hpp"
 
+
+#include "CFD/include/GradientCalculation.hpp"
 
 using namespace OP2A::Setup;
 using namespace OP2A;
@@ -85,6 +89,11 @@ int main(int argc, char *argv[])
 	 */
 	application.show_starting_task("Read Species/Chemistry Data");
 	application.preprocessing_species();
+
+	vector<double> Ys_temp(12, 0.0);
+	Ys_temp[0]	= 0.78;
+	Ys_temp[1]	= 0.22;
+	double D12 = application.species_set.ThermalConductivity_e_Gupta(373, 1.0e17, 373, 101300, Ys_temp);
 
 
 	/* ======================================================================
@@ -152,6 +161,51 @@ int main(int argc, char *argv[])
 	application.show_starting_task("Save restart Data");
 	application.print_restartCFD(string(NAME_V));
 
+
+
+
+	//TESTing GRAD
+	for (int c = 1; c <= application.grid.NCM; c++)
+	{
+		double x = application.grid.cells[c].geo.x[0];
+		double y = application.grid.cells[c].geo.x[1];
+		double ff = x*x*x + x*y + y*y + exp(x+y);
+
+		application.grid.cells[c].data1D.data[0].data[0] = ff;
+	}
+
+	for (int c = 1; c <= application.grid.NGM; c++)
+	{
+		double x = application.grid.cells_ghost[c].geo.x[0];
+		double y = application.grid.cells_ghost[c].geo.x[1];
+		double ff = x*x*x + x*y + y*y + exp(x+y);
+
+		application.grid.cells_ghost[c].data1D.data[0].data[0] = ff;
+	}
+
+	vector<vector <double> > grad_phi	= Common::vector_2D(application.grid.NFM+1, 2, 0.0);
+	CFD::GradientCalculation::GradientCalculation_LSQR(application.grid, 0, 0, 1, grad_phi);
+
+
+	double error_max = 0.0;
+	for (int c = 1; c <= application.grid.NCM; c++)
+	{
+		double x = application.grid.cells[c].geo.x[0];
+		double y = application.grid.cells[c].geo.x[1];
+
+		double fx = 3.0*x*x + y + exp(x+y);
+		double fy = x + 2.0*y + exp(x+y);
+
+		double fx_cal = grad_phi[c][0];
+		double fy_cal = grad_phi[c][1];
+
+
+		double error_x = Math::fabs<double>(fx - fx_cal) / fx * 100.0;
+		double error_y = Math::fabs<double>(fy - fy_cal) / fy * 100.0;
+
+		error_max = Math::fmax<double>(error_x, error_max);
+		error_max = Math::fmax<double>(error_y, error_max);
+	}
 
 
 
